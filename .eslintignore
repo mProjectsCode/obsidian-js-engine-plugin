@@ -1,3 +1,4 @@
-node_modules/
-
+npm node_modules
+build
 main.js
+Publish.js

@@ -1,6 +1,7 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import builtins from 'builtin-modules';
+import copy from 'esbuild-plugin-copy-watch';
 import esbuildSvelte from 'esbuild-svelte';
 import sveltePreprocess from 'svelte-preprocess';
 
@@ -47,17 +48,27 @@ esbuild
 		],
 		format: 'cjs',
 		watch: !prod,
-		target: 'es2018',
+		target: 'es2016',
 		logLevel: 'info',
 		sourcemap: prod ? false : 'inline',
 		treeShaking: true,
-		outfile: 'main.js',
-		minify: true,
+		outdir: 'exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/',
+		outbase: 'src',
 		plugins: [
+			copy([
+				{
+					from: './styles.css',
+					to: '',
+				},
+				{
+					from: './manifest.json',
+					to: '',
+				},
+			]),
 			esbuildSvelte({
 				compilerOptions: { css: true },
 				preprocess: sveltePreprocess(),
-			}),
+			})
 		],
 	})
 	.catch(() => process.exit(1));
