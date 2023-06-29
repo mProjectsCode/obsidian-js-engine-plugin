@@ -1,4 +1,4 @@
-import {App, TFile} from 'obsidian';
+import { App, TFile } from 'obsidian';
 import JsEnginePlugin from './main';
 
 export interface ExecutionContext {
@@ -6,8 +6,8 @@ export interface ExecutionContext {
 }
 
 export interface ExecutionArgument {
-	key: string,
-	value: unknown,
+	key: string;
+	value: unknown;
 }
 
 export class ArgumentManager {
@@ -23,12 +23,12 @@ export class ArgumentManager {
 		this.defaultArgs.push({
 			key: 'app',
 			value: this.app,
-		})
+		});
 
 		this.defaultArgs.push({
 			key: 'engine',
 			value: this.plugin.api,
-		})
+		});
 	}
 
 	constructArgs(context: ExecutionContext): ExecutionArgument[] {
@@ -37,9 +37,7 @@ export class ArgumentManager {
 			{
 				key: 'context',
 				value: context,
-			}
+			},
 		];
 	}
-
-
 }

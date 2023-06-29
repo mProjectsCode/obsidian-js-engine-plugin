@@ -1,6 +1,6 @@
-import {AbstractMarkdownElement} from './AbstractMarkdownElement';
-import {MarkdownElementType} from './MarkdownElementType';
-import {AbstractMarkdownLiteral} from './AbstractMarkdownLiteral';
+import { AbstractMarkdownElement } from './AbstractMarkdownElement';
+import { MarkdownElementType } from './MarkdownElementType';
+import { AbstractMarkdownLiteral } from './AbstractMarkdownLiteral';
 
 export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownElement {
 	markdownElements: AbstractMarkdownElement[];
@@ -19,9 +19,9 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 
 	addElement(element: AbstractMarkdownElement): void {
 		if (this.allowElement(element)) {
-			this.markdownElements.push(element)
+			this.markdownElements.push(element);
 		} else {
-			throw new Error("Element not allowed in container.");
+			throw new Error('Element not allowed in container.');
 		}
 	}
 
@@ -57,31 +57,37 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 
 	createParagraph(content: string): ParagraphElement {
 		const element = new ParagraphElement(content);
-		this.addElement(element)
+		this.addElement(element);
 		return element;
 	}
 
 	createHeading(level: number, content: string): HeadingElement {
 		const element = new HeadingElement(level, content);
-		this.addElement(element)
+		this.addElement(element);
 		return element;
 	}
 
 	createBlockQuote(): BlockQuoteElement {
 		const element = new BlockQuoteElement();
-		this.addElement(element)
+		this.addElement(element);
 		return element;
 	}
 
 	createCallout(title: string, type: string, args: string = ''): CalloutElement {
 		const element = new CalloutElement(title, type, args);
-		this.addElement(element)
+		this.addElement(element);
 		return element;
 	}
 
 	createCodeBlock(language: string, content: string): CodeBlockElement {
 		const element = new CodeBlockElement(language, content);
-		this.addElement(element)
+		this.addElement(element);
+		return element;
+	}
+
+	createTable(header: string[], body: string[][]): TableElement {
+		const element = new TableElement(header, body);
+		this.addElement(element);
 		return element;
 	}
 }
@@ -96,7 +102,6 @@ export class TextElement extends AbstractMarkdownLiteral {
 	cursive: boolean;
 	underline: boolean;
 
-
 	constructor(content: string, bold: boolean, cursive: boolean, underline: boolean) {
 		super();
 
@@ -106,22 +111,22 @@ export class TextElement extends AbstractMarkdownLiteral {
 		this.underline = underline;
 	}
 
-	public toMarkdown(): string {
+	public toString(): string {
 		let prefix: string = '';
 		let postfix: string = '';
 
 		if (this.underline) {
-			prefix += '<b>'
+			prefix += '<b>';
 			postfix = '</b>' + postfix;
 		}
 
 		if (this.bold) {
-			prefix += '**'
+			prefix += '**';
 			postfix = '**' + postfix;
 		}
 
 		if (this.cursive) {
-			prefix += '*'
+			prefix += '*';
 			postfix = '*' + postfix;
 		}
 
@@ -132,14 +137,13 @@ export class TextElement extends AbstractMarkdownLiteral {
 export class CodeElement extends AbstractMarkdownLiteral {
 	content: string;
 
-
 	constructor(content: string) {
 		super();
 
 		this.content = content;
 	}
 
-	public toMarkdown(): string {
+	public toString(): string {
 		return `\`${this.content}\``;
 	}
 }
@@ -158,8 +162,8 @@ export class HeadingElement extends AbstractMarkdownElementContainer {
 		this.addText(content);
 	}
 
-	public toMarkdown(): string {
-		return `${'#'.repeat(this.level)} ${this.markdownElements.map(x => x.toMarkdown()).join('')}`;
+	public toString(): string {
+		return `${'#'.repeat(this.level)} ${this.markdownElements.map(x => x.toString()).join('')}`;
 	}
 
 	public allowElement(element: AbstractMarkdownElement): boolean {
@@ -168,15 +172,14 @@ export class HeadingElement extends AbstractMarkdownElementContainer {
 }
 
 export class ParagraphElement extends AbstractMarkdownElementContainer {
-
 	constructor(content: string) {
 		super();
 
 		this.addText(content);
 	}
 
-	public toMarkdown(): string {
-		return this.markdownElements.map(x => x.toMarkdown()).join('');
+	public toString(): string {
+		return this.markdownElements.map(x => x.toString()).join('');
 	}
 
 	public allowElement(element: AbstractMarkdownElement): boolean {
@@ -186,7 +189,6 @@ export class ParagraphElement extends AbstractMarkdownElementContainer {
 
 export class CodeBlockElement extends AbstractMarkdownElementContainer {
 	language: string;
-
 
 	constructor(language: string, content: string) {
 		super();
@@ -199,8 +201,8 @@ export class CodeBlockElement extends AbstractMarkdownElementContainer {
 		return element.getType() === MarkdownElementType.LITERAL;
 	}
 
-	public toMarkdown(): string {
-		return `\`\`\`${this.language}\n${this.markdownElements.map(x => x.toMarkdown()).join('')}\n\`\`\``;
+	public toString(): string {
+		return `\`\`\`${this.language}\n${this.markdownElements.map(x => x.toString()).join('')}\n\`\`\``;
 	}
 }
 
@@ -209,17 +211,15 @@ export class BlockQuoteElement extends AbstractMarkdownElementContainer {
 		return true;
 	}
 
-	public toMarkdown(): string {
-		return `> ` + this.markdownElements.map(x => x.toMarkdown().replaceAll('\n', '\n> ')).join('\n> \n> ');
+	public toString(): string {
+		return `> ` + this.markdownElements.map(x => x.toString().replaceAll('\n', '\n> ')).join('\n> \n> ');
 	}
 }
-
 
 export class CalloutElement extends AbstractMarkdownElementContainer {
 	title: string;
 	type: string;
 	args: string;
-
 
 	constructor(title: string, type: string, args: string) {
 		super();
@@ -233,7 +233,87 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 		return true;
 	}
 
-	public toMarkdown(): string {
-		return `> [!${this.type}|${this.args}] ${this.title}` + `\n> ` + this.markdownElements.map(x => x.toMarkdown().replaceAll('\n', '\n> ')).join('\n> \n> ');
+	public toString(): string {
+		return `> [!${this.type}|${this.args}] ${this.title}` + `\n> ` + this.markdownElements.map(x => x.toString().replaceAll('\n', '\n> ')).join('\n> \n> ');
+	}
+}
+
+export class TableElement extends AbstractMarkdownElementContainer {
+	header: string[];
+	body: string[][];
+
+	constructor(header: string[], body: string[][]) {
+		super();
+
+		this.header = header;
+		this.body = body;
+	}
+
+	public allowElement(element: AbstractMarkdownElement): boolean {
+		return true;
+	}
+
+	public toString(): string {
+		const rows = this.body.length;
+		if (rows === 0) {
+			return '';
+		}
+
+		const columns = this.header.length;
+		if (columns === 0) {
+			return '';
+		}
+		for (const row of this.body) {
+			if (row.length !== columns) {
+				throw new Error('Table rows are do not contain the same number of columns.');
+			}
+		}
+
+		const longestStringInColumns: number[] = [];
+
+		for (let i = 0; i < columns; i++) {
+			let longestStringInColumn = 0;
+
+			if (this.header[i].length > longestStringInColumn) {
+				longestStringInColumn = this.header[i].length;
+			}
+			for (const row of this.body) {
+				if (row[i].length > longestStringInColumn) {
+					longestStringInColumn = row[i].length;
+				}
+			}
+
+			longestStringInColumns.push(longestStringInColumn);
+		}
+
+		let table = '';
+
+		// build header
+		table += '|';
+		for (let j = 0; j < columns; j++) {
+			let element = this.header[j];
+			element += ' '.repeat(longestStringInColumns[j] - element.length);
+			table += ' ' + element + ' |';
+		}
+		table += '\n';
+		// build divider
+		table += '|';
+		for (let j = 0; j < columns; j++) {
+			table += ' ' + '-'.repeat(longestStringInColumns[j]) + ' |';
+		}
+		table += '\n';
+
+		// build body
+		for (let i = 0; i < rows; i++) {
+			table += '|';
+			for (let j = 0; j < columns; j++) {
+				let element = this.body[i][j];
+				element += ' '.repeat(longestStringInColumns[j] - element.length);
+				table += ' ' + element + ' |';
+			}
+			table += '\n';
+		}
+
+		return table;
 	}
 }

@@ -1,6 +1,6 @@
-import {ArgumentManager, ExecutionArgument, ExecutionContext} from './ArgumentManager';
+import { ArgumentManager, ExecutionArgument, ExecutionContext } from './ArgumentManager';
 import JsEnginePlugin from './main';
-import {App} from 'obsidian';
+import { App } from 'obsidian';
 
 export class JsEngine {
 	app: App;
@@ -19,11 +19,11 @@ export class JsEngine {
 			return;
 		}
 
-		const isAsync = code.contains('await');
-		const functionConstructor = isAsync ? async function (): Promise<void> {}.constructor : Function;
+		const AsyncFunction = async function (): Promise<void> {}.constructor;
 		const args: ExecutionArgument[] = this.argsManager.constructArgs(context);
 
-		const func: any = functionConstructor(...args.map(x => x.key), code);
+		// @ts-ignore
+		const func: any = new AsyncFunction(...args.map(x => x.key), code);
 
 		return Promise.resolve(func(...args.map(x => x.value)));
 	}

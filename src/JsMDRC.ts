@@ -1,14 +1,14 @@
-import {MarkdownRenderChild, MarkdownRenderer, TAbstractFile, TFile} from 'obsidian';
+import { MarkdownRenderChild, MarkdownRenderer, TAbstractFile, TFile } from 'obsidian';
 import JsEnginePlugin from './main';
-import {MarkdownPostProcessorContext} from 'obsidian/publish';
-import {ExecutionContext} from './ArgumentManager';
-import {MarkdownBuilder} from './markdownBuilder/MarkdownBuilder';
+import { MarkdownPostProcessorContext } from 'obsidian/publish';
+import { ExecutionContext } from './ArgumentManager';
+import { MarkdownBuilder } from './markdownBuilder/MarkdownBuilder';
+import { MarkdownString } from './api/MarkdownAPI';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;
 	content: string;
 	ctx: MarkdownPostProcessorContext;
-
 
 	constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, ctx: MarkdownPostProcessorContext) {
 		super(containerEl);
@@ -37,7 +37,7 @@ export class JsMDRC extends MarkdownRenderChild {
 	buildExecutionContext(): ExecutionContext {
 		return {
 			file: this.getExecutionFile(),
-		}
+		};
 	}
 
 	async tryRun(): Promise<unknown> {
@@ -49,7 +49,7 @@ export class JsMDRC extends MarkdownRenderChild {
 	}
 
 	async tryRender(container: HTMLElement): Promise<void> {
-		const res = await this.tryRun();
+		let res = await this.tryRun();
 
 		if (!res) {
 			return;
@@ -61,22 +61,29 @@ export class JsMDRC extends MarkdownRenderChild {
 		}
 
 		if (res instanceof MarkdownBuilder) {
-			console.log(res.toMarkdown());
-			await MarkdownRenderer.renderMarkdown(res.toMarkdown(), container, this.ctx.sourcePath, this);
-			return;
+			res = res.toMarkdown();
 		}
 
+		if (res instanceof MarkdownString) {
+			console.log(res.content);
+			await res.render(container, this.ctx.sourcePath, this);
+		}
+
+		if (res instanceof HTMLElement) {
+			container.append(res);
+		}
 	}
 
 	async onload(): Promise<void> {
 		console.log('load');
 
-		this.containerEl.empty()
+		this.containerEl.empty();
 
 		try {
-			await this.tryRender(this.containerEl)
+			await this.tryRender(this.containerEl);
 		} catch (e) {
-			this.containerEl.innerText = e as string;
+			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
+			console.log(e);
 		}
 	}
 

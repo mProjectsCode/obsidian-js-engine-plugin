@@ -29,7 +29,23 @@ let blockquote = callout.createBlockQuote()
 blockquote.createHeading(5, "This is a block quote")
 blockquote.createParagraph("This is another test paragraph.")
 
+callout.createTable(["Column 1", "Column 2"], [
+	["data 1", "**data 2**"],
+	["data 3", "data 4"],
+]);
+
 return markdownBuilder
 ```
 
+# Import Test
 
+```js-engine
+let lib = await engine.importJs("lib.js");
+return lib.getGreeting();
+```
+
+# Async Tewst
+
+```js-engine
+return await engine.test()
+```

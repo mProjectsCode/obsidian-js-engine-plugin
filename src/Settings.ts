@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, Setting} from 'obsidian';
+import { App, PluginSettingTab, Setting } from 'obsidian';
 import JsEnginePlugin from './main';
 
 export interface JsEnginePluginSettings {
@@ -6,8 +6,8 @@ export interface JsEnginePluginSettings {
 }
 
 export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {
-	mySetting: 'default'
-}
+	mySetting: 'default',
+};
 
 export class JsEnginePluginSettingTab extends PluginSettingTab {
 	plugin: JsEnginePlugin;
@@ -18,7 +18,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
@@ -26,6 +26,6 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			return;
 		}
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', { text: 'Settings for my awesome plugin.' });
 	}
 }

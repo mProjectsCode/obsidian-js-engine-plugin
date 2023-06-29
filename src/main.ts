@@ -1,16 +1,15 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin, PluginManifest, PluginSettingTab, Setting} from 'obsidian';
-import {JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab} from './Settings';
-import {Mode} from 'codemirror';
-import {ArgumentManager} from './ArgumentManager';
-import {JsEngine} from './JsEngine';
-import {JsMDRC} from './JsMDRC';
-import {API} from './api/API';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginManifest, PluginSettingTab, Setting } from 'obsidian';
+import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab } from './Settings';
+import { Mode } from 'codemirror';
+import { ArgumentManager } from './ArgumentManager';
+import { JsEngine } from './JsEngine';
+import { JsMDRC } from './JsMDRC';
+import { API } from './api/API';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
 	jsEngine: JsEngine | undefined;
 	api: API | undefined;
-
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
@@ -21,28 +20,25 @@ export default class JsEnginePlugin extends Plugin {
 
 		this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
 
-		this.api = new API();
+		this.api = new API(this.app, this);
 
 		this.jsEngine = new JsEngine(this.app, this);
 
 		this.addCommand({
 			id: 'test',
 			name: 'JS Engine Test Command',
-			callback: () => {
-			}
+			callback: () => {},
 		});
 
 		this.registerMarkdownCodeBlockProcessor('js-engine', (source, el, ctx) => {
 			const mdrc = new JsMDRC(el, this, source, ctx);
 			ctx.addChild(mdrc);
-		})
+		});
 
 		await this.registerCodeMirrorMode();
 	}
 
-	onunload(): void {
-
-	}
+	onunload(): void {}
 
 	async loadSettings(): Promise<void> {
 		this.settings = Object.assign({}, JS_ENGINE_DEFAULT_SETTINGS, await this.loadData());
@@ -99,4 +95,3 @@ export default class JsEnginePlugin extends Plugin {
 		});
 	}
 }
-
