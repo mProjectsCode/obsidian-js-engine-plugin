@@ -14,13 +14,12 @@ export class JsEngine {
 		this.argsManager = new ArgumentManager(app, plugin);
 	}
 
-	async execute(code: string, context: ExecutionContext): Promise<unknown> {
+	async execute(code: string, args: ExecutionArgument[]): Promise<unknown> {
 		if (!code) {
 			return;
 		}
 
 		const AsyncFunction = async function (): Promise<void> {}.constructor;
-		const args: ExecutionArgument[] = this.argsManager.constructArgs(context);
 
 		// @ts-ignore
 		const func: any = new AsyncFunction(...args.map(x => x.key), code);

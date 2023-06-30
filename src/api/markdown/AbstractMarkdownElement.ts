@@ -1,5 +1,5 @@
 import { MarkdownElementType } from './MarkdownElementType';
-import { MarkdownString } from '../api/MarkdownAPI';
+import { MarkdownString } from '../MarkdownAPI';
 
 export abstract class AbstractMarkdownElement {
 	abstract toString(): string;

@@ -1,14 +1,17 @@
-asd
+---
+text: taasdasd
+number: 12234234
+---
+
+Some text
 ```js-engine
 let a = "test";
 return a;
 ```
-asdasd
-asdasd
-asdasd
+Some more text
 
 ```js-engine
-let markdownBuilder = engine.createMarkdownBuilder()
+let markdownBuilder = engine.markdown.createBuilder()
 
 markdownBuilder.createHeading(2, "Test Heading")
 markdownBuilder.createParagraph("This is a test paragraph.")
@@ -44,8 +47,23 @@ let lib = await engine.importJs("lib.js");
 return lib.getGreeting();
 ```
 
-# Async Tewst
+# Async Test
 
 ```js-engine
 return await engine.test()
+```
+
+# Meta Bind Test
+
+```js-engine
+const meta_bind_api = engine.getPlugin("obsidian-meta-bind-plugin").api
+
+const div1 = container.createDiv()
+const div2 = container.createDiv()
+
+const inputField = meta_bind_api.createInputFieldFromString("INPUT[text:text]", "INLINE", context.file.path, div1);
+const inputField2 = meta_bind_api.createInputFieldFromString("INPUT[number:number]", "INLINE", context.file.path, div2);
+
+component.addChild(inputField)
+component.addChild(inputField2)
 ```

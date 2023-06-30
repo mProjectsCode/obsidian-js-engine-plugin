@@ -1,23 +1,18 @@
-import { MarkdownBuilder } from '../markdownBuilder/MarkdownBuilder';
-import { MarkdownString } from './MarkdownAPI';
-import { App } from 'obsidian';
+import {MarkdownAPI} from './MarkdownAPI';
+import {App, Plugin} from 'obsidian';
 import JsEnginePlugin from '../main';
 
 export class API {
-	app: App;
-	plugin: JsEnginePlugin;
+	readonly app: App;
+	readonly plugin: JsEnginePlugin;
+	readonly markdown: MarkdownAPI;
+
 
 	constructor(app: App, plugin: JsEnginePlugin) {
 		this.app = app;
 		this.plugin = plugin;
-	}
 
-	createMarkdownBuilder(): MarkdownBuilder {
-		return new MarkdownBuilder();
-	}
-
-	createMarkdown(markdown: string): MarkdownString {
-		return new MarkdownString(markdown);
+		this.markdown = new MarkdownAPI(app, plugin);
 	}
 
 	/**
@@ -28,5 +23,9 @@ export class API {
 	async importJs(path: string): Promise<any> {
 		const fullPath = this.app.vault.adapter.getResourcePath(path);
 		return import(fullPath);
+	}
+
+	getPlugin(pluginId: string): Plugin {
+		return this.app.plugins.getPlugin(pluginId);
 	}
 }

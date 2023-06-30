@@ -1,9 +1,9 @@
-import { MarkdownRenderChild, MarkdownRenderer, TAbstractFile, TFile } from 'obsidian';
+import { MarkdownRenderChild, TAbstractFile, TFile } from 'obsidian';
 import JsEnginePlugin from './main';
 import { MarkdownPostProcessorContext } from 'obsidian/publish';
-import { ExecutionContext } from './ArgumentManager';
-import { MarkdownBuilder } from './markdownBuilder/MarkdownBuilder';
-import { MarkdownString } from './api/MarkdownAPI';
+import {ExecutionArgument, ExecutionContext} from './ArgumentManager';
+import { MarkdownBuilder } from './api/markdown/MarkdownBuilder';
+import {MarkdownString} from './api/markdown/MarkdownString';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;
@@ -40,16 +40,24 @@ export class JsMDRC extends MarkdownRenderChild {
 		};
 	}
 
-	async tryRun(): Promise<unknown> {
+	buildExecutionArgs(container: HTMLElement): ExecutionArgument[] {
 		if (!this.plugin.jsEngine) {
-			return;
+			throw new Error("jsEngine is undefined");
+		}
+		return this.plugin.jsEngine?.argsManager.constructArgs(this.buildExecutionContext(), this, container);
+	}
+
+	async tryRun(args: ExecutionArgument[]): Promise<unknown> {
+		if (!this.plugin.jsEngine) {
+			throw new Error("jsEngine is undefined");
 		}
 
-		return this.plugin.jsEngine.execute(this.content, this.buildExecutionContext());
+		return this.plugin.jsEngine.execute(this.content, args);
 	}
 
 	async tryRender(container: HTMLElement): Promise<void> {
-		let res = await this.tryRun();
+		const args = this.buildExecutionArgs(container);
+		let res = await this.tryRun(args);
 
 		if (!res) {
 			return;
@@ -83,7 +91,6 @@ export class JsMDRC extends MarkdownRenderChild {
 			await this.tryRender(this.containerEl);
 		} catch (e) {
 			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
-			console.log(e);
 		}
 	}
 
