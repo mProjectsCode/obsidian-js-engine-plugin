@@ -1,10 +1,10 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginManifest, PluginSettingTab, Setting } from 'obsidian';
-import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab } from './Settings';
-import { Mode } from 'codemirror';
-import { ArgumentManager } from './ArgumentManager';
-import { JsEngine } from './JsEngine';
-import { JsMDRC } from './JsMDRC';
-import { API } from './api/API';
+import {App, Plugin, PluginManifest} from 'obsidian';
+import {JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab} from './Settings';
+import {Mode} from 'codemirror';
+import {JsEngine} from './JsEngine';
+import {JsMDRC} from './JsMDRC';
+import {API} from './api/API';
+import {MessageType} from './messages/MessageManager';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -21,6 +21,11 @@ export default class JsEnginePlugin extends Plugin {
 		this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
 
 		this.api = new API(this.app, this);
+
+		this.api.message.createMessage(MessageType.INFO, 'test');
+		this.api.message.createMessage(MessageType.INFO, 'test');
+		this.api.message.createMessage(MessageType.INFO, 'test');
+		this.api.message.createMessage(MessageType.INFO, 'test');
 
 		this.jsEngine = new JsEngine(this.app, this);
 
@@ -59,7 +64,7 @@ export default class JsEnginePlugin extends Plugin {
 		}
 
 		window.CodeMirror.defineMode('js-engine', config => {
-			const mbOverlay: any = {
+			const mbOverlay: Mode<any> = {
 				startState: () => {
 					const js_state = window.CodeMirror.startState(js_mode);
 					return {

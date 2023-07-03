@@ -2,7 +2,8 @@ import {App, Component, TFile} from 'obsidian';
 import JsEnginePlugin from './main';
 
 export interface ExecutionContext {
-	file: TFile | undefined;
+	file: TFile;
+	line: number;
 }
 
 export interface ExecutionArgument {

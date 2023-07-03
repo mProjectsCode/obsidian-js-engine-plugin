@@ -6,3 +6,27 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.js-engine-message-counter {
+	margin-left: var(--size-4-1);
+}
+
+.js-engine-message-indicator-mod-info {
+
+}
+
+.js-engine-message-indicator-mod-tip {
+	color: var(--color-cyan);
+}
+
+.js-engine-message-indicator-mod-success {
+	color: var(--color-green);
+}
+
+.js-engine-message-indicator-mod-warning {
+	color: var(--color-yellow);
+}
+
+.js-engine-message-indicator-mod-error {
+	color: var(--color-red);
+}

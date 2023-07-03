@@ -1,6 +1,5 @@
-import { MarkdownRenderChild, TAbstractFile, TFile } from 'obsidian';
+import { MarkdownRenderChild, TAbstractFile, TFile, MarkdownPostProcessorContext } from 'obsidian';
 import JsEnginePlugin from './main';
-import { MarkdownPostProcessorContext } from 'obsidian/publish';
 import {ExecutionArgument, ExecutionContext} from './ArgumentManager';
 import { MarkdownBuilder } from './api/markdown/MarkdownBuilder';
 import {MarkdownString} from './api/markdown/MarkdownString';
@@ -91,6 +90,7 @@ export class JsMDRC extends MarkdownRenderChild {
 			await this.tryRender(this.containerEl);
 		} catch (e) {
 			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
+			this.containerEl.addClass("mod-warning");
 		}
 	}
 

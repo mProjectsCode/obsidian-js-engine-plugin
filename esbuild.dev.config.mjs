@@ -51,16 +51,18 @@ const context = await esbuild.context({
 	outdir: 'exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/',
 	outbase: 'src',
 	plugins: [
-		copy([
-			{
-				from: './styles.css',
-				to: '',
-			},
-			{
-				from: './manifest.json',
-				to: '',
-			},
-		]),
+		copy({
+			paths: [
+				{
+					from: './styles.css',
+					to: '',
+				},
+				{
+					from: './manifest.json',
+					to: '',
+				},
+			]
+		}),
 		esbuildSvelte({
 			compilerOptions: { css: true },
 			preprocess: sveltePreprocess(),

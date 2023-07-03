@@ -1,11 +1,22 @@
 import {MarkdownAPI} from './MarkdownAPI';
 import {App, Plugin} from 'obsidian';
 import JsEnginePlugin from '../main';
+import {MessageManager} from '../messages/MessageManager';
 
 export class API {
-	readonly app: App;
-	readonly plugin: JsEnginePlugin;
+	/**
+	 * Reference to the obsidian app.
+	 */
+	private readonly app: App;
+	/**
+	 * Reference the JS Engine plugin.
+	 */
+	private readonly plugin: JsEnginePlugin;
+	/**
+	 * API to interact with markdown.
+	 */
 	readonly markdown: MarkdownAPI;
+	readonly message: MessageManager;
 
 
 	constructor(app: App, plugin: JsEnginePlugin) {
@@ -13,10 +24,11 @@ export class API {
 		this.plugin = plugin;
 
 		this.markdown = new MarkdownAPI(app, plugin);
+		this.message = new MessageManager(app, plugin);
 	}
 
 	/**
-	 * Allows importing of ECMAScript modules from a vault relative path.
+	 * Loads an ECMAScript module from a vault relative path.
 	 *
 	 * @param path the vault relative path of the file to import
 	 */
@@ -25,6 +37,11 @@ export class API {
 		return import(fullPath);
 	}
 
+	/**
+	 * Gets a plugin by its id. A plugin id can be found by looking at its manifest.
+	 *
+	 * @param pluginId the id of the plugin.
+	 */
 	getPlugin(pluginId: string): Plugin {
 		return this.app.plugins.getPlugin(pluginId);
 	}
