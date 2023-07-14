@@ -1,18 +1,24 @@
-import {App, Plugin, PluginManifest} from 'obsidian';
-import {JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab} from './Settings';
-import {Mode} from 'codemirror';
-import {JsEngine} from './JsEngine';
-import {JsMDRC} from './JsMDRC';
-import {API} from './api/API';
-import {MessageType} from './messages/MessageManager';
+import { App, Plugin, PluginManifest } from 'obsidian';
+import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab } from './Settings';
+import { Mode } from 'codemirror';
+import { JsMDRC } from './JsMDRC';
+import { API } from './api/API';
+import { MessageManager, MessageType } from './messages/MessageManager';
+import { InstanceId, InstanceType } from './api/InstanceId';
+import { JsEngine } from './jsEngine/JsEngine';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
-	jsEngine: JsEngine | undefined;
-	api: API | undefined;
+	messageManager: MessageManager;
+	jsEngine: JsEngine;
+	api: API;
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
+
+		this.messageManager = new MessageManager(this.app, this);
+		this.jsEngine = new JsEngine(this.app, this);
+		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));
 	}
 
 	async onload(): Promise<void> {
@@ -20,14 +26,12 @@ export default class JsEnginePlugin extends Plugin {
 
 		this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
 
-		this.api = new API(this.app, this);
+		this.messageManager.initStatusBarItem();
 
-		this.api.message.createMessage(MessageType.INFO, 'test');
-		this.api.message.createMessage(MessageType.INFO, 'test');
-		this.api.message.createMessage(MessageType.INFO, 'test');
-		this.api.message.createMessage(MessageType.INFO, 'test');
-
-		this.jsEngine = new JsEngine(this.app, this);
+		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
+		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
+		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
+		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
 
 		this.addCommand({
 			id: 'test',
@@ -40,7 +44,9 @@ export default class JsEnginePlugin extends Plugin {
 			ctx.addChild(mdrc);
 		});
 
-		await this.registerCodeMirrorMode();
+		this.app.workspace.onLayoutReady(async () => {
+			await this.registerCodeMirrorMode();
+		});
 	}
 
 	onunload(): void {}

@@ -61,7 +61,7 @@ const context = await esbuild.context({
 					from: './manifest.json',
 					to: '',
 				},
-			]
+			],
 		}),
 		esbuildSvelte({
 			compilerOptions: { css: true },

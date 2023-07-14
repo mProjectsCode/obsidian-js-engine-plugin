@@ -1,7 +1,5 @@
-import {App} from 'obsidian';
-import {MarkdownBuilder} from './markdown/MarkdownBuilder';
-import JsEnginePlugin from '../main';
-import {MarkdownString} from './markdown/MarkdownString';
+import { MarkdownBuilder } from './markdown/MarkdownBuilder';
+import { MarkdownString } from './markdown/MarkdownString';
 import {
 	BlockQuoteElement,
 	CalloutElement,
@@ -12,25 +10,16 @@ import {
 	TableElement,
 	TextElement,
 } from './markdown/AbstractMarkdownElementContainer';
-
+import { API } from './API';
 
 /**
  * The markdown API provides utilities for creating markdown using js.
  */
 export class MarkdownAPI {
-	/**
-	 * Reference to the obsidian app.
-	 */
-	private readonly app: App;
-	/**
-	 * Reference the JS Engine plugin.
-	 */
-	private readonly plugin: JsEnginePlugin;
+	private readonly apiInstance: API;
 
-
-	constructor(app: App, plugin: JsEnginePlugin) {
-		this.app = app;
-		this.plugin = plugin;
+	constructor(apiInstance: API) {
+		this.apiInstance = apiInstance;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import {Component, MarkdownRenderer} from 'obsidian';
+import { Component, MarkdownRenderer } from 'obsidian';
 
 export class MarkdownString {
 	content: string;

@@ -1,23 +1,36 @@
-import {ExecutionContext} from '../ArgumentManager';
-import {JsExecution} from '../JsEngine';
-import {App, setIcon} from 'obsidian';
+import { App, moment, setIcon } from 'obsidian';
 import JsEnginePlugin from '../main';
+import { MessageDisplay } from './MessageDisplay';
+import { store, Store } from '../utils/StoreObj';
+import type { Moment } from 'moment';
+import { InstanceId } from '../api/InstanceId';
+import { iteratorToArray } from '../Util';
 
 export enum MessageType {
-	INFO = "info",
-	TIP = "tip",
-	SUCCESS = "success",
-	WANING = "warning",
-	ERROR = "error",
+	INFO = 'info',
+	TIP = 'tip',
+	SUCCESS = 'success',
+	WANING = 'warning',
+	ERROR = 'error',
 }
 
-export const messageTypeOrder: MessageType[] = [
-	MessageType.ERROR,
-	MessageType.WANING,
-	MessageType.SUCCESS,
-	MessageType.TIP,
-	MessageType.INFO,
-]
+export const messageTypeOrder: MessageType[] = [MessageType.ERROR, MessageType.WANING, MessageType.SUCCESS, MessageType.TIP, MessageType.INFO];
+
+export function mapMessageTypeToClass(messageType: MessageType): string {
+	return `js-engine-message-mod-${messageType}`;
+}
+
+export function mapMessageTypeToIcon(messageType: MessageType): string {
+	const map: Map<MessageType, string> = new Map<MessageType, string>();
+
+	map.set(MessageType.ERROR, 'zap');
+	map.set(MessageType.WANING, 'alert-triangle');
+	map.set(MessageType.SUCCESS, 'check');
+	map.set(MessageType.TIP, 'flame');
+	map.set(MessageType.INFO, 'info');
+
+	return map.get(messageType) ?? 'info';
+}
 
 export function mapMessageTypeToMessageIndicatorClass(messageType: MessageType): string {
 	return `js-engine-message-indicator-mod-${messageType}`;
@@ -26,24 +39,29 @@ export function mapMessageTypeToMessageIndicatorClass(messageType: MessageType):
 export class Message {
 	type: MessageType;
 	title: string;
+	content: string;
+	code: string;
 
-	constructor(type: MessageType, title: string) {
+	constructor(type: MessageType, title: string, content: string, code: string) {
 		this.type = type;
 		this.title = title;
+		this.content = content;
+		this.code = code;
 	}
 }
 
 export class MessageWrapper {
 	uuid: string;
+	source: InstanceId;
 	message: Message;
-	activeExecutions: Map<string, JsExecution | undefined>;
+	time: Moment;
 
-
-	constructor(message: Message, activeExecutions: Map<string, JsExecution | undefined>) {
+	constructor(message: Message, source: InstanceId) {
 		this.message = message;
-		this.activeExecutions = activeExecutions;
+		this.source = source;
 
 		this.uuid = self.crypto.randomUUID();
+		this.time = moment();
 	}
 }
 
@@ -57,46 +75,63 @@ export class MessageManager {
 	 */
 	private readonly plugin: JsEnginePlugin;
 
-	messages: Map<string, MessageWrapper>;
-	readonly statusBarItem: HTMLElement;
+	messages: Store<Map<string, MessageWrapper>>;
 
+	statusBarItem: HTMLElement | undefined;
+	private messageDisplay: MessageDisplay | undefined;
 
 	constructor(app: App, plugin: JsEnginePlugin) {
 		this.app = app;
 		this.plugin = plugin;
 
-		this.messages = new Map<string, MessageWrapper>();
-		this.statusBarItem = plugin.addStatusBarItem();
-		this.updateStatusBarItem();
+		this.messages = store(new Map<string, MessageWrapper>());
 	}
 
-	addMessage(message: Message): void {
-		const activeExecutions: Map<string, JsExecution> = new Map(this.plugin.jsEngine?.activeExecutions);
-		const messageWrapper = new MessageWrapper(message, activeExecutions);
-		this.messages.set(messageWrapper.uuid, messageWrapper);
+	initStatusBarItem(): void {
+		this.messageDisplay = new MessageDisplay(this.app, this.plugin);
+
+		this.statusBarItem = this.plugin.addStatusBarItem();
+
+		this.statusBarItem.addClass('mod-clickable');
+		this.statusBarItem.addEventListener('click', () => {
+			this.messageDisplay?.open();
+		});
+
 		this.updateStatusBarItem();
+		this.messages.subscribe(_ => {
+			this.updateStatusBarItem();
+		});
 	}
 
-	createMessage(type: MessageType, title: string): void {
-		this.addMessage(new Message(type, title));
+	addMessage(message: Message, source: InstanceId): MessageWrapper {
+		const messageWrapper = new MessageWrapper(message, source);
+
+		this.messages.get().set(messageWrapper.uuid, messageWrapper);
+		this.messages.notify();
+
+		return messageWrapper;
 	}
 
 	removeMessage(id: string): void {
-		this.messages.delete(id);
+		this.messages.get().delete(id);
+		this.messages.notify();
 	}
 
 	private updateStatusBarItem(): void {
-		this.statusBarItem.empty();
-		this.statusBarItem.addClass('mod-clickable')
+		if (!this.statusBarItem) {
+			return;
+		}
 
-		const messageIcon = this.statusBarItem.createEl("div");
-		setIcon(messageIcon, "message-square");
+		this.statusBarItem.empty();
+
+		const messageIcon = this.statusBarItem.createEl('div');
+		setIcon(messageIcon, 'message-square');
 
 		const messageCountEl = this.statusBarItem.createEl('span');
-		messageCountEl.addClass("js-engine-message-counter")
-		messageCountEl.innerText = this.messages.size.toString();
+		messageCountEl.addClass('js-engine-message-counter');
+		messageCountEl.innerText = this.messages.get().size.toString();
 
-		const messageTypeSet = new Set<string>(Array.from(this.messages.values()).map(x => x.message.type));
+		const messageTypeSet = new Set<string>(Array.from(this.messages.get().values()).map(x => x.message.type));
 		for (const messageType of messageTypeOrder) {
 			if (messageTypeSet.has(messageType)) {
 				messageCountEl.addClass(mapMessageTypeToMessageIndicatorClass(messageType));
@@ -104,7 +139,12 @@ export class MessageManager {
 			}
 		}
 		if (messageTypeSet.size === 0) {
-			messageCountEl.addClass("js-engine-message-indicator-mod-info");
+			messageCountEl.addClass('js-engine-message-indicator-mod-info');
 		}
+	}
+
+	getMessagesFromSource(source: InstanceId): MessageWrapper[] {
+		const messages = this.messages.get();
+		return iteratorToArray(messages.values()).filter(x => x.source.id === source.id);
 	}
 }

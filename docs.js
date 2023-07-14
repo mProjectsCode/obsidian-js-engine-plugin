@@ -8,15 +8,15 @@ async function main() {
 	app.options.addReader(new TypeDoc.TypeDocReader());
 
 	app.bootstrap({
-		entryPoints: ["src/api/*"],
-		entryPointStrategy: 'expand'
+		entryPoints: ['src/api/*'],
+		entryPointStrategy: 'expand',
 	});
 
 	const project = app.convert();
 
 	if (project) {
 		// Project may not have converted correctly
-		const outputDir = "docs";
+		const outputDir = 'docs';
 
 		// Rendered docs
 		await app.generateDocs(project, outputDir);

@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, PluginSettingTab } from 'obsidian';
 import JsEnginePlugin from './main';
 
 export interface JsEnginePluginSettings {

@@ -1,30 +1,35 @@
-import {MarkdownAPI} from './MarkdownAPI';
-import {App, Plugin} from 'obsidian';
+import { MarkdownAPI } from './MarkdownAPI';
+import { App, Plugin } from 'obsidian';
 import JsEnginePlugin from '../main';
-import {MessageManager} from '../messages/MessageManager';
+import { InstanceId } from './InstanceId';
+import { MessageAPI } from './MessageAPI';
 
 export class API {
 	/**
 	 * Reference to the obsidian app.
 	 */
-	private readonly app: App;
+	readonly app: App;
 	/**
 	 * Reference the JS Engine plugin.
 	 */
-	private readonly plugin: JsEnginePlugin;
+	readonly plugin: JsEnginePlugin;
+	readonly instanceId: InstanceId;
 	/**
 	 * API to interact with markdown.
 	 */
 	readonly markdown: MarkdownAPI;
-	readonly message: MessageManager;
+	/**
+	 * API to interact with the plugins message system.
+	 */
+	readonly message: MessageAPI;
 
-
-	constructor(app: App, plugin: JsEnginePlugin) {
+	constructor(app: App, plugin: JsEnginePlugin, instanceId: InstanceId) {
 		this.app = app;
 		this.plugin = plugin;
+		this.instanceId = instanceId;
 
-		this.markdown = new MarkdownAPI(app, plugin);
-		this.message = new MessageManager(app, plugin);
+		this.markdown = new MarkdownAPI(this);
+		this.message = new MessageAPI(this);
 	}
 
 	/**

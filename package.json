@@ -34,7 +34,6 @@
 		"obsidian": "latest",
 		"obsidian-dataview": "latest",
 		"prettier": "2.8.8",
-		"svelte": "^4.0.1",
 		"svelte-preprocess": "^5.0.4",
 		"ts-jest": "^29.1.0",
 		"tslib": "2.6.0",
@@ -42,7 +41,9 @@
 		"typescript": "^5.1.6"
 	},
 	"dependencies": {
+		"@popperjs/core": "^2.11.8",
 		"obsidian-svelte": "^0.1.9",
-		"svelte-portal": "^2.2.0"
+		"svelte-portal": "^2.2.0",
+		"svelte": "^4.0.1"
 	}
 }
