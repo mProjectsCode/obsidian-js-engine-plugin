@@ -14,6 +14,10 @@
     <p>Code</p>
     <pre class="language-none"><code>{execution.code}</code></pre>
 
+	<h3>Time</h3>
+	<p>Build Time: {Math.round(execution.functionBuildTime)} ms</p>
+	<p>Execution Time: {Math.round(execution.functionRunTime)} ms</p>
+
     <h3>Arguments</h3>
     <div class="markdown-rendered">
         <table>

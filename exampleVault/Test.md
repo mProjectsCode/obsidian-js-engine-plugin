@@ -47,6 +47,12 @@ let lib = await engine.importJs("lib.js");
 return lib.getGreeting();
 ```
 
+```js-engine
+let lib = await engine.importJs("svelte_project/dist/assets/index-9a060cab.js");
+console.log(lib);
+console.log(lib.App);
+```
+
 # Async Test
 
 ```js-engine

@@ -25,7 +25,7 @@ export class MarkdownAPI {
 	/**
 	 * Creates a markdown builder.
 	 */
-	createBuilder(): MarkdownBuilder {
+	public createBuilder(): MarkdownBuilder {
 		return new MarkdownBuilder();
 	}
 
@@ -36,7 +36,7 @@ export class MarkdownAPI {
 	 *
 	 * @param markdown the string to wrap
 	 */
-	create(markdown: string): MarkdownString {
+	public create(markdown: string): MarkdownString {
 		return new MarkdownString(markdown);
 	}
 
@@ -45,7 +45,7 @@ export class MarkdownAPI {
 	 *
 	 * @param text
 	 */
-	createText(text: string): TextElement {
+	public createText(text: string): TextElement {
 		return new TextElement(text, false, false, false);
 	}
 
@@ -54,7 +54,7 @@ export class MarkdownAPI {
 	 *
 	 * @param text
 	 */
-	createBoldText(text: string): TextElement {
+	public createBoldText(text: string): TextElement {
 		return new TextElement(text, true, false, false);
 	}
 
@@ -63,7 +63,7 @@ export class MarkdownAPI {
 	 *
 	 * @param text
 	 */
-	createCursiveText(text: string): TextElement {
+	public createCursiveText(text: string): TextElement {
 		return new TextElement(text, false, true, false);
 	}
 
@@ -72,7 +72,7 @@ export class MarkdownAPI {
 	 *
 	 * @param text
 	 */
-	createUnderlinedText(text: string): TextElement {
+	public createUnderlinedText(text: string): TextElement {
 		return new TextElement(text, false, false, true);
 	}
 
@@ -81,7 +81,7 @@ export class MarkdownAPI {
 	 *
 	 * @param text
 	 */
-	createCode(text: string): CodeElement {
+	public createCode(text: string): CodeElement {
 		return new CodeElement(text);
 	}
 
@@ -90,7 +90,7 @@ export class MarkdownAPI {
 	 *
 	 * @param content
 	 */
-	createParagraph(content: string): ParagraphElement {
+	public createParagraph(content: string): ParagraphElement {
 		return new ParagraphElement(content);
 	}
 
@@ -100,14 +100,14 @@ export class MarkdownAPI {
 	 * @param level the level of the heading from 1 to 6
 	 * @param content the text of the heading
 	 */
-	createHeading(level: number, content: string): HeadingElement {
+	public createHeading(level: number, content: string): HeadingElement {
 		return new HeadingElement(level, content);
 	}
 
 	/**
 	 * Creates a new markdown block quote element.
 	 */
-	createBlockQuote(): BlockQuoteElement {
+	public createBlockQuote(): BlockQuoteElement {
 		return new BlockQuoteElement();
 	}
 
@@ -118,7 +118,7 @@ export class MarkdownAPI {
 	 * @param type the type of the callout
 	 * @param args the callout args, optional
 	 */
-	createCallout(title: string, type: string, args: string = ''): CalloutElement {
+	public createCallout(title: string, type: string, args: string = ''): CalloutElement {
 		return new CalloutElement(title, type, args);
 	}
 
@@ -128,7 +128,7 @@ export class MarkdownAPI {
 	 * @param language the language of the code block
 	 * @param content the content of the code block
 	 */
-	createCodeBlock(language: string, content: string): CodeBlockElement {
+	public createCodeBlock(language: string, content: string): CodeBlockElement {
 		return new CodeBlockElement(language, content);
 	}
 
@@ -138,7 +138,7 @@ export class MarkdownAPI {
 	 * @param header the header row
 	 * @param body the table body
 	 */
-	createTable(header: string[], body: string[][]): TableElement {
+	public createTable(header: string[], body: string[][]): TableElement {
 		return new TableElement(header, body);
 	}
 }

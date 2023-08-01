@@ -37,7 +37,7 @@ export class API {
 	 *
 	 * @param path the vault relative path of the file to import
 	 */
-	async importJs(path: string): Promise<any> {
+	public async importJs(path: string): Promise<any> {
 		const fullPath = this.app.vault.adapter.getResourcePath(path);
 		return import(fullPath);
 	}
@@ -47,7 +47,7 @@ export class API {
 	 *
 	 * @param pluginId the id of the plugin.
 	 */
-	getPlugin(pluginId: string): Plugin {
+	public getPlugin(pluginId: string): Plugin {
 		return this.app.plugins.getPlugin(pluginId);
 	}
 }

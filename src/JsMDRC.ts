@@ -40,8 +40,10 @@ export class JsMDRC extends MarkdownRenderChild {
 
 	buildExecutionContext(): ExecutionContext {
 		console.log(this.ctx);
+		const file = this.getExecutionFile()!;
 		return {
-			file: this.getExecutionFile()!,
+			file: file,
+			metadata: this.plugin.app.metadataCache.getFileCache(file),
 			line: 0,
 		};
 	}
@@ -72,8 +74,6 @@ export class JsMDRC extends MarkdownRenderChild {
 		if (!result) {
 			return;
 		}
-
-		this.renderExecutionStats(container);
 
 		if (typeof result === 'string') {
 			container.innerText = result;
@@ -126,6 +126,7 @@ export class JsMDRC extends MarkdownRenderChild {
 
 		try {
 			await this.tryRender(this.containerEl);
+			this.renderExecutionStats(this.containerEl);
 		} catch (e) {
 			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
 			this.containerEl.addClass('mod-warning');

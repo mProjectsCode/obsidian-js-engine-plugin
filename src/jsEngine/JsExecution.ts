@@ -16,6 +16,7 @@ export class JsExecution {
 	args: ExecutionArgument[];
 	context: ExecutionContext | undefined;
 	apiInstance: API;
+	messages: MessageWrapper[];
 
 	func: ((...args: any[]) => Promise<unknown>) | undefined;
 	result: unknown | undefined;
@@ -35,6 +36,7 @@ export class JsExecution {
 
 		this.uuid = self.crypto.randomUUID();
 		this.apiInstance = new API(this.app, this.plugin, new InstanceId(InstanceType.JS_EXECUTION, this.uuid));
+		this.messages = [];
 
 		this.func = undefined;
 
@@ -92,6 +94,8 @@ export class JsExecution {
 			}
 		}
 
+		this.messages = this.apiInstance.message.getMessagesForInstance();
+
 		this.functionRunTime = performance.now() - startTime;
 	}
 
@@ -100,7 +104,7 @@ export class JsExecution {
 	}
 
 	getMessages(): MessageWrapper[] {
-		return this.plugin.messageManager.getMessagesFromSource(this.apiInstance.instanceId);
+		return this.messages;
 	}
 
 	openStatsModal(): void {
