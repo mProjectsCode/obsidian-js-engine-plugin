@@ -87,16 +87,6 @@ export default class JsEnginePlugin extends Plugin {
 					};
 				},
 				token: (stream: any, state: any) => {
-					// const globals = ['app', 'mb', 'dv', 'filePath', 'ctx'];
-
-					// console.log(stream);
-
-					// for (const global of globals) {
-					// 	if (stream.match(global)) {
-					// 		return 'variable';
-					// 	}
-					// }
-
 					const js_result = js_mode.token && js_mode.token(stream, state);
 					return `line-HyperMD-codeblock ${js_result}`;
 				},

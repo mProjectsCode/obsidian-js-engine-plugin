@@ -11,7 +11,8 @@
     <h2>JS Execution Stats</h2>
 
     <p>Execution ID: {execution.uuid}</p>
-    <p>Code</p>
+
+	<h3>Code</h3>
     <pre class="language-none"><code>{execution.code}</code></pre>
 
 	<h3>Time</h3>

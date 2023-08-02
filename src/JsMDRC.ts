@@ -1,4 +1,4 @@
-import { MarkdownPostProcessorContext, MarkdownRenderChild, setIcon, TAbstractFile, TFile } from 'obsidian';
+import { MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, TAbstractFile, TFile } from 'obsidian';
 import JsEnginePlugin from './main';
 import { ExecutionArgument, ExecutionContext } from './ArgumentManager';
 import { MarkdownBuilder } from './api/markdown/MarkdownBuilder';
@@ -65,7 +65,7 @@ export class JsMDRC extends MarkdownRenderChild {
 		return this.plugin.jsEngine.execute(this.content, args, context);
 	}
 
-	async tryRender(container: HTMLElement): Promise<void> {
+	async renderResults(container: HTMLElement): Promise<void> {
 		const args = this.buildExecutionArgs(container);
 		const context = this.buildExecutionContext();
 		this.jsExecution = await this.tryRun(args, context);
@@ -108,29 +108,52 @@ export class JsMDRC extends MarkdownRenderChild {
 	}
 
 	renderExecutionStats(container: HTMLElement): void {
+		const menu = new Menu();
+		menu.addItem(item => {
+			item.setTitle('Info');
+			item.setIcon('info');
+			item.onClick(() => {
+				this.jsExecution?.openStatsModal();
+			});
+		});
+
+		menu.addItem(item => {
+			item.setTitle('Rerun');
+			item.setIcon('rotate-ccw');
+			item.onClick(() => {
+				this.render();
+			});
+		});
+
 		const statsContainer = container.createDiv();
 
 		statsContainer.addClass('js-engine-execution-stats-button');
-		statsContainer.addEventListener('click', () => {
-			this.jsExecution?.openStatsModal();
+		statsContainer.addEventListener('click', evt => {
+			menu.showAtMouseEvent(evt);
 		});
 		setIcon(statsContainer, 'info');
 	}
 
-	async onload(): Promise<void> {
-		console.log('load');
-
+	async render(): Promise<void> {
 		this.containerEl.empty();
 
-		this.containerEl.addClass('js-engine-execution-render-child');
+		if (!this.containerEl.hasClass('js-engine-execution-render-child')) {
+			this.containerEl.addClass('js-engine-execution-render-child');
+		}
 
 		try {
-			await this.tryRender(this.containerEl);
+			await this.renderResults(this.containerEl);
 			this.renderExecutionStats(this.containerEl);
 		} catch (e) {
 			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
 			this.containerEl.addClass('mod-warning');
 		}
+	}
+
+	async onload(): Promise<void> {
+		console.log('load');
+
+		await this.render();
 	}
 
 	onunload(): void {

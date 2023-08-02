@@ -1,9 +1,9 @@
 ---
 number: 3
 added:
-  - "3"
+  - Quest 5
 removed:
-  - "4"
+  - Quest 4
 aliases: []
 ---
 
@@ -54,9 +54,9 @@ mdBuilder.createTable(
 	["Quest", "Completed", "Started On", "Completed On"],
 	quests.map(x => [
 		x.name,
-		x.removed !== -1 ? "#" : "",
+		x.removed !== -1 ? "[x]" : "[ ]",
 		x.added,
-		x.removed, 
+		x.removed !== -1 ? x.removed : "", 
 	])
 );
 
