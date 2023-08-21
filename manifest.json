@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-js-engine-plugin",
 	"name": "JS Engine Plugin",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"minAppVersion": "1.3.5",
 	"description": "Run JavaScript from within your notes.",
 	"author": "Moritz Jung",
