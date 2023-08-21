@@ -12,79 +12,64 @@
 <div class="col-content">
 <div class="tsd-page-title">
 <h2>obsidian-js-engine-plugin</h2></div>
-<div class="tsd-panel tsd-typography"><a id="md:obsidian-sample-plugin" class="tsd-anchor"></a><h1><a href="#md:obsidian-sample-plugin">Obsidian Sample Plugin</a></h1><p>This is a sample plugin for Obsidian (<a href="https://obsidian.md">https://obsidian.md</a>).</p>
-<p>This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.</p>
-<p><strong>Note:</strong> The Obsidian API is still in early alpha and is subject to change at any time!</p>
-<p>This sample plugin demonstrates some of the basic functionality the plugin API can do.</p>
-<ul>
-<li>Adds a ribbon icon, which shows a Notice when clicked.</li>
-<li>Adds a command &quot;Open Sample Modal&quot; which opens a Modal.</li>
-<li>Adds a plugin setting tab to the settings page.</li>
-<li>Registers a global click event and output &#39;click&#39; to the console.</li>
-<li>Registers a global interval which logs &#39;setInterval&#39; to the console.</li>
-</ul>
-<a id="md:first-time-developing-plugins" class="tsd-anchor"></a><h2><a href="#md:first-time-developing-plugins">First time developing plugins?</a></h2><p>Quick starting guide for new plugin devs:</p>
-<ul>
-<li>Check if <a href="https://obsidian.md/plugins">someone already developed a plugin for what you want</a>! There might be an existing plugin similar enough that you can partner up with.</li>
-<li>Make a copy of this repo as a template with the &quot;Use this template&quot; button (login to GitHub if you don&#39;t see it).</li>
-<li>Clone your repo to a local development folder. For convenience, you can place this folder in your <code>.obsidian/plugins/your-plugin-name</code> folder.</li>
-<li>Install NodeJS, then run <code>npm i</code> in the command line under your repo folder.</li>
-<li>Run <code>npm run dev</code> to compile your plugin from <code>main.ts</code> to <code>main.js</code>.</li>
-<li>Make changes to <code>main.ts</code> (or create new <code>.ts</code> files). Those changes should be automatically compiled into <code>main.js</code>.</li>
-<li>Reload Obsidian to load the new version of your plugin.</li>
-<li>Enable plugin in settings window.</li>
-<li>For updates to the Obsidian API run <code>npm update</code> in the command line under your repo folder.</li>
-</ul>
-<a id="md:releasing-new-releases" class="tsd-anchor"></a><h2><a href="#md:releasing-new-releases">Releasing new releases</a></h2><ul>
-<li>Update your <code>manifest.json</code> with your new version number, such as <code>1.0.1</code>, and the minimum Obsidian version required for your latest release.</li>
-<li>Update your <code>versions.json</code> file with <code>&quot;new-plugin-version&quot;: &quot;minimum-obsidian-version&quot;</code> so older versions of Obsidian can download an older version of your plugin that&#39;s compatible.</li>
-<li>Create new GitHub release using your new version number as the &quot;Tag version&quot;. Use the exact version number, don&#39;t include a prefix <code>v</code>. See here for an example: <a href="https://github.com/obsidianmd/obsidian-sample-plugin/releases">https://github.com/obsidianmd/obsidian-sample-plugin/releases</a></li>
-<li>Upload the files <code>manifest.json</code>, <code>main.js</code>, <code>styles.css</code> as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.</li>
-<li>Publish the release.</li>
-</ul>
-<blockquote>
-<p>You can simplify the version bump process by running <code>npm version patch</code>, <code>npm version minor</code> or <code>npm version major</code> after updating <code>minAppVersion</code> manually in <code>manifest.json</code>.
-The command will bump version in <code>manifest.json</code> and <code>package.json</code>, and add the entry for the new version to <code>versions.json</code></p>
+<div class="tsd-panel tsd-typography"><a id="md:obsidian-js-engine-plugin" class="tsd-anchor"></a><h1><a href="#md:obsidian-js-engine-plugin">Obsidian JS Engine Plugin</a></h1><p>This plugin for Obsidian allows you to run JavaScript from within your notes using special code blocks.</p>
+<a id="md:usage" class="tsd-anchor"></a><h2><a href="#md:usage">Usage</a></h2><p>Start by creating a code block with the <code>js-engine</code> plugin. Inside the code block you can write any JS code and at the end return a value. 
+The plugin will then render the returned value instead of the code block. When you return nothing, the plugin will not render anything and the code block will be invisible.</p>
+<a id="md:api-docs" class="tsd-anchor"></a><h2><a href="#md:api-docs">API Docs</a></h2><p>The following variables are available in the code blocks.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>app</td>
+<td><code>App</code> (Obsidian)</td>
+</tr>
+<tr>
+<td>engine</td>
+<td><code>API</code> (this plugin)</td>
+</tr>
+<tr>
+<td>context</td>
+<td><code>ExecutionContext</code> (this plugin) or <code>undefined</code></td>
+</tr>
+<tr>
+<td>component</td>
+<td><code>Component</code> (Obsidian)</td>
+</tr>
+<tr>
+<td>container</td>
+<td><code>HTMLElement</code></td>
+</tr>
+</tbody></table>
+<p>Documentation for the API and types that are available inside the code block can be found <a href="https://mprojectscode.github.io/obsidian-js-engine-plugin/classes/API.API.html">here</a>.</p>
+<a id="md:examples" class="tsd-anchor"></a><h2><a href="#md:examples">Examples</a></h2><a id="md:markdown-builder" class="tsd-anchor"></a><h3><a href="#md:markdown-builder">Markdown Builder</a></h3><pre><code class="language-js"><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-2">markdownBuilder</span><span class="hl-1"> = </span><span class="hl-2">engine</span><span class="hl-1">.</span><span class="hl-2">markdown</span><span class="hl-1">.</span><span class="hl-3">createBuilder</span><span class="hl-1">()</span><br/><br/><span class="hl-2">markdownBuilder</span><span class="hl-1">.</span><span class="hl-3">createHeading</span><span class="hl-1">(</span><span class="hl-4">2</span><span class="hl-1">, </span><span class="hl-5">&quot;Test Heading&quot;</span><span class="hl-1">)</span><br/><span class="hl-2">markdownBuilder</span><span class="hl-1">.</span><span class="hl-3">createParagraph</span><span class="hl-1">(</span><span class="hl-5">&quot;This is a test paragraph.&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-2">markdownBuilder</span><span class="hl-1">.</span><span class="hl-3">createHeading</span><span class="hl-1">(</span><span class="hl-4">3</span><span class="hl-1">, </span><span class="hl-5">&quot;This is a sub heading&quot;</span><span class="hl-1">)</span><br/><span class="hl-2">markdownBuilder</span><span class="hl-1">.</span><span class="hl-3">createHeading</span><span class="hl-1">(</span><span class="hl-4">4</span><span class="hl-1">, </span><span class="hl-5">&quot;This is a sub sub heading&quot;</span><span class="hl-1">)</span><br/><span class="hl-2">markdownBuilder</span><span class="hl-1">.</span><span class="hl-3">createParagraph</span><span class="hl-1">(</span><span class="hl-5">&quot;This is another test paragraph.&quot;</span><span class="hl-1">)</span>
+</code><button>Copy</button></pre>
+<a id="md:output" class="tsd-anchor"></a><h4><a href="#md:output">Output</a></h4><blockquote>
+<a id="md:test-heading" class="tsd-anchor"></a><h2><a href="#md:test-heading">Test Heading</a></h2><p>This is a test paragraph.</p>
+<a id="md:this-is-a-sub-heading" class="tsd-anchor"></a><h3><a href="#md:this-is-a-sub-heading">This is a sub heading</a></h3><a id="md:this-is-a-sub-sub-heading" class="tsd-anchor"></a><h4><a href="#md:this-is-a-sub-sub-heading">This is a sub sub heading</a></h4><p>This is another test paragraph.</p>
 </blockquote>
-<a id="md:adding-your-plugin-to-the-community-plugin-list" class="tsd-anchor"></a><h2><a href="#md:adding-your-plugin-to-the-community-plugin-list">Adding your plugin to the community plugin list</a></h2><ul>
-<li>Check <a href="https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md">https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md</a></li>
-<li>Publish an initial version.</li>
-<li>Make sure you have a <code>README.md</code> file in the root of your repo.</li>
-<li>Make a pull request at <a href="https://github.com/obsidianmd/obsidian-releases">https://github.com/obsidianmd/obsidian-releases</a> to add your plugin.</li>
-</ul>
-<a id="md:how-to-use" class="tsd-anchor"></a><h2><a href="#md:how-to-use">How to use</a></h2><ul>
-<li>Clone this repo.</li>
-<li><code>npm i</code> or <code>yarn</code> to install dependencies</li>
-<li><code>npm run dev</code> to start compilation in watch mode.</li>
-</ul>
-<a id="md:manually-installing-the-plugin" class="tsd-anchor"></a><h2><a href="#md:manually-installing-the-plugin">Manually installing the plugin</a></h2><ul>
-<li>Copy over <code>main.js</code>, <code>styles.css</code>, <code>manifest.json</code> to your vault <code>VaultFolder/.obsidian/plugins/your-plugin-id/</code>.</li>
-</ul>
-<a id="md:improve-code-quality-with-eslint-optional" class="tsd-anchor"></a><h2><a href="#md:improve-code-quality-with-eslint-optional">Improve code quality with eslint (optional)</a></h2><ul>
-<li><a href="https://eslint.org/">ESLint</a> is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code.</li>
-<li>To use eslint with this project, make sure to install eslint from terminal:<ul>
-<li><code>npm install -g eslint</code></li>
-</ul>
-</li>
-<li>To use eslint to analyze this project use this command:<ul>
-<li><code>eslint main.ts</code></li>
-<li>eslint will then create a report with suggestions for code improvement by file and line number.</li>
-</ul>
-</li>
-<li>If your source code is in a folder, such as <code>src</code>, you can use eslint with this command to analyze all files in that folder:<ul>
-<li><code>eslint .\src\</code></li>
-</ul>
-</li>
-</ul>
-<a id="md:funding-url" class="tsd-anchor"></a><h2><a href="#md:funding-url">Funding URL</a></h2><p>You can include funding URLs where people who use your plugin can financially support it.</p>
-<p>The simple way is to set the <code>fundingUrl</code> field to your link in your <code>manifest.json</code> file:</p>
-<pre><code class="language-json"><span class="hl-0">{</span><br/><span class="hl-0">    </span><span class="hl-1">&quot;fundingUrl&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;https://buymeacoffee.com&quot;</span><br/><span class="hl-0">}</span>
+<a id="md:rendering-strings-as-markdown" class="tsd-anchor"></a><h3><a href="#md:rendering-strings-as-markdown">Rendering Strings as Markdown</a></h3><pre><code class="language-js"><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-2">str</span><span class="hl-1"> = </span><span class="hl-5">&quot;*test*&quot;</span><span class="hl-1">;</span><br/><span class="hl-6">return</span><span class="hl-1"> </span><span class="hl-2">str</span><span class="hl-1">;</span>
 </code><button>Copy</button></pre>
-<p>If you have multiple URLs, you can also do:</p>
-<pre><code class="language-json"><span class="hl-0">{</span><br/><span class="hl-0">    </span><span class="hl-1">&quot;fundingUrl&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">        </span><span class="hl-1">&quot;Buy Me a Coffee&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;https://buymeacoffee.com&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-1">&quot;GitHub Sponsor&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;https://github.com/sponsors&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-1">&quot;Patreon&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;https://www.patreon.com/&quot;</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+<pre><code class="language-js"><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-2">str</span><span class="hl-1"> = </span><span class="hl-5">&quot;*test*&quot;</span><span class="hl-1">;</span><br/><span class="hl-6">return</span><span class="hl-1"> </span><span class="hl-2">engine</span><span class="hl-1">.</span><span class="hl-2">markdown</span><span class="hl-1">.</span><span class="hl-3">create</span><span class="hl-1">(</span><span class="hl-2">str</span><span class="hl-1">);</span>
 </code><button>Copy</button></pre>
-<a id="md:api-documentation" class="tsd-anchor"></a><h2><a href="#md:api-documentation">API Documentation</a></h2><p>See <a href="https://github.com/obsidianmd/obsidian-api">https://github.com/obsidianmd/obsidian-api</a></p>
+<p>The top example renders the string as plain text and the second one renders the text as markdown.</p>
+<a id="md:output-1" class="tsd-anchor"></a><h4><a href="#md:output-1">Output</a></h4><blockquote>
+<p>*test*</p>
+</blockquote>
+<blockquote>
+<p><em>test</em></p>
+</blockquote>
+<a id="md:importing-js" class="tsd-anchor"></a><h3><a href="#md:importing-js">Importing JS</a></h3><pre><code class="language-js"><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-2">lib</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-2">engine</span><span class="hl-1">.</span><span class="hl-3">importJs</span><span class="hl-1">(</span><span class="hl-5">&quot;lib.js&quot;</span><span class="hl-1">);</span><br/><span class="hl-6">return</span><span class="hl-1"> </span><span class="hl-2">lib</span><span class="hl-1">.</span><span class="hl-3">getGreeting</span><span class="hl-1">();</span>
+</code><button>Copy</button></pre>
+<p>With a file named <code>lib.js</code> in the root of the vault.</p>
+<pre><code class="language-js"><span class="hl-6">export</span><span class="hl-1"> </span><span class="hl-0">function</span><span class="hl-1"> </span><span class="hl-3">getGreeting</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-6">return</span><span class="hl-1"> </span><span class="hl-5">&quot;Hello!&quot;</span><span class="hl-1">;</span><br/><span class="hl-1">}</span>
+</code><button>Copy</button></pre>
+<a id="md:output-2" class="tsd-anchor"></a><h4><a href="#md:output-2">Output</a></h4><blockquote>
+<p>Hello!</p>
+</blockquote>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -107,17 +92,33 @@ The command will bump version in <code>manifest.json</code> and <code>package.js
 <ul>
 <li>
 <ul>
-<li><a href="#md:obsidian-sample-plugin"><span>Obsidian <wbr/>Sample <wbr/>Plugin</span></a></li>
+<li><a href="#md:obsidian-js-engine-plugin"><span>Obsidian JS <wbr/>Engine <wbr/>Plugin</span></a></li>
 <li>
 <ul>
-<li><a href="#md:first-time-developing-plugins"><span>First time developing plugins?</span></a></li>
-<li><a href="#md:releasing-new-releases"><span>Releasing new releases</span></a></li>
-<li><a href="#md:adding-your-plugin-to-the-community-plugin-list"><span>Adding your plugin to the community plugin list</span></a></li>
-<li><a href="#md:how-to-use"><span>How to use</span></a></li>
-<li><a href="#md:manually-installing-the-plugin"><span>Manually installing the plugin</span></a></li>
-<li><a href="#md:improve-code-quality-with-eslint-optional"><span>Improve code quality with eslint (optional)</span></a></li>
-<li><a href="#md:funding-url"><span>Funding URL</span></a></li>
-<li><a href="#md:api-documentation"><span>API <wbr/>Documentation</span></a></li></ul></li></ul></li></ul></div></details></div>
+<li><a href="#md:usage"><span>Usage</span></a></li>
+<li><a href="#md:api-docs"><span>API <wbr/>Docs</span></a></li>
+<li><a href="#md:examples"><span>Examples</span></a></li>
+<li>
+<ul>
+<li><a href="#md:markdown-builder"><span>Markdown <wbr/>Builder</span></a></li>
+<li>
+<ul>
+<li><a href="#md:output"><span>Output</span></a></li></ul></li></ul></li>
+<li><a href="#md:test-heading"><span>Test <wbr/>Heading</span></a></li>
+<li>
+<ul>
+<li><a href="#md:this-is-a-sub-heading"><span>This is a sub heading</span></a></li>
+<li>
+<ul>
+<li><a href="#md:this-is-a-sub-sub-heading"><span>This is a sub sub heading</span></a></li></ul></li>
+<li><a href="#md:rendering-strings-as-markdown"><span>Rendering <wbr/>Strings as <wbr/>Markdown</span></a></li>
+<li>
+<ul>
+<li><a href="#md:output-1"><span>Output</span></a></li></ul></li>
+<li><a href="#md:importing-js"><span>Importing JS</span></a></li>
+<li>
+<ul>
+<li><a href="#md:output-2"><span>Output</span></a></li></ul></li></ul></li></ul></li></ul></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>obsidian-<wbr/>js-<wbr/>engine-<wbr/>plugin</span></a>
 <ul class="tsd-small-nested-navigation">

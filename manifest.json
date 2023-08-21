@@ -3,9 +3,9 @@
 	"name": "JS Engine Plugin",
 	"version": "0.0.1",
 	"minAppVersion": "1.3.5",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
+	"description": "Run JavaScript from within your notes.",
 	"author": "Moritz Jung",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"authorUrl": "https://mprojectscode.github.io/",
+	"fundingUrl": "",
 	"isDesktopOnly": false
 }

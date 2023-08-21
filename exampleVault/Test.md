@@ -5,8 +5,13 @@ number: 12234234
 
 Some text
 ```js-engine
-let a = "test";
+let a = "*test*";
 return a;
+```
+
+```js-engine
+let a = "*test*";
+return engine.markdown.create(a);
 ```
 Some more text
 
@@ -73,3 +78,4 @@ const inputField2 = meta_bind_api.createInputFieldFromString("INPUT[number:numbe
 component.addChild(inputField)
 component.addChild(inputField2)
 ```
+
