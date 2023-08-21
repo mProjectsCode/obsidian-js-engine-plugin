@@ -1,9 +1,9 @@
 import { App, Plugin, PluginManifest } from 'obsidian';
-import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings, JsEnginePluginSettingTab } from './Settings';
+import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings } from './Settings';
 import { Mode } from 'codemirror';
 import { JsMDRC } from './JsMDRC';
 import { API } from './api/API';
-import { MessageManager, MessageType } from './messages/MessageManager';
+import { MessageManager } from './messages/MessageManager';
 import { InstanceId, InstanceType } from './api/InstanceId';
 import { JsEngine } from './jsEngine/JsEngine';
 
