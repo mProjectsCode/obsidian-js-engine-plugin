@@ -1,13 +1,9 @@
 import { App, PluginSettingTab } from 'obsidian';
 import JsEnginePlugin from './main';
 
-export interface JsEnginePluginSettings {
-	mySetting: string;
-}
+export interface JsEnginePluginSettings {}
 
-export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {
-	mySetting: 'default',
-};
+export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {};
 
 export class JsEnginePluginSettingTab extends PluginSettingTab {
 	plugin: JsEnginePlugin;
@@ -26,6 +22,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			return;
 		}
 
-		containerEl.createEl('h2', { text: 'Settings for my awesome plugin.' });
+		containerEl.createEl('h2', { text: 'JS Engine Settings' });
+		containerEl.createEl('p', { text: 'Currently Empty, but there will be stuff here later.' });
 	}
 }

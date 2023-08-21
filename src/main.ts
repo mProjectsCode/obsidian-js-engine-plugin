@@ -28,16 +28,11 @@ export default class JsEnginePlugin extends Plugin {
 
 		this.messageManager.initStatusBarItem();
 
-		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
-		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
-		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
-		this.api.message.createMessage(MessageType.INFO, 'test', 'test content');
-
-		this.addCommand({
-			id: 'test',
-			name: 'JS Engine Test Command',
-			callback: () => {},
-		});
+		// this.addCommand({
+		// 	id: 'test',
+		// 	name: 'JS Engine Test Command',
+		// 	callback: () => {},
+		// });
 
 		this.registerMarkdownCodeBlockProcessor('js-engine', (source, el, ctx) => {
 			const mdrc = new JsMDRC(el, this, source, ctx);
