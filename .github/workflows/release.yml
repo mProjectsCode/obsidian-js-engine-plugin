@@ -7,7 +7,7 @@ on:
             - '*' # Push events to matching any tag format, i.e. 1.0, 20.15.10
 
 env:
-    PLUGIN_NAME: obsidian-js-engine-plugin # Change this to the name of your plugin-id folder
+    PLUGIN_NAME: js-engine # Change this to the name of your plugin-id folder
 
 jobs:
     build:
