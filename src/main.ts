@@ -24,7 +24,7 @@ export default class JsEnginePlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
+		// this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
 
 		this.messageManager.initStatusBarItem();
 

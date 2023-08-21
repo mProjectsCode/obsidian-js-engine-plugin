@@ -22,7 +22,6 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			return;
 		}
 
-		containerEl.createEl('h2', { text: 'JS Engine Settings' });
 		containerEl.createEl('p', { text: 'Currently Empty, but there will be stuff here later.' });
 	}
 }
