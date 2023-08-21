@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-js-engine-plugin",
-	"name": "JS Engine Plugin",
+	"id": "js-engine",
+	"name": "JS Engine",
 	"version": "0.0.2",
 	"minAppVersion": "1.3.5",
 	"description": "Run JavaScript from within your notes.",

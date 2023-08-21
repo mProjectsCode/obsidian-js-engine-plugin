@@ -48,7 +48,7 @@ const context = await esbuild.context({
 	logLevel: 'info',
 	sourcemap: 'inline',
 	treeShaking: true,
-	outdir: 'exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/',
+	outdir: 'exampleVault/.obsidian/plugins/js-engine/',
 	outbase: 'src',
 	plugins: [
 		copy({
