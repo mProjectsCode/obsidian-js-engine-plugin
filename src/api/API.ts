@@ -38,7 +38,13 @@ export class API {
 	 * @param path the vault relative path of the file to import
 	 */
 	public async importJs(path: string): Promise<any> {
-		const fullPath = this.app.vault.adapter.getResourcePath(path);
+		let fullPath = this.app.vault.adapter.getResourcePath(path);
+		if (!fullPath.includes('?')) {
+			const scriptFile = this.app.metadataCache.getFirstLinkpathDest(path, "")
+			if (scriptFile) {
+				fullPath += '?' + scriptFile.stat.mtime
+			}
+		}
 		return import(fullPath);
 	}
 
