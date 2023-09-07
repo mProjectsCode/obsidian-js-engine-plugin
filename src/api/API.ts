@@ -3,6 +3,7 @@ import { App, Plugin } from 'obsidian';
 import JsEnginePlugin from '../main';
 import { InstanceId } from './InstanceId';
 import { MessageAPI } from './MessageAPI';
+import { ReactiveComponent, ReactiveRenderFunction } from './reactive/ReactiveComponent';
 
 export class API {
 	/**
@@ -49,5 +50,9 @@ export class API {
 	 */
 	public getPlugin(pluginId: string): Plugin {
 		return this.app.plugins.getPlugin(pluginId);
+	}
+
+	public reactive(fn: ReactiveRenderFunction, ...initialArgs: any[]): ReactiveComponent {
+		return new ReactiveComponent(fn, initialArgs);
 	}
 }

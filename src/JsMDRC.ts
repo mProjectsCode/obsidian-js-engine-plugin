@@ -7,6 +7,7 @@ import { MessageWrapper } from './messages/MessageManager';
 import MessageComponent from './messages/MessageComponent.svelte';
 
 import { JsExecution } from './jsEngine/JsExecution';
+import { ResultRenderer } from './ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;
@@ -68,43 +69,48 @@ export class JsMDRC extends MarkdownRenderChild {
 	async renderResults(container: HTMLElement): Promise<void> {
 		const args = this.buildExecutionArgs(container);
 		const context = this.buildExecutionContext();
+
 		this.jsExecution = await this.tryRun(args, context);
-		let result = this.jsExecution.result;
+		const result = this.jsExecution.result;
 
-		if (!result) {
-			return;
-		}
+		const renderer = new ResultRenderer(this.plugin, container, this.ctx.sourcePath, this);
+		await renderer.render(result);
 
-		if (typeof result === 'string') {
-			container.innerText = result;
-			return;
-		}
-
-		if (result instanceof MarkdownBuilder) {
-			result = result.toMarkdown();
-		}
-
-		if (result instanceof MarkdownString) {
-			console.log(result.content);
-			await result.render(container, this.ctx.sourcePath, this);
-			return;
-		}
-
-		if (result instanceof HTMLElement) {
-			container.append(result);
-		}
-
-		if (result instanceof MessageWrapper) {
-			new MessageComponent({
-				target: container,
-				props: {
-					messageWrapper: result,
-					messageManager: this.plugin.messageManager,
-					showDeleteButton: false,
-					showMessageSource: false,
-				},
-			});
-		}
+		//
+		// if (!result) {
+		// 	return;
+		// }
+		//
+		// if (typeof result === 'string') {
+		// 	container.innerText = result;
+		// 	return;
+		// }
+		//
+		// if (result instanceof MarkdownBuilder) {
+		// 	result = result.toMarkdown();
+		// }
+		//
+		// if (result instanceof MarkdownString) {
+		// 	console.log(result.content);
+		// 	await result.render(container, this.ctx.sourcePath, this);
+		// 	return;
+		// }
+		//
+		// if (result instanceof HTMLElement) {
+		// 	container.append(result);
+		// }
+		//
+		// if (result instanceof MessageWrapper) {
+		// 	new MessageComponent({
+		// 		target: container,
+		// 		props: {
+		// 			messageWrapper: result,
+		// 			messageManager: this.plugin.messageManager,
+		// 			showDeleteButton: false,
+		// 			showMessageSource: false,
+		// 		},
+		// 	});
+		// }
 	}
 
 	renderExecutionStats(container: HTMLElement): void {
