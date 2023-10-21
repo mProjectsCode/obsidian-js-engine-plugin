@@ -34,6 +34,8 @@ markdownBuilder.createParagraph('This is a test paragraph.');
 markdownBuilder.createHeading(3, 'This is a sub heading');
 markdownBuilder.createHeading(4, 'This is a sub sub heading');
 markdownBuilder.createParagraph('This is another test paragraph.');
+
+return markdownBuilder;
 ```
 
 #### Output
