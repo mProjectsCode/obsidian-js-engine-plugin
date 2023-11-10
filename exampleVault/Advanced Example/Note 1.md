@@ -53,7 +53,7 @@ mdBuilder.createTable(
 	["Quest", "Completed", "Started On", "Completed On"],
 	quests.map(x => [
 		x.name,
-		x.removed !== -1 ? "[x]" : "[ ]",
+		x.removed !== -1 ? "☑" : "☐",
 		x.added,
 		x.removed !== -1 ? x.removed : "", 
 	])

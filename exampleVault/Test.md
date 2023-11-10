@@ -1,5 +1,5 @@
 ---
-text: asdadasd
+text: asdakdbg
 number: 12234234
 ---
 
@@ -14,6 +14,8 @@ let a = "*test*";
 return engine.markdown.create(a);
 ```
 Some more text
+
+# Big Markdown Chunk
 
 ```js-engine
 let markdownBuilder = engine.markdown.createBuilder()
@@ -84,3 +86,40 @@ component.addChild(inputField)
 component.addChild(inputField2)
 ```
 
+# Reactive Idea (TODO)
+
+```js
+// define a function that takes in some args and returns what should be rendered
+function render(args) {
+	return 'Something';
+}
+
+// create a reactive component, passing in the function and arguments for the initial render
+const reactive = engine.reactive(render, initialArgs);
+
+// subscribe to events and call refresh with new arguments, which causes the render function to be rerun with these arguments, replacing the existing content
+event.on('...', (args) => reactive.refresh(args));
+
+// return the reactive component
+return reactive;
+```
+
+```js-engine
+
+function render(args) {
+	console.log(args)
+	return args?.text ?? "undefined";
+}
+
+const reactive = engine.reactive(render, context.metadata.frontmatter);
+
+const unloadCb = engine.app.metadataCache.on('changed', async (file, data, cache) => { 
+	if (file.path === context.file.path) { 
+		reactive.refresh(cache.frontmatter);
+	}
+}); 
+
+component.registerEvent(unloadCb);
+
+return reactive;
+```

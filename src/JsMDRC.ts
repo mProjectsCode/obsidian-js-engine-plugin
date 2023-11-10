@@ -7,6 +7,7 @@ import { MessageWrapper } from './messages/MessageManager';
 import MessageComponent from './messages/MessageComponent.svelte';
 
 import { JsExecution } from './jsEngine/JsExecution';
+import { ResultRenderer } from './ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;
