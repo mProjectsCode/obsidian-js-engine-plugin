@@ -1,11 +1,22 @@
-import { App } from 'obsidian';
+import { App, Component } from "obsidian";
 import JsEnginePlugin from '../main';
 import { ExecutionArgument, ExecutionContext } from '../ArgumentManager';
 import { MessageType, MessageWrapper } from '../messages/MessageManager';
 import { API } from '../api/API';
 import { InstanceId, InstanceType } from '../api/InstanceId';
+import { Obj } from "tern";
 
 const AsyncFunction = async function (): Promise<void> {}.constructor;
+
+export interface JsExecutionParams {
+	app: App;
+	plugin: JsEnginePlugin;
+	code: string;
+	component: Component;
+	container?: HTMLElement | undefined;
+	context?: ExecutionContext | undefined;
+	contextOverrides?: Record<string, unknown> | undefined;
+}
 
 export class JsExecution {
 	readonly app: App;
@@ -14,7 +25,7 @@ export class JsExecution {
 	uuid: string;
 	code: string;
 	args: ExecutionArgument[];
-	context: ExecutionContext | undefined;
+	context: ExecutionContext & Record<string, unknown>;
 	apiInstance: API;
 	messages: MessageWrapper[];
 
@@ -27,12 +38,12 @@ export class JsExecution {
 	functionBuildTime: number | undefined;
 	functionRunTime: number | undefined;
 
-	constructor(app: App, plugin: JsEnginePlugin, code: string, args: ExecutionArgument[], context?: ExecutionContext) {
-		this.app = app;
-		this.plugin = plugin;
+	constructor(params: JsExecutionParams) {
+		this.app = params.app;
+		this.plugin = params.plugin;
 
-		this.code = code;
-		this.context = context;
+		this.code = params.code;
+		this.context = Object.assign({}, params.context, params.contextOverrides);
 
 		this.uuid = self.crypto.randomUUID();
 		this.apiInstance = new API(this.app, this.plugin, new InstanceId(InstanceType.JS_EXECUTION, this.uuid));
@@ -53,7 +64,14 @@ export class JsExecution {
 				key: 'context',
 				value: this.context,
 			},
-			...args,
+			{
+				key: 'component',
+				value: params.component,
+			},
+			{
+				key: 'container',
+				value: params.container,
+			},
 		];
 	}
 

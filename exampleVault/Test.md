@@ -1,5 +1,5 @@
 ---
-text: taasd
+text: asdadasd
 number: 12234234
 ---
 
@@ -49,6 +49,11 @@ return markdownBuilder
 
 ```js-engine
 let lib = await engine.importJs("lib.js");
+return lib.getGreeting();
+```
+
+```js-engine
+let lib = await self.require.import("lib.js");
 return lib.getGreeting();
 ```
 

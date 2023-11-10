@@ -48,63 +48,24 @@ export class JsMDRC extends MarkdownRenderChild {
 		};
 	}
 
-	buildExecutionArgs(container: HTMLElement): ExecutionArgument[] {
-		return [
-			{
-				key: 'component',
-				value: this,
-			},
-			{
-				key: 'container',
-				value: container,
-			},
-		];
-	}
-
-	async tryRun(args: ExecutionArgument[], context: ExecutionContext): Promise<JsExecution> {
-		return this.plugin.jsEngine.execute(this.content, args, context);
+	async tryRun(context: ExecutionContext): Promise<JsExecution> {
+		return this.plugin.jsEngine.execute({
+			code: this.content,
+			context: context,
+			contextOverrides: {},
+			component: this,
+			container: this.containerEl,
+		});
 	}
 
 	async renderResults(container: HTMLElement): Promise<void> {
-		const args = this.buildExecutionArgs(container);
 		const context = this.buildExecutionContext();
-		this.jsExecution = await this.tryRun(args, context);
-		let result = this.jsExecution.result;
 
-		if (!result) {
-			return;
-		}
+		this.jsExecution = await this.tryRun(context);
+		const result = this.jsExecution.result;
 
-		if (typeof result === 'string') {
-			container.innerText = result;
-			return;
-		}
-
-		if (result instanceof MarkdownBuilder) {
-			result = result.toMarkdown();
-		}
-
-		if (result instanceof MarkdownString) {
-			console.log(result.content);
-			await result.render(container, this.ctx.sourcePath, this);
-			return;
-		}
-
-		if (result instanceof HTMLElement) {
-			container.append(result);
-		}
-
-		if (result instanceof MessageWrapper) {
-			new MessageComponent({
-				target: container,
-				props: {
-					messageWrapper: result,
-					messageManager: this.plugin.messageManager,
-					showDeleteButton: false,
-					showMessageSource: false,
-				},
-			});
-		}
+		const renderer = new ResultRenderer(this.plugin, container, this.ctx.sourcePath, this);
+		await renderer.render(result);
 	}
 
 	renderExecutionStats(container: HTMLElement): void {
