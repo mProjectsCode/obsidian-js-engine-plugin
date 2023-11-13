@@ -1,10 +1,11 @@
 import { MarkdownAPI } from './MarkdownAPI';
-import { App, Plugin } from 'obsidian';
-import JsEnginePlugin from '../main';
-import { InstanceId } from './InstanceId';
+import { type App, type Plugin } from 'obsidian';
+import type JsEnginePlugin from '../main';
+import { type InstanceId } from './InstanceId';
 import { MessageAPI } from './MessageAPI';
-import { ReactiveComponent, ReactiveRenderFunction } from './reactive/ReactiveComponent';
+import { ReactiveComponent } from './reactive/ReactiveComponent';
 import { LibAPI } from './LibAPI';
+import { type JsFunc } from '../jsEngine/JsExecution';
 
 export class API {
 	/**
@@ -44,6 +45,7 @@ export class API {
 	 *
 	 * @param path the vault relative path of the file to import
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public async importJs(path: string): Promise<any> {
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 		if (!fullPath.includes('?')) {
@@ -64,7 +66,7 @@ export class API {
 		return this.app.plugins.getPlugin(pluginId);
 	}
 
-	public reactive(fn: ReactiveRenderFunction, ...initialArgs: any[]): ReactiveComponent {
+	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
 		return new ReactiveComponent(fn, initialArgs);
 	}
 }

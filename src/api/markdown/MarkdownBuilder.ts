@@ -1,5 +1,5 @@
 import { AbstractMarkdownElementContainer } from './AbstractMarkdownElementContainer';
-import { AbstractMarkdownElement } from './AbstractMarkdownElement';
+import { type AbstractMarkdownElement } from './AbstractMarkdownElement';
 
 export class MarkdownBuilder extends AbstractMarkdownElementContainer {
 	constructor() {
@@ -10,7 +10,7 @@ export class MarkdownBuilder extends AbstractMarkdownElementContainer {
 		return this.markdownElements.map(x => x.toString()).join('\n\n');
 	}
 
-	public allowElement(element: AbstractMarkdownElement): boolean {
+	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
 	}
 }

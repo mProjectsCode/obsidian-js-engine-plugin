@@ -1,8 +1,8 @@
-import { MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, TAbstractFile, TFile } from 'obsidian';
-import JsEnginePlugin from './main';
-import { ExecutionContext } from './ArgumentManager';
+import { type MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, type TAbstractFile, TFile } from 'obsidian';
+import type JsEnginePlugin from './main';
+import { type ExecutionContext } from './ArgumentManager';
 
-import { JsExecution } from './jsEngine/JsExecution';
+import { type JsExecution } from './jsEngine/JsExecution';
 import { ResultRenderer } from './ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {
@@ -79,7 +79,7 @@ export class JsMDRC extends MarkdownRenderChild {
 			item.setTitle('Rerun');
 			item.setIcon('rotate-ccw');
 			item.onClick(() => {
-				this.render();
+				void this.render();
 			});
 		});
 

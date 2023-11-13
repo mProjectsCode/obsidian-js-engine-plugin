@@ -1,4 +1,4 @@
-import { Subscriber, Unsubscriber, Writable } from 'svelte/store';
+import { type Subscriber, type Unsubscriber, type Writable } from 'svelte/store';
 
 export type Store<T> = Writable<T> & {
 	get(): T;
@@ -38,7 +38,7 @@ export class StoreObj<T> implements Store<T> {
 		return this.value;
 	}
 
-	subscribe(run: Subscriber<T>, invalidate?: Invalidator<T>): Unsubscriber {
+	subscribe(run: Subscriber<T>, _?: Invalidator<T>): Unsubscriber {
 		const subscriberId = this.subscriberCounter;
 		this.subscriberCounter += 1;
 		// console.trace('sub', subscriberId);

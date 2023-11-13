@@ -207,7 +207,7 @@ export class CodeBlockElement extends AbstractMarkdownElementContainer {
 }
 
 export class BlockQuoteElement extends AbstractMarkdownElementContainer {
-	public allowElement(element: AbstractMarkdownElement): boolean {
+	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
 	}
 
@@ -229,7 +229,7 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 		this.args = args;
 	}
 
-	public allowElement(element: AbstractMarkdownElement): boolean {
+	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
 	}
 
@@ -249,7 +249,7 @@ export class TableElement extends AbstractMarkdownElementContainer {
 		this.body = body;
 	}
 
-	public allowElement(element: AbstractMarkdownElement): boolean {
+	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
 	}
 

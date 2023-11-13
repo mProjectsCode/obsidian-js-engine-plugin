@@ -1,6 +1,6 @@
-import { App, Plugin, PluginManifest } from 'obsidian';
-import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettings } from './Settings';
-import { Mode } from 'codemirror';
+import { type App, Plugin, type PluginManifest } from 'obsidian';
+import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from './Settings';
+import { type Mode } from 'codemirror';
 import { JsMDRC } from './JsMDRC';
 import { API } from './api/API';
 import { MessageManager } from './messages/MessageManager';
@@ -47,7 +47,8 @@ export default class JsEnginePlugin extends Plugin {
 	onunload(): void {}
 
 	async loadSettings(): Promise<void> {
-		this.settings = Object.assign({}, JS_ENGINE_DEFAULT_SETTINGS, await this.loadData());
+		const loadedSettings = (await this.loadData()) as JsEnginePluginSettings;
+		this.settings = Object.assign({}, JS_ENGINE_DEFAULT_SETTINGS, loadedSettings);
 	}
 
 	async saveSettings(): Promise<void> {
@@ -58,6 +59,7 @@ export default class JsEnginePlugin extends Plugin {
 	 * Inspired by https://github.com/SilentVoid13/Templater/blob/487805b5ad1fd7fbc145040ed82b4c41fc2c48e2/src/editor/Editor.ts#L67
 	 */
 	async registerCodeMirrorMode(): Promise<void> {
+		/* eslint-disable */
 		const js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
 		if (js_mode == null || js_mode.name === 'null') {
 			console.log("Couldn't find js mode, can't enable syntax highlighting.");

@@ -1,4 +1,4 @@
-import { MarkdownElementType } from './MarkdownElementType';
+import { type MarkdownElementType } from './MarkdownElementType';
 import { MarkdownString } from './MarkdownString';
 
 export abstract class AbstractMarkdownElement {

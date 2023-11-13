@@ -1,23 +1,22 @@
-import { ResultRenderer } from '../../ResultRenderer';
-
-export type ReactiveRenderFunction = (...args: any[]) => unknown;
+import { type ResultRenderer } from '../../ResultRenderer';
+import { type JsFunc } from '../../jsEngine/JsExecution';
 
 export class ReactiveComponent {
-	readonly _render: ReactiveRenderFunction;
-	readonly initialArgs: any[];
+	readonly _render: JsFunc;
+	readonly initialArgs: unknown[];
 	renderer: ResultRenderer | undefined;
 
-	constructor(_render: ReactiveRenderFunction, initialArgs: any[]) {
+	constructor(_render: JsFunc, initialArgs: unknown[]) {
 		this._render = _render;
 		this.initialArgs = initialArgs;
 	}
 
-	public refresh(...args: any[]): void {
-		this.renderer?.render(this._render(...args));
+	public async refresh(...args: unknown[]): Promise<void> {
+		void this.renderer?.render(await this._render(...args));
 	}
 
 	public initialRender(): void {
-		this.refresh(...this.initialArgs);
+		void this.refresh(...this.initialArgs);
 	}
 
 	public setRenderer(renderer: ResultRenderer): void {

@@ -1,4 +1,4 @@
-import { CachedMetadata, TFile } from 'obsidian';
+import { type CachedMetadata, type TFile } from 'obsidian';
 
 export interface ExecutionContext {
 	file: TFile;

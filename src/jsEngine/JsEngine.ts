@@ -1,6 +1,6 @@
-import JsEnginePlugin from '../main';
-import { App } from 'obsidian';
-import { JsExecution, JsExecutionParams } from './JsExecution';
+import type JsEnginePlugin from '../main';
+import { type App } from 'obsidian';
+import { JsExecution, type JsExecutionParams } from './JsExecution';
 import { ExecutionStatsModal } from './ExecutionStatsModal';
 
 export type EngineExecutionParams = Omit<JsExecutionParams, 'app' | 'plugin'>;

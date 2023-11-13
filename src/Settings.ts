@@ -1,6 +1,7 @@
-import { App, PluginSettingTab } from 'obsidian';
-import JsEnginePlugin from './main';
+import { type App, PluginSettingTab } from 'obsidian';
+import type JsEnginePlugin from './main';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface JsEnginePluginSettings {}
 
 export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {};
@@ -14,14 +15,12 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const { containerEl } = this;
-
-		containerEl.empty();
+		this.containerEl.empty();
 
 		if (!this.plugin.settings) {
 			return;
 		}
 
-		containerEl.createEl('p', { text: 'Currently Empty, but there will be stuff here later.' });
+		this.containerEl.createEl('p', { text: 'Currently Empty, but there will be stuff here later.' });
 	}
 }

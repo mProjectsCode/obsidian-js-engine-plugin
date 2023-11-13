@@ -1,4 +1,4 @@
-import { API } from './API';
+import { type API } from './API';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
@@ -36,6 +36,7 @@ export class LibAPI {
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public itertools(): any {
 		return IterTools;
 	}

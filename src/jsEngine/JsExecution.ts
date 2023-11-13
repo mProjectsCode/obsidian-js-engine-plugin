@@ -1,11 +1,13 @@
-import { App, Component } from 'obsidian';
-import JsEnginePlugin from '../main';
-import { ExecutionArgument, ExecutionContext } from '../ArgumentManager';
-import { MessageType, MessageWrapper } from '../messages/MessageManager';
+import { type App, type Component } from 'obsidian';
+import type JsEnginePlugin from '../main';
+import { type ExecutionArgument, type ExecutionContext } from '../ArgumentManager';
+import { MessageType, type MessageWrapper } from '../messages/MessageManager';
 import { API } from '../api/API';
 import { InstanceId, InstanceType } from '../api/InstanceId';
 
 const AsyncFunction = async function (): Promise<void> {}.constructor;
+
+export type JsFunc = (...args: unknown[]) => Promise<unknown>;
 
 export interface JsExecutionParams {
 	app: App;
@@ -28,8 +30,8 @@ export class JsExecution {
 	apiInstance: API;
 	messages: MessageWrapper[];
 
-	func: ((...args: any[]) => Promise<unknown>) | undefined;
-	result: unknown | undefined;
+	func: JsFunc | undefined;
+	result: unknown;
 
 	functionBuildError: Error | undefined;
 	functionRunError: Error | undefined;
@@ -78,12 +80,17 @@ export class JsExecution {
 		const startTime = performance.now();
 
 		try {
-			this.func = AsyncFunction(...this.args.map(x => x.key), this.code);
+			this.func = AsyncFunction(...this.args.map(x => x.key), this.code) as JsFunc;
 		} catch (e) {
 			if (e instanceof Error) {
 				this.functionBuildError = e;
 
-				this.result = this.plugin.api?.message.createMessage(MessageType.ERROR, 'Failed to parse JS', `Failed to parse JS during execution "${this.uuid}"`, e.stack);
+				this.result = this.plugin.api?.message.createMessage(
+					MessageType.ERROR,
+					'Failed to parse JS',
+					`Failed to parse JS during execution "${this.uuid}"`,
+					e.stack,
+				);
 			}
 		}
 
@@ -107,7 +114,12 @@ export class JsExecution {
 			if (e instanceof Error) {
 				this.functionRunError = e;
 
-				this.result = this.apiInstance.message.createMessage(MessageType.ERROR, 'Failed to execute JS', `Failed to execute JS during execution "${this.uuid}"`, e.stack);
+				this.result = this.apiInstance.message.createMessage(
+					MessageType.ERROR,
+					'Failed to execute JS',
+					`Failed to execute JS during execution "${this.uuid}"`,
+					e.stack,
+				);
 			}
 		}
 

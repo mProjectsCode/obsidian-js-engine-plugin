@@ -2,8 +2,8 @@ import { MarkdownBuilder } from './api/markdown/MarkdownBuilder';
 import { MarkdownString } from './api/markdown/MarkdownString';
 import { MessageWrapper } from './messages/MessageManager';
 import MessageComponent from './messages/MessageComponent.svelte';
-import { Component } from 'obsidian';
-import JsEnginePlugin from './main';
+import { type Component } from 'obsidian';
+import type JsEnginePlugin from './main';
 import { ReactiveComponent } from './api/reactive/ReactiveComponent';
 
 export class ResultRenderer {

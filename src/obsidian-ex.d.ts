@@ -1,4 +1,4 @@
-import { Plugin, PluginManifest } from 'obsidian';
+import { type Plugin, type PluginManifest } from 'obsidian';
 
 declare module 'obsidian' {
 	interface App {

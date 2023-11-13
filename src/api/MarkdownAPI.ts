@@ -10,7 +10,7 @@ import {
 	TableElement,
 	TextElement,
 } from './markdown/AbstractMarkdownElementContainer';
-import { API } from './API';
+import { type API } from './API';
 
 /**
  * The markdown API provides utilities for creating markdown using js.
