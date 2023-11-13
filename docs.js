@@ -1,18 +1,16 @@
 const TypeDoc = require('typedoc');
 
 async function main() {
-	const app = new TypeDoc.Application();
+	const app = await TypeDoc.Application.bootstrapWithPlugins({
+		entryPoints: ['src/api/*'],
+		entryPointStrategy: 'expand',
+	});
 
 	// If you want TypeDoc to load tsconfig.json / typedoc.json files
 	app.options.addReader(new TypeDoc.TSConfigReader());
 	app.options.addReader(new TypeDoc.TypeDocReader());
 
-	app.bootstrap({
-		entryPoints: ['src/api/*'],
-		entryPointStrategy: 'expand',
-	});
-
-	const project = app.convert();
+	const project = await app.convert();
 
 	if (project) {
 		// Project may not have converted correctly
