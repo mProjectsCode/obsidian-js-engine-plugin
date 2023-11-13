@@ -1,10 +1,9 @@
 import JsEnginePlugin from '../main';
 import { App } from 'obsidian';
-import { ExecutionArgument, ExecutionContext } from '../ArgumentManager';
-import { JsExecution, JsExecutionParams } from "./JsExecution";
+import { JsExecution, JsExecutionParams } from './JsExecution';
 import { ExecutionStatsModal } from './ExecutionStatsModal';
 
-export type EngineExecutionParams = Omit<JsExecutionParams, 'app' | 'plugin'>
+export type EngineExecutionParams = Omit<JsExecutionParams, 'app' | 'plugin'>;
 
 export class JsEngine {
 	private readonly app: App;
@@ -22,7 +21,7 @@ export class JsEngine {
 	}
 
 	async execute(params: EngineExecutionParams): Promise<JsExecution> {
-		const execution = new JsExecution({app: this.app, plugin: this.plugin, ...params});
+		const execution = new JsExecution({ app: this.app, plugin: this.plugin, ...params });
 		this.activeExecutions.set(execution.uuid, execution);
 
 		execution.buildFunction();

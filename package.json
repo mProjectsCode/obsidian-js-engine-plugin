@@ -10,7 +10,7 @@
 		"test": "jest",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings=0 src/**",
-		"types": "tsc",
+		"types": "tsc --declaration --emitDeclarationOnly --outfile index.d.ts",
 		"docs": "node docs.js"
 	},
 	"keywords": [],
@@ -41,9 +41,11 @@
 		"typescript": "^5.1.6"
 	},
 	"dependencies": {
+		"@lemons_dev/parsinom": "^0.0.11",
 		"@popperjs/core": "^2.11.8",
+		"itertools-ts": "^1.27.0",
 		"obsidian-svelte": "^0.1.9",
-		"svelte-portal": "^2.2.0",
-		"svelte": "^4.0.1"
+		"svelte": "^4.0.1",
+		"svelte-portal": "^2.2.0"
 	}
 }

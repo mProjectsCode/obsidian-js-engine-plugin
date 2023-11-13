@@ -1,5 +1,5 @@
 ---
-text: asdakdbg
+text: this is some text
 number: 12234234
 ---
 
@@ -49,77 +49,91 @@ return markdownBuilder
 
 # Import Test
 
+You can import JS files that lie inside of your vault.
+
+JS Engine version:
+
 ```js-engine
 let lib = await engine.importJs("lib.js");
 return lib.getGreeting();
 ```
+
+Modules Plugin version:
 
 ```js-engine
 let lib = await self.require.import("lib.js");
 return lib.getGreeting();
 ```
 
+# Lib Test
+
+Importing packaged libraries works. In this example [parsiNOM](https://github.com/mProjectsCode/parsiNOM) is used.
+
 ```js-engine
-let lib = await engine.importJs("svelte_project/dist/assets/index-9a060cab.js");
-console.log(lib);
-console.log(lib.App);
+let { P, P_UTILS } = engine.lib.parsinom();
+
+const parser = P.sequence(
+	P_UTILS.letters(), 
+	P_UTILS.digits()
+).map(
+	([a, b]) => b + a
+);
+
+return parser.parse("test123");
 ```
 
-# Async Test
+This example uses [IterTools](https://github.com/Smoren/itertools-ts).
 
 ```js-engine
-return await engine.test()
+let { Stream } = engine.lib.itertools();
+
+const result = Stream.of([1, 1, 2, 2, 3, 4, 5])
+	.distinct()             // [1, 2, 3, 4, 5]
+	.map((x) => x ** 2)     // [1, 4, 9, 16, 25]
+	.filter((x) => x < 10)  // [1, 4, 9]
+	.toSum();               // 14
+
+return result;
 ```
 
 # Meta Bind Test
 
+You can interact with other plugins APIs, in this example [Meta Bind](https://github.com/mProjectsCode/obsidian-meta-bind-plugin) is used.
+
 ```js-engine
-const meta_bind_api = engine.getPlugin("obsidian-meta-bind-plugin").api
+const mb = engine.getPlugin("obsidian-meta-bind-plugin").api
 
 const div1 = container.createDiv()
 const div2 = container.createDiv()
 
-const inputField = meta_bind_api.createInputFieldFromString("INPUT[text:text]", "INLINE", context.file.path, div1);
-const inputField2 = meta_bind_api.createInputFieldFromString("INPUT[number:number]", "INLINE", context.file.path, div2);
-
-component.addChild(inputField)
-component.addChild(inputField2)
+const inputField = mb.createInputFieldFromString("INPUT[text:text]", "INLINE", context.file.path, div1, component, undefined);
+const inputField2 = mb.createInputFieldFromString("INPUT[number:number]", "INLINE", context.file.path, div2, component, undefined);
 ```
 
-# Reactive Idea (TODO)
+# Reactive Components
 
-```js
-// define a function that takes in some args and returns what should be rendered
-function render(args) {
-	return 'Something';
-}
-
-// create a reactive component, passing in the function and arguments for the initial render
-const reactive = engine.reactive(render, initialArgs);
-
-// subscribe to events and call refresh with new arguments, which causes the render function to be rerun with these arguments, replacing the existing content
-event.on('...', (args) => reactive.refresh(args));
-
-// return the reactive component
-return reactive;
-```
+You can also create reactive components that re-render based on a specific event. In this case we subscribe to obsidians metadata cache.
 
 ```js-engine
 
+// define a function that takes in some args and returns what should be rendered
 function render(args) {
-	console.log(args)
 	return args?.text ?? "undefined";
 }
 
+// create a reactive component, passing in the function and arguments for the initial render
 const reactive = engine.reactive(render, context.metadata.frontmatter);
 
+// subscribe to events and call refresh with new arguments, which causes the render function to be rerun with these arguments, replacing the existing content
 const unloadCb = engine.app.metadataCache.on('changed', async (file, data, cache) => { 
 	if (file.path === context.file.path) { 
 		reactive.refresh(cache.frontmatter);
 	}
 }); 
 
+// register the subscription to be unloaded when the code block is unloaded
 component.registerEvent(unloadCb);
 
+// return the reactive component
 return reactive;
 ```

@@ -1,10 +1,9 @@
-import { App, Component } from "obsidian";
+import { App, Component } from 'obsidian';
 import JsEnginePlugin from '../main';
 import { ExecutionArgument, ExecutionContext } from '../ArgumentManager';
 import { MessageType, MessageWrapper } from '../messages/MessageManager';
 import { API } from '../api/API';
 import { InstanceId, InstanceType } from '../api/InstanceId';
-import { Obj } from "tern";
 
 const AsyncFunction = async function (): Promise<void> {}.constructor;
 

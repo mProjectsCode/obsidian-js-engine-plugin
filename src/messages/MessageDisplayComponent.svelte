@@ -9,9 +9,9 @@
 <h2>Messages</h2>
 
 <div>
-	{#each $messages as [id, message]}
-		<MessageComponent bind:messageWrapper="{message}" messageManager="{messageManager}"></MessageComponent>
-	{:else}
-		<p>None</p>
-	{/each}
+  {#each $messages as [id, message]}
+    <MessageComponent bind:messageWrapper="{message}" messageManager="{messageManager}"></MessageComponent>
+  {:else}
+    <p>None</p>
+  {/each}
 </div>

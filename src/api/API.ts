@@ -4,6 +4,7 @@ import JsEnginePlugin from '../main';
 import { InstanceId } from './InstanceId';
 import { MessageAPI } from './MessageAPI';
 import { ReactiveComponent, ReactiveRenderFunction } from './reactive/ReactiveComponent';
+import { LibAPI } from './LibAPI';
 
 export class API {
 	/**
@@ -23,6 +24,10 @@ export class API {
 	 * API to interact with the plugins message system.
 	 */
 	readonly message: MessageAPI;
+	/**
+	 * API to interact with packaged libraries.
+	 */
+	readonly lib: LibAPI;
 
 	constructor(app: App, plugin: JsEnginePlugin, instanceId: InstanceId) {
 		this.app = app;
@@ -31,6 +36,7 @@ export class API {
 
 		this.markdown = new MarkdownAPI(this);
 		this.message = new MessageAPI(this);
+		this.lib = new LibAPI(this);
 	}
 
 	/**
@@ -41,9 +47,9 @@ export class API {
 	public async importJs(path: string): Promise<any> {
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 		if (!fullPath.includes('?')) {
-			const scriptFile = this.app.metadataCache.getFirstLinkpathDest(path, "")
+			const scriptFile = this.app.metadataCache.getFirstLinkpathDest(path, '');
 			if (scriptFile) {
-				fullPath += '?' + scriptFile.stat.mtime
+				fullPath += '?' + scriptFile.stat.mtime;
 			}
 		}
 		return import(fullPath);

@@ -1,10 +1,6 @@
 import { MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, TAbstractFile, TFile } from 'obsidian';
 import JsEnginePlugin from './main';
-import { ExecutionArgument, ExecutionContext } from './ArgumentManager';
-import { MarkdownBuilder } from './api/markdown/MarkdownBuilder';
-import { MarkdownString } from './api/markdown/MarkdownString';
-import { MessageWrapper } from './messages/MessageManager';
-import MessageComponent from './messages/MessageComponent.svelte';
+import { ExecutionContext } from './ArgumentManager';
 
 import { JsExecution } from './jsEngine/JsExecution';
 import { ResultRenderer } from './ResultRenderer';

@@ -1,8 +1,8 @@
-import { API } from "./API";
-import { EngineExecutionParams } from "../jsEngine/JsEngine";
-import { JsExecution } from "../jsEngine/JsExecution";
-import { Component } from "obsidian";
-import { ResultRenderer } from "../ResultRenderer";
+import { API } from './API';
+import { EngineExecutionParams } from '../jsEngine/JsEngine';
+import { JsExecution } from '../jsEngine/JsExecution';
+import { Component } from 'obsidian';
+import { ResultRenderer } from '../ResultRenderer';
 
 /**
  * The internal API provides access to some of js engines internals.

@@ -43,6 +43,7 @@ export class ResultRenderer {
 
 		if (content instanceof HTMLElement) {
 			this.container.append(content);
+			return;
 		}
 
 		if (content instanceof MessageWrapper) {
@@ -55,11 +56,15 @@ export class ResultRenderer {
 					showMessageSource: false,
 				},
 			});
+			return;
 		}
 
 		if (content instanceof ReactiveComponent) {
 			content.setRenderer(this);
 			content.initialRender();
+			return;
 		}
+
+		this.container.innerText = JSON.stringify(content);
 	}
 }
