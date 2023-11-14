@@ -1,4 +1,4 @@
-const TypeDoc = require('typedoc');
+import TypeDoc from 'typedoc';
 
 async function main() {
 	const app = await TypeDoc.Application.bootstrapWithPlugins({
