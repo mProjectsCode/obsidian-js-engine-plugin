@@ -1,5 +1,5 @@
 import { type ResultRenderer } from '../../ResultRenderer';
-import { type JsFunc } from '../../jsEngine/JsExecution';
+import { type JsFunc } from '../../engine/JsExecution';
 
 export class ReactiveComponent {
 	readonly _render: JsFunc;

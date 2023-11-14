@@ -17,5 +17,5 @@
 		"types": ["svelte", "bun-types", "web"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["jsEngine/**/*.ts"]
 }

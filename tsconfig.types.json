@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"module": "commonjs",
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"skipLibCheck": true,
+		"target": "ESNext",
+		"outFile": "JsEngine.js",
+		"lib": ["DOM", "ESNext"]
+	},
+	"include": ["jsEngine/**/*.ts", "index.ts"]
+}

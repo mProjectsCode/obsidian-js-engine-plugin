@@ -5,7 +5,7 @@ import { ExecutionStatsModal } from './ExecutionStatsModal';
 
 export type EngineExecutionParams = Omit<JsExecutionParams, 'app' | 'plugin'>;
 
-export class JsEngine {
+export class Engine {
 	private readonly app: App;
 	private readonly plugin: JsEnginePlugin;
 	private executionStatsModal: ExecutionStatsModal;

@@ -2,7 +2,7 @@ import { type MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, 
 import type JsEnginePlugin from './main';
 import { type ExecutionContext } from './ArgumentManager';
 
-import { type JsExecution } from './jsEngine/JsExecution';
+import { type JsExecution } from './engine/JsExecution';
 import { ResultRenderer } from './ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {

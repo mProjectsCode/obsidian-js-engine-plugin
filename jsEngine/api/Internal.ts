@@ -1,6 +1,6 @@
 import { type API } from './API';
-import { type EngineExecutionParams } from '../jsEngine/JsEngine';
-import { type JsExecution } from '../jsEngine/JsExecution';
+import { type EngineExecutionParams } from '../engine/Engine';
+import { type JsExecution } from '../engine/JsExecution';
 import { type Component } from 'obsidian';
 import { ResultRenderer } from '../ResultRenderer';
 

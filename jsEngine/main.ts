@@ -5,19 +5,19 @@ import { JsMDRC } from './JsMDRC';
 import { API } from './api/API';
 import { MessageManager } from './messages/MessageManager';
 import { InstanceId, InstanceType } from './api/InstanceId';
-import { JsEngine } from './jsEngine/JsEngine';
+import { Engine } from './engine/Engine';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
 	messageManager: MessageManager;
-	jsEngine: JsEngine;
+	jsEngine: Engine;
 	api: API;
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
 
 		this.messageManager = new MessageManager(this.app, this);
-		this.jsEngine = new JsEngine(this.app, this);
+		this.jsEngine = new Engine(this.app, this);
 		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));
 	}
 

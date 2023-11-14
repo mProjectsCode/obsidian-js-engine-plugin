@@ -1,8 +1,8 @@
-import TypeDoc from 'typedoc';
+const TypeDoc = require('typedoc');
 
 async function main() {
 	const app = await TypeDoc.Application.bootstrapWithPlugins({
-		entryPoints: ['src/api/*'],
+		entryPoints: ['jsEngine/api/*'],
 		entryPointStrategy: 'expand',
 	});
 

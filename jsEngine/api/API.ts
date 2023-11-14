@@ -5,7 +5,8 @@ import { type InstanceId } from './InstanceId';
 import { MessageAPI } from './MessageAPI';
 import { ReactiveComponent } from './reactive/ReactiveComponent';
 import { LibAPI } from './LibAPI';
-import { type JsFunc } from '../jsEngine/JsExecution';
+import { type JsFunc } from '../engine/JsExecution';
+import { InternalAPI } from './Internal';
 
 export class API {
 	/**
@@ -29,6 +30,10 @@ export class API {
 	 * API to interact with packaged libraries.
 	 */
 	readonly lib: LibAPI;
+	/**
+	 * API to interact with js engines internals.
+	 */
+	readonly internal: InternalAPI;
 
 	constructor(app: App, plugin: JsEnginePlugin, instanceId: InstanceId) {
 		this.app = app;
@@ -38,6 +43,7 @@ export class API {
 		this.markdown = new MarkdownAPI(this);
 		this.message = new MessageAPI(this);
 		this.lib = new LibAPI(this);
+		this.internal = new InternalAPI(this);
 	}
 
 	/**

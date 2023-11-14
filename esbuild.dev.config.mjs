@@ -24,7 +24,7 @@ const context = await esbuild
 		banner: {
 			js: banner,
 		},
-		entryPoints: ['src/main.ts'],
+		entryPoints: ['jsEngine/main.ts'],
 		bundle: true,
 		external: [
 			'obsidian',
@@ -48,7 +48,7 @@ const context = await esbuild
 		sourcemap: 'inline',
 		treeShaking: true,
 		outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
-		outbase: 'src',
+		outbase: 'jsEngine',
 		plugins: [
 			copy({
 				paths: [
