@@ -65,6 +65,28 @@ let lib = await self.require.import("lib.js");
 return lib.getGreeting();
 ```
 
+Run File:
+
+```js-engine
+const execution = await engine.internal.executeFile('testFile.js', {
+	container: container,
+	component: component,
+});
+const renderer = engine.internal.createRenderer(container, context.file.path, component);
+renderer.render(execution.result);
+container.createEl('p', {text: 'hello, this is rendered from this file'});
+```
+
+Without creating a renderer:
+
+```js-engine
+const execution = await engine.internal.executeFile('testFile.js', {
+	container: container,
+	component: component,
+});
+return execution.result
+```
+
 # Lib Test
 
 Importing packaged libraries works. In this example [parsiNOM](https://github.com/mProjectsCode/parsiNOM) is used.
