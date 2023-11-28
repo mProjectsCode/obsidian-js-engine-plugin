@@ -67,4 +67,37 @@ export class ResultRenderer {
 
 		this.container.innerText = JSON.stringify(content);
 	}
+
+	public renderToSimpleObject(content: unknown): unknown {
+		if (content == null) {
+			return undefined;
+		}
+
+		if (typeof content === 'string') {
+			return content;
+		}
+
+		if (content instanceof MarkdownBuilder) {
+			return content.toMarkdown().content;
+		}
+
+		if (content instanceof MarkdownString) {
+			return content.content;
+		}
+
+		if (content instanceof HTMLElement) {
+			return content.outerHTML;
+		}
+
+		if (content instanceof MessageWrapper) {
+			return content.message;
+		}
+
+		try {
+			return JSON.stringify(content);
+		} catch (e) {
+			console.error(e);
+			return undefined;
+		}
+	}
 }

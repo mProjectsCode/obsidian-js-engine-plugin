@@ -42,6 +42,12 @@ export default class JsEnginePlugin extends Plugin {
 		this.app.workspace.onLayoutReady(async () => {
 			await this.registerCodeMirrorMode();
 		});
+
+		// this.registerView(JS_EDITOR_VIEW_TYPE, (leaf) => {
+		// 	return new JsEditor(leaf);
+		// })
+		//
+		// this.registerExtensions(['js'], JS_EDITOR_VIEW_TYPE);
 	}
 
 	onunload(): void {}
