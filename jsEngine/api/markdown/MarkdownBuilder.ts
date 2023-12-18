@@ -1,6 +1,9 @@
 import { AbstractMarkdownElementContainer } from './AbstractMarkdownElementContainer';
 import { type AbstractMarkdownElement } from './AbstractMarkdownElement';
 
+/**
+ * Allows for easily building markdown using JavaScript.
+ */
 export class MarkdownBuilder extends AbstractMarkdownElementContainer {
 	constructor() {
 		super();

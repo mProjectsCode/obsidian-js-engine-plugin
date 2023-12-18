@@ -4,7 +4,7 @@ import { MessageDisplay } from './MessageDisplay';
 import { store, type Store } from '../utils/StoreObj';
 import type { Moment } from 'moment';
 import { type InstanceId } from '../api/InstanceId';
-import { iteratorToArray } from '../Util';
+import { iteratorToArray } from '../utils/Util';
 
 export enum MessageType {
 	INFO = 'info',

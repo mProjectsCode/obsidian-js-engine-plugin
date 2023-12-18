@@ -6,6 +6,7 @@ import { API } from './api/API';
 import { MessageManager } from './messages/MessageManager';
 import { InstanceId, InstanceType } from './api/InstanceId';
 import { Engine } from './engine/Engine';
+import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -28,20 +29,12 @@ export default class JsEnginePlugin extends Plugin {
 
 		this.messageManager.initStatusBarItem();
 
-		// this.addCommand({
-		// 	id: 'test',
-		// 	name: 'JS Engine Test Command',
-		// 	callback: () => {},
-		// });
-
 		this.registerMarkdownCodeBlockProcessor('js-engine', (source, el, ctx) => {
 			const mdrc = new JsMDRC(el, this, source, ctx);
 			ctx.addChild(mdrc);
 		});
 
-		this.app.workspace.onLayoutReady(async () => {
-			await this.registerCodeMirrorMode();
-		});
+		await this.registerCodeMirrorMode();
 
 		// this.registerView(JS_EDITOR_VIEW_TYPE, (leaf) => {
 		// 	return new JsEditor(leaf);
@@ -66,31 +59,20 @@ export default class JsEnginePlugin extends Plugin {
 	 */
 	async registerCodeMirrorMode(): Promise<void> {
 		/* eslint-disable */
-		const js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
-		if (js_mode == null || js_mode.name === 'null') {
-			console.log("Couldn't find js mode, can't enable syntax highlighting.");
-			return;
-		}
 
-		window.CodeMirror.defineMode('js-engine', config => {
+		window.CodeMirror.defineMode('js-engine', _config => {
 			const mbOverlay: Mode<any> = {
 				startState: () => {
-					const js_state = window.CodeMirror.startState(js_mode);
-					return {
-						...js_state,
-					};
+					return javascript.startState?.(4);
 				},
 				blankLine: (state: any) => {
-					return null;
+					return javascript.blankLine?.(state, 4);
 				},
-				copyState: (state: any) => {
-					const js_state = window.CodeMirror.startState(js_mode);
-					return {
-						...js_state,
-					};
+				copyState: (_state: any) => {
+					return javascript.startState?.(4);
 				},
 				token: (stream: any, state: any) => {
-					const js_result = js_mode.token && js_mode.token(stream, state);
+					const js_result = javascript.token?.(stream, state);
 					return `line-HyperMD-codeblock ${js_result}`;
 				},
 			};

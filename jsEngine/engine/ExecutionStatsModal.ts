@@ -3,6 +3,9 @@ import type JsEnginePlugin from '../main';
 import ExecutionStatsComponent from './ExecutionStatsComponent.svelte';
 import { type JsExecution } from './JsExecution';
 
+/**
+ * @internal
+ */
 export class ExecutionStatsModal extends Modal {
 	private readonly plugin: JsEnginePlugin;
 	private component: ExecutionStatsComponent | undefined;

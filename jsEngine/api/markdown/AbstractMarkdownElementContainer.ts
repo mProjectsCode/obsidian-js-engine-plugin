@@ -2,6 +2,9 @@ import { AbstractMarkdownElement } from './AbstractMarkdownElement';
 import { MarkdownElementType } from './MarkdownElementType';
 import { AbstractMarkdownLiteral } from './AbstractMarkdownLiteral';
 
+/**
+ * @internal
+ */
 export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownElement {
 	markdownElements: AbstractMarkdownElement[];
 
@@ -11,12 +14,21 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 		this.markdownElements = [];
 	}
 
+	/**
+	 * @internal
+	 */
 	abstract allowElement(element: AbstractMarkdownElement): boolean;
 
 	public getType(): MarkdownElementType {
 		return MarkdownElementType.NON_LITERAL;
 	}
 
+	/**
+	 * Adds a child element to the container.
+	 *
+	 * @param element
+	 * @throws Error if the element is not allowed in the container.
+	 */
 	addElement(element: AbstractMarkdownElement): void {
 		if (this.allowElement(element)) {
 			this.markdownElements.push(element);
@@ -96,6 +108,9 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 // LITERALS
 // --------------------------------------------
 
+/**
+ * Represents a piece of pure markdown text.
+ */
 export class TextElement extends AbstractMarkdownLiteral {
 	content: string;
 	bold: boolean;
@@ -134,6 +149,9 @@ export class TextElement extends AbstractMarkdownLiteral {
 	}
 }
 
+/**
+ * Represents an inline markdown code block.
+ */
 export class CodeElement extends AbstractMarkdownLiteral {
 	content: string;
 
@@ -152,6 +170,9 @@ export class CodeElement extends AbstractMarkdownLiteral {
 // NON LITERALS
 // --------------------------------------------
 
+/**
+ * Represents a markdown heading.
+ */
 export class HeadingElement extends AbstractMarkdownElementContainer {
 	level: number;
 
@@ -171,6 +192,9 @@ export class HeadingElement extends AbstractMarkdownElementContainer {
 	}
 }
 
+/**
+ * Represents a markdown paragraph.
+ */
 export class ParagraphElement extends AbstractMarkdownElementContainer {
 	constructor(content: string) {
 		super();
@@ -187,6 +211,9 @@ export class ParagraphElement extends AbstractMarkdownElementContainer {
 	}
 }
 
+/**
+ * Represents a markdown code block.
+ */
 export class CodeBlockElement extends AbstractMarkdownElementContainer {
 	language: string;
 
@@ -206,6 +233,9 @@ export class CodeBlockElement extends AbstractMarkdownElementContainer {
 	}
 }
 
+/**
+ * Represents a markdown block quote.
+ */
 export class BlockQuoteElement extends AbstractMarkdownElementContainer {
 	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
@@ -216,6 +246,9 @@ export class BlockQuoteElement extends AbstractMarkdownElementContainer {
 	}
 }
 
+/**
+ * Represents a markdown callout.
+ */
 export class CalloutElement extends AbstractMarkdownElementContainer {
 	title: string;
 	type: string;
@@ -238,6 +271,9 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 	}
 }
 
+/**
+ * Represents a markdown table.
+ */
 export class TableElement extends AbstractMarkdownElementContainer {
 	header: string[];
 	body: string[][];

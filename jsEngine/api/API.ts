@@ -51,8 +51,7 @@ export class API {
 	 *
 	 * @param path the vault relative path of the file to import
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public async importJs(path: string): Promise<any> {
+	public async importJs(path: string): Promise<unknown> {
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 		if (!fullPath.includes('?')) {
 			const scriptFile = this.app.metadataCache.getFirstLinkpathDest(path, '');
@@ -72,6 +71,13 @@ export class API {
 		return this.app.plugins.getPlugin(pluginId);
 	}
 
+	/**
+	 * Creates a reactive component.
+	 * Reactive components are useful for creating dynamic content.
+	 *
+	 * @param fn the function to rerun. It's return value will be rendered.
+	 * @param initialArgs the initial arguments (for the first render) to pass to the function.
+	 */
 	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
 		return new ReactiveComponent(fn, initialArgs);
 	}

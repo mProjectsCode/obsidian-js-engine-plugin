@@ -25,6 +25,9 @@ export class LibAPI {
 		this.apiInstance = apiInstance;
 	}
 
+	/**
+	 * Get the [ParsiNOM](https://github.com/mProjectsCode/parsiNOM) library.
+	 */
 	public parsinom(): LibParsiNOM {
 		return {
 			P: P,
@@ -36,8 +39,10 @@ export class LibAPI {
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public itertools(): any {
+	/**
+	 * Get the [itertools-ts](https://github.com/Smoren/itertools-ts) library.
+	 */
+	public itertools(): typeof IterTools {
 		return IterTools;
 	}
 }

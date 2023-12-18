@@ -1,9 +1,8 @@
 import { type MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, type TAbstractFile, TFile } from 'obsidian';
 import type JsEnginePlugin from './main';
-import { type ExecutionContext } from './ArgumentManager';
 
-import { type JsExecution } from './engine/JsExecution';
-import { ResultRenderer } from './ResultRenderer';
+import { type JsExecutionContext, type JsExecution } from './engine/JsExecution';
+import { ResultRenderer } from './engine/ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;
@@ -35,7 +34,7 @@ export class JsMDRC extends MarkdownRenderChild {
 		}
 	}
 
-	buildExecutionContext(): ExecutionContext {
+	buildExecutionContext(): JsExecutionContext {
 		console.log(this.ctx);
 		const file = this.getExecutionFile()!;
 		return {
@@ -45,7 +44,7 @@ export class JsMDRC extends MarkdownRenderChild {
 		};
 	}
 
-	async tryRun(context: ExecutionContext): Promise<JsExecution> {
+	async tryRun(context: JsExecutionContext): Promise<JsExecution> {
 		return this.plugin.jsEngine.execute({
 			code: this.content,
 			context: context,

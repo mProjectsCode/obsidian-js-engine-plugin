@@ -1,13 +1,19 @@
-import { type Component, MarkdownRenderer } from 'obsidian';
+import { type App, type Component, MarkdownRenderer } from 'obsidian';
 
+/**
+ * A string that should be rendered as markdown by the plugin.
+ */
 export class MarkdownString {
-	content: string;
+	readonly content: string;
 
 	constructor(content: string) {
 		this.content = content;
 	}
 
-	async render(element: HTMLElement, sourcePath: string, component: Component): Promise<void> {
-		await MarkdownRenderer.renderMarkdown(this.content, element, sourcePath, component);
+	/**
+	 * @internal
+	 */
+	async render(app: App, element: HTMLElement, sourcePath: string, component: Component): Promise<void> {
+		await MarkdownRenderer.render(app, this.content, element, sourcePath, component);
 	}
 }

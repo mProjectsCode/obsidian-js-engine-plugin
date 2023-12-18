@@ -1,16 +1,40 @@
 import type JsEnginePlugin from '../main';
-import { type App } from 'obsidian';
-import { JsExecution, type JsExecutionParams } from './JsExecution';
+import { type App, type Component } from 'obsidian';
+import { JsExecution, type JsExecutionContext } from './JsExecution';
 import { ExecutionStatsModal } from './ExecutionStatsModal';
 
-export type EngineExecutionParams = Omit<JsExecutionParams, 'app' | 'plugin'>;
+/**
+ * Parameters for the {@link Engine.execute} method.
+ */
+export interface EngineExecutionParams {
+	/**
+	 * The JavaScript code to execute.
+	 */
+	code: string;
+	/**
+	 * Obsidian Component for lifecycle management.
+	 */
+	component: Component;
+	/**
+	 * Optional container element to render results to.
+	 */
+	container?: HTMLElement | undefined;
+	/**
+	 * Optional context to provide to the JavaScript code.
+	 */
+	context?: JsExecutionContext | undefined;
+	/**
+	 * Optional extra context variables to provide to the JavaScript code.
+	 */
+	contextOverrides?: Record<string, unknown> | undefined;
+}
 
 export class Engine {
 	private readonly app: App;
 	private readonly plugin: JsEnginePlugin;
 	private executionStatsModal: ExecutionStatsModal;
 
-	activeExecutions: Map<string, JsExecution>;
+	readonly activeExecutions: Map<string, JsExecution>;
 
 	constructor(app: App, plugin: JsEnginePlugin) {
 		this.app = app;
@@ -20,6 +44,11 @@ export class Engine {
 		this.activeExecutions = new Map<string, JsExecution>();
 	}
 
+	/**
+	 * Execute JavaScript code.
+	 *
+	 * @param params
+	 */
 	async execute(params: EngineExecutionParams): Promise<JsExecution> {
 		const execution = new JsExecution({ app: this.app, plugin: this.plugin, ...params });
 		this.activeExecutions.set(execution.uuid, execution);
@@ -35,6 +64,11 @@ export class Engine {
 		return execution;
 	}
 
+	/**
+	 * Open the execution stats modal for a given {@link JsExecution}.
+	 *
+	 * @param jsExecution
+	 */
 	openExecutionStatsModal(jsExecution: JsExecution): void {
 		this.executionStatsModal.setExecution(jsExecution);
 		this.executionStatsModal.open();

@@ -28,7 +28,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each execution.args as arg (arg.key)}
+				{#each execution.globals as arg (arg.key)}
 					<tr>
 						<td>{arg.key}</td>
 						<td>{typeof arg.value}</td>
