@@ -6,7 +6,7 @@ import { UserError } from 'utils';
 async function runPreconditions(): Promise<void> {
 	// run preconditions
 	await $seq(
-		[`bun run format`, `bun run lint:fix`, `bun run test`],
+		[`bun run format`, `bun run lint:fix`, `bun run tsc`, `bun run test`, `bun run types`],
 		(cmd: string) => {
 			throw new UserError(`precondition "${cmd}" failed`);
 		},

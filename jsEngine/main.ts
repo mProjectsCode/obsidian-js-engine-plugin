@@ -1,4 +1,4 @@
-import {type App, Component, Plugin, type PluginManifest} from 'obsidian';
+import { type App, Component, Plugin, type PluginManifest } from 'obsidian';
 import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from './Settings';
 import { type Mode } from 'codemirror';
 import { JsMDRC } from './JsMDRC';
@@ -7,7 +7,7 @@ import { MessageManager } from './messages/MessageManager';
 import { InstanceId, InstanceType } from './api/InstanceId';
 import { Engine } from './engine/Engine';
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
-import {JSFileSelectModal} from './fileRunner/JSFileSelectModal';
+import { JSFileSelectModal } from './fileRunner/JSFileSelectModal';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -39,7 +39,7 @@ export default class JsEnginePlugin extends Plugin {
 			id: 'execute-js-file',
 			name: 'Execute JS File',
 			callback: () => {
-				new JSFileSelectModal(this, async (selected) => {
+				new JSFileSelectModal(this, async selected => {
 					const component = new Component();
 					component.load();
 					try {
@@ -51,9 +51,9 @@ export default class JsEnginePlugin extends Plugin {
 					} finally {
 						component.unload();
 					}
-				}).open()
-			}
-		})
+				}).open();
+			},
+		});
 
 		await this.registerCodeMirrorMode();
 	}

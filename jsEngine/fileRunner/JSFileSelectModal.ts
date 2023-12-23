@@ -1,11 +1,11 @@
-import {FuzzySuggestModal, TFile} from 'obsidian';
-import JsEnginePlugin from '../main';
+import { FuzzySuggestModal, TFile } from 'obsidian';
+import type JsEnginePlugin from '../main';
 
 export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 	plugin: JsEnginePlugin;
-	selectCallback: (selected: TFile) => void;
+	selectCallback: (selected: TFile) => void | Promise<void>;
 
-	constructor(plugin: JsEnginePlugin, selectCallback: (selected: TFile) => void) {
+	constructor(plugin: JsEnginePlugin, selectCallback: (selected: TFile) => void | Promise<void>) {
 		super(plugin.app);
 
 		this.plugin = plugin;
@@ -22,6 +22,6 @@ export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 	}
 
 	public onChooseItem(item: TFile, _evt: MouseEvent | KeyboardEvent): void {
-		this.selectCallback(item);
+		void this.selectCallback(item);
 	}
 }
