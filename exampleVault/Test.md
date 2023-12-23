@@ -159,3 +159,12 @@ component.registerEvent(unloadCb);
 // return the reactive component
 return reactive;
 ```
+
+# Obsidian Module
+
+```js-engine
+const el = container.createEl("button", {text: "Click me"})
+el.addEventListener("click", () => {
+	new obsidian.Notice("Hello")
+}); 
+```
