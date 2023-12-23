@@ -1,4 +1,4 @@
-import { type App, Plugin, type PluginManifest } from 'obsidian';
+import {type App, Component, Plugin, type PluginManifest} from 'obsidian';
 import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from './Settings';
 import { type Mode } from 'codemirror';
 import { JsMDRC } from './JsMDRC';
@@ -7,6 +7,7 @@ import { MessageManager } from './messages/MessageManager';
 import { InstanceId, InstanceType } from './api/InstanceId';
 import { Engine } from './engine/Engine';
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
+import {JSFileSelectModal} from './fileRunner/JSFileSelectModal';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -34,13 +35,27 @@ export default class JsEnginePlugin extends Plugin {
 			ctx.addChild(mdrc);
 		});
 
-		await this.registerCodeMirrorMode();
+		this.addCommand({
+			id: 'execute-js-file',
+			name: 'Execute JS File',
+			callback: () => {
+				new JSFileSelectModal(this, async (selected) => {
+					const component = new Component();
+					component.load();
+					try {
+						await this.api.internal.executeFile(selected.path, {
+							component: component,
+						});
+					} catch (e) {
+						console.warn(e);
+					} finally {
+						component.unload();
+					}
+				}).open()
+			}
+		})
 
-		// this.registerView(JS_EDITOR_VIEW_TYPE, (leaf) => {
-		// 	return new JsEditor(leaf);
-		// })
-		//
-		// this.registerExtensions(['js'], JS_EDITOR_VIEW_TYPE);
+		await this.registerCodeMirrorMode();
 	}
 
 	onunload(): void {}

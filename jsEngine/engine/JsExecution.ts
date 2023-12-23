@@ -156,6 +156,8 @@ export class JsExecution {
 		try {
 			this.result = await Promise.resolve(this.func(...Object.values(this.globals)));
 		} catch (e) {
+			console.warn('failed to execute JS', e);
+
 			if (e instanceof Error) {
 				this.functionRunError = e;
 
