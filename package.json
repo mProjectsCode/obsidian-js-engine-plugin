@@ -17,8 +17,7 @@
 		"check": "bun run format:check && bun run lint && bun run tsc && bun run test",
 		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test",
 		"release": "bun run automation/release.ts",
-		"types": "tsc --project tsconfig.types.json",
-		"docs": "node docs.js"
+		"types": "tsc --project tsconfig.types.json"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
