@@ -6,6 +6,7 @@ import {
 	CodeBlockElement,
 	CodeElement,
 	HeadingElement,
+	ListElement,
 	ParagraphElement,
 	TableElement,
 	TextElement,
@@ -140,5 +141,14 @@ export class MarkdownAPI {
 	 */
 	public createTable(header: string[], body: string[][]): TableElement {
 		return new TableElement(header, body);
+	}
+
+	/**
+	 * Creates a new markdown list element.
+	 *
+	 * @param ordered whether the list should be ordered or not (use 1. or -)
+	 */
+	createList(ordered: boolean): ListElement {
+		return new ListElement(ordered);
 	}
 }

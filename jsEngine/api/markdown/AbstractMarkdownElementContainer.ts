@@ -102,6 +102,12 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 		this.addElement(element);
 		return element;
 	}
+
+	createList(ordered: boolean): ListElement {
+		const element = new ListElement(ordered);
+		this.addElement(element);
+		return element;
+	}
 }
 
 // --------------------------------------------
@@ -163,6 +169,85 @@ export class CodeElement extends AbstractMarkdownLiteral {
 
 	public toString(): string {
 		return `\`${this.content}\``;
+	}
+}
+
+/**
+ * Represents a markdown table.
+ */
+export class TableElement extends AbstractMarkdownLiteral {
+	header: string[];
+	body: string[][];
+
+	constructor(header: string[], body: string[][]) {
+		super();
+
+		this.header = header;
+		this.body = body;
+	}
+
+	public toString(): string {
+		const rows = this.body.length;
+		if (rows === 0) {
+			return '';
+		}
+
+		const columns = this.header.length;
+		if (columns === 0) {
+			return '';
+		}
+		for (const row of this.body) {
+			if (row.length !== columns) {
+				throw new Error('Table rows are do not contain the same number of columns.');
+			}
+		}
+
+		const longestStringInColumns: number[] = [];
+
+		for (let i = 0; i < columns; i++) {
+			let longestStringInColumn = 0;
+
+			if (this.header[i].length > longestStringInColumn) {
+				longestStringInColumn = this.header[i].length;
+			}
+			for (const row of this.body) {
+				if (row[i].length > longestStringInColumn) {
+					longestStringInColumn = row[i].length;
+				}
+			}
+
+			longestStringInColumns.push(longestStringInColumn);
+		}
+
+		let table = '';
+
+		// build header
+		table += '|';
+		for (let j = 0; j < columns; j++) {
+			let element = this.header[j];
+			element += ' '.repeat(longestStringInColumns[j] - element.length);
+			table += ' ' + element + ' |';
+		}
+		table += '\n';
+		// build divider
+		table += '|';
+		for (let j = 0; j < columns; j++) {
+			table += ' ' + '-'.repeat(longestStringInColumns[j]) + ' |';
+		}
+		table += '\n';
+
+		// build body
+		for (let i = 0; i < rows; i++) {
+			table += '|';
+			for (let j = 0; j < columns; j++) {
+				let element = this.body[i][j];
+				element += ' '.repeat(longestStringInColumns[j] - element.length);
+				table += ' ' + element + ' |';
+			}
+			table += '\n';
+		}
+
+		return table;
 	}
 }
 
@@ -271,85 +356,36 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 	}
 }
 
-/**
- * Represents a markdown table.
- */
-export class TableElement extends AbstractMarkdownElementContainer {
-	header: string[];
-	body: string[][];
+export class ListElement extends AbstractMarkdownElementContainer {
+	ordered: boolean;
 
-	constructor(header: string[], body: string[][]) {
+	constructor(ordered: boolean) {
 		super();
 
-		this.header = header;
-		this.body = body;
+		this.ordered = ordered;
 	}
 
 	public allowElement(_: AbstractMarkdownElement): boolean {
 		return true;
 	}
 
+	private getPrefix(i: number): string {
+		if (this.ordered) {
+			return `${i + 1}. `;
+		} else {
+			return `- `;
+		}
+	}
+
 	public toString(): string {
-		const rows = this.body.length;
-		if (rows === 0) {
-			return '';
-		}
-
-		const columns = this.header.length;
-		if (columns === 0) {
-			return '';
-		}
-		for (const row of this.body) {
-			if (row.length !== columns) {
-				throw new Error('Table rows are do not contain the same number of columns.');
-			}
-		}
-
-		const longestStringInColumns: number[] = [];
-
-		for (let i = 0; i < columns; i++) {
-			let longestStringInColumn = 0;
-
-			if (this.header[i].length > longestStringInColumn) {
-				longestStringInColumn = this.header[i].length;
-			}
-			for (const row of this.body) {
-				if (row[i].length > longestStringInColumn) {
-					longestStringInColumn = row[i].length;
+		return this.markdownElements
+			.map((x, i) => {
+				if (x instanceof ListElement) {
+					return `\t${x.toString().replaceAll('\n', '\n\t')}`;
 				}
-			}
 
-			longestStringInColumns.push(longestStringInColumn);
-		}
-
-		let table = '';
-
-		// build header
-		table += '|';
-		for (let j = 0; j < columns; j++) {
-			let element = this.header[j];
-			element += ' '.repeat(longestStringInColumns[j] - element.length);
-			table += ' ' + element + ' |';
-		}
-		table += '\n';
-		// build divider
-		table += '|';
-		for (let j = 0; j < columns; j++) {
-			table += ' ' + '-'.repeat(longestStringInColumns[j]) + ' |';
-		}
-		table += '\n';
-
-		// build body
-		for (let i = 0; i < rows; i++) {
-			table += '|';
-			for (let j = 0; j < columns; j++) {
-				let element = this.body[i][j];
-				element += ' '.repeat(longestStringInColumns[j] - element.length);
-				table += ' ' + element + ' |';
-			}
-			table += '\n';
-		}
-
-		return table;
+				return `${this.getPrefix(i)}${x.toString().replaceAll('\n', '\n\t')}`;
+			})
+			.join('\n');
 	}
 }

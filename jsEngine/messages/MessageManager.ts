@@ -117,6 +117,11 @@ export class MessageManager {
 		this.messages.notify();
 	}
 
+	removeAllMessages(): void {
+		this.messages.get().clear();
+		this.messages.notify();
+	}
+
 	private updateStatusBarItem(): void {
 		if (!this.statusBarItem) {
 			return;

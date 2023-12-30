@@ -4,8 +4,8 @@ This plugin for Obsidian allows you to run JavaScript from within your notes usi
 
 ## Usage
 
-Start by creating a code block with the `js-engine` plugin. 
-Inside the code block you can write what ever JavaScript code that you want. 
+Start by creating a code block with the `js-engine` plugin.
+Inside the code block you can write what ever JavaScript code that you want.
 The plugin will run the JavaScript and render the returned value in place of the code block.
 
 ## API Docs

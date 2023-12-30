@@ -42,7 +42,26 @@ blockquote.createParagraph("This is another test paragraph.")
 callout.createTable(["Column 1", "Column 2"], [
 	["data 1", "**data 2**"],
 	["data 3", "data 4"],
-]);
+])
+
+callout.addText('And now a list.')
+
+let list = callout.createList(false)
+list.addText('test')
+list.createTable(["Column 1", "Column 2"], [
+	["data 1", "**data 2**"],
+	["data 3", "data 4"],
+])
+
+let sublist = list.createList(true)
+sublist.addText('sub list')
+sublist.addCode('this is some code')
+
+list.addText('another Element')
+
+let sublist2 = list.createList(false)
+sublist2.addText('another sub list')
+
 
 return markdownBuilder
 ```
@@ -166,5 +185,5 @@ return reactive;
 const el = container.createEl("button", {text: "Click me"})
 el.addEventListener("click", () => {
 	new obsidian.Notice("Hello")
-}); 
+});
 ```
