@@ -1,4 +1,4 @@
-import { type App, Component, Plugin, type PluginManifest } from 'obsidian';
+import { type App, Plugin, type PluginManifest } from 'obsidian';
 import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from './Settings';
 import { type Mode } from 'codemirror';
 import { JsMDRC } from './JsMDRC';
@@ -40,17 +40,7 @@ export default class JsEnginePlugin extends Plugin {
 			name: 'Execute JS File',
 			callback: () => {
 				new JSFileSelectModal(this, async selected => {
-					const component = new Component();
-					component.load();
-					try {
-						await this.api.internal.executeFile(selected.path, {
-							component: component,
-						});
-					} catch (e) {
-						console.warn(e);
-					} finally {
-						component.unload();
-					}
+					await this.api.internal.executeFileSimple(selected.path);
 				}).open();
 			},
 		});

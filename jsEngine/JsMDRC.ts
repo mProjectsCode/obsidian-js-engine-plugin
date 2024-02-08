@@ -35,12 +35,12 @@ export class JsMDRC extends MarkdownRenderChild {
 	}
 
 	buildExecutionContext(): JsExecutionContext {
-		console.log(this.ctx);
+		// console.log(this.ctx);
 		const file = this.getExecutionFile()!;
 		return {
 			file: file,
 			metadata: this.plugin.app.metadataCache.getFileCache(file),
-			line: 0,
+			block: undefined,
 		};
 	}
 
@@ -108,12 +108,12 @@ export class JsMDRC extends MarkdownRenderChild {
 	}
 
 	async onload(): Promise<void> {
-		console.log('load');
+		// console.log('load');
 
 		await this.render();
 	}
 
 	onunload(): void {
-		console.log('unload');
+		// console.log('unload');
 	}
 }

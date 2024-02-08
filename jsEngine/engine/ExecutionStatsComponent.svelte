@@ -28,10 +28,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each execution.globals as arg (arg.key)}
+				{#each Object.entries(execution.globals) as arg (arg[0])}
 					<tr>
-						<td>{arg.key}</td>
-						<td>{typeof arg.value}</td>
+						<td>{arg[0]}</td>
+						<td>{typeof arg[1]}</td>
 					</tr>
 				{:else}
 					<tr>

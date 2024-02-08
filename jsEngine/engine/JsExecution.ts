@@ -28,7 +28,12 @@ export interface JsExecutionContext {
 	/**
 	 * Currently unused.
 	 */
-	line: number;
+	block: Block | undefined;
+}
+
+export interface Block {
+	from: number;
+	to: number;
 }
 
 /**
