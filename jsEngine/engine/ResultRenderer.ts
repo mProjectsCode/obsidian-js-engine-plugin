@@ -85,14 +85,6 @@ export class ResultRenderer {
 	 * @returns The simple object.
 	 */
 	convertToSimpleObject(value: unknown): unknown {
-		if (value == null) {
-			return undefined;
-		}
-
-		if (typeof value === 'string') {
-			return value;
-		}
-
 		if (value instanceof MarkdownBuilder) {
 			return value.toMarkdown().content;
 		}
@@ -109,11 +101,6 @@ export class ResultRenderer {
 			return value.message;
 		}
 
-		try {
-			return JSON.stringify(value);
-		} catch (e) {
-			console.error(e);
-			return undefined;
-		}
+		return value;
 	}
 }
