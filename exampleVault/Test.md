@@ -1,5 +1,5 @@
 ---
-text: this is some text
+text: this is reactive
 number: 12234234
 ---
 
@@ -164,6 +164,9 @@ You can also create reactive components that re-render based on a specific event
 
 // define a function that takes in some args and returns what should be rendered
 function render(args) {
+	if (args?.text === "this") {
+		throw new Error("not allowed");
+	}
 	return args?.text ?? "undefined";
 }
 

@@ -79,6 +79,6 @@ export class API {
 	 * @param initialArgs the initial arguments (for the first render) to pass to the function.
 	 */
 	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
-		return new ReactiveComponent(fn, initialArgs);
+		return new ReactiveComponent(this, fn, initialArgs);
 	}
 }

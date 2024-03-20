@@ -1,5 +1,7 @@
 import { type ResultRenderer } from '../../engine/ResultRenderer';
 import { type JsFunc } from '../../engine/JsExecution';
+import { MessageType } from 'jsEngine/messages/MessageManager';
+import { type API } from 'jsEngine/api/API';
 
 /**
  * A reactive component is a component that can be refreshed.
@@ -8,6 +10,7 @@ import { type JsFunc } from '../../engine/JsExecution';
  * See {@link API.reactive}
  */
 export class ReactiveComponent {
+	private readonly apiInstance: API;
 	private readonly _render: JsFunc;
 	private readonly initialArgs: unknown[];
 	/**
@@ -15,7 +18,8 @@ export class ReactiveComponent {
 	 */
 	renderer: ResultRenderer | undefined;
 
-	constructor(_render: JsFunc, initialArgs: unknown[]) {
+	constructor(api: API, _render: JsFunc, initialArgs: unknown[]) {
+		this.apiInstance = api;
 		this._render = _render;
 		this.initialArgs = initialArgs;
 	}
@@ -26,7 +30,25 @@ export class ReactiveComponent {
 	 * @param args
 	 */
 	public async refresh(...args: unknown[]): Promise<void> {
-		void this.renderer?.render(await this._render(...args));
+		let result: unknown;
+
+		try {
+			// eslint-disable-next-line
+			result = await this._render(...args);
+		} catch (e) {
+			console.warn('failed to execute JS', e);
+
+			if (e instanceof Error) {
+				result = this.apiInstance.message.createMessage(
+					MessageType.ERROR,
+					'Failed to execute JS',
+					`Failed to execute JS during reactive execution in execution "${this.apiInstance.instanceId.id}"`,
+					e.stack,
+				);
+			}
+		}
+
+		void this.renderer?.render(result);
 	}
 
 	/**
