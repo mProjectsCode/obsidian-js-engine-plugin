@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-js-engine-plugin",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "This plugin for obsidian allows you to use and run JavaScript from within your notes.",
 	"main": "main.js",
 	"scripts": {
