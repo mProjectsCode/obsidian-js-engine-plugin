@@ -3,6 +3,11 @@ text: this is some text
 number: 12234234
 ---
 
+```js
+let a = "*test*";
+return a;
+```
+
 Some text
 ```js-engine
 let a = "*test*";

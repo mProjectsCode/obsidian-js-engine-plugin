@@ -4,6 +4,8 @@
 
 	export let execution: JsExecution;
 	let messages = execution.getMessages();
+	let prism = window.Prism;
+	$: highlightCode = prism.highlight(execution.code, prism.languages.javascript, 'javascript');
 </script>
 
 <div>
@@ -12,7 +14,7 @@
 	<p>Execution ID: {execution.uuid}</p>
 
 	<h3>Code</h3>
-	<pre class="language-none"><code>{execution.code}</code></pre>
+	<pre class="language-js"><code class="language-js">{@html highlightCode}</code></pre>
 
 	<h3>Time</h3>
 	<p>Build Time: {Math.round(execution.functionBuildTime ?? 0)} ms</p>
