@@ -17,6 +17,10 @@ export class InstanceId {
 		this.id = id;
 	}
 
+	toString(): string {
+		return `plugin:js-engine:${this.name}:${this.id}`;
+	}
+
 	static create(name: string): InstanceId {
 		return new InstanceId(name, self.crypto.randomUUID());
 	}

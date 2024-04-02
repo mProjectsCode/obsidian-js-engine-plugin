@@ -195,3 +195,9 @@ el.addEventListener("click", () => {
 	new obsidian.Notice("Hello")
 });
 ```
+
+# Test Error
+
+```js-engine
+le
+```
