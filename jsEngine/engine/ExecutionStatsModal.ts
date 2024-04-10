@@ -30,6 +30,11 @@ export class ExecutionStatsModal extends Modal {
 			this.contentEl.addClass('js-engine-execution-stats-modal');
 		}
 
+		if (this.execution === undefined) {
+			this.contentEl.createEl('p', { cls: 'mod-warning', text: 'No execution data available.' });
+			return;
+		}
+
 		this.component = new ExecutionStatsComponent({
 			target: this.contentEl,
 			props: {

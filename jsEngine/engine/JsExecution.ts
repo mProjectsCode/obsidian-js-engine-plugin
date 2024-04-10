@@ -6,8 +6,6 @@ import { InstanceId, InstanceType } from '../api/InstanceId';
 import * as Obsidian from 'obsidian';
 import { type EngineExecutionParams } from './Engine';
 
-const AsyncFunction = async function (): Promise<void> {}.constructor;
-
 /**
  * An async JavaScript function.
  */
@@ -128,7 +126,11 @@ export class JsExecution {
 
 		try {
 			// this.func = AsyncFunction(...Object.keys(this.globals), this.code) as JsFunc;
-			this.func = window.eval(`(async function anonymous(${Object.keys(this.globals).join(', ')}) {\n\n${this.code}\n\n})\n //# sourceURL=${encodeURIComponent(this.apiInstance.instanceId.toString())}`) as JsFunc;
+			this.func = window.eval(
+				`(async function anonymous(${Object.keys(this.globals).join(', ')}) {\n\n${this.code}\n\n})\n //# sourceURL=${encodeURIComponent(
+					this.apiInstance.instanceId.toString(),
+				)}`,
+			) as JsFunc;
 		} catch (e) {
 			if (e instanceof Error) {
 				this.functionBuildError = e;

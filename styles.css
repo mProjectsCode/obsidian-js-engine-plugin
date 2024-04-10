@@ -113,4 +113,6 @@ If your plugin does not need CSS, delete this file.
 
 .modal:has(> .js-engine-execution-stats-modal) {
 	width: unset;
+	min-width: 80%;
+	max-width: 100%;
 }

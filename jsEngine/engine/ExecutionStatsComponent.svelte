@@ -4,8 +4,16 @@
 
 	export let execution: JsExecution;
 	let messages = execution.getMessages();
-	let prism = window.Prism;
-	$: highlightCode = prism.highlight(execution.code, prism.languages.javascript, 'javascript');
+
+	function highlightCode(code: string): string {
+		const prism = window.Prism;
+		try {
+			return prism.highlight(code, prism.languages.javascript, 'javascript');
+		} catch (e) {
+			console.warn('js-engine | failed to highlight code', e);
+			return code;
+		}
+	}
 </script>
 
 <div>
@@ -14,7 +22,7 @@
 	<p>Execution ID: {execution.uuid}</p>
 
 	<h3>Code</h3>
-	<pre class="language-js"><code class="language-js">{@html highlightCode}</code></pre>
+	<pre class="language-js"><code class="language-js">{@html highlightCode(execution.code)}</code></pre>
 
 	<h3>Time</h3>
 	<p>Build Time: {Math.round(execution.functionBuildTime ?? 0)} ms</p>
