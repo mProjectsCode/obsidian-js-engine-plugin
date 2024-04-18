@@ -18,11 +18,11 @@ export interface JsExecutionContext {
 	/**
 	 * The file that the execution was triggered from.
 	 */
-	file: TFile;
+	file: TFile | undefined;
 	/**
 	 * The metadata of the file that the execution was triggered from.
 	 */
-	metadata: CachedMetadata | null;
+	metadata: CachedMetadata | undefined;
 	/**
 	 * Currently unused.
 	 */

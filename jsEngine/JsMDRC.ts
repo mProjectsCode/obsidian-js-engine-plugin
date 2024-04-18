@@ -36,10 +36,10 @@ export class JsMDRC extends MarkdownRenderChild {
 
 	buildExecutionContext(): JsExecutionContext {
 		// console.log(this.ctx);
-		const file = this.getExecutionFile()!;
+		const file = this.getExecutionFile();
 		return {
 			file: file,
-			metadata: this.plugin.app.metadataCache.getFileCache(file),
+			metadata: file === undefined ? undefined : this.plugin.app.metadataCache.getFileCache(file) ?? undefined,
 			block: undefined,
 		};
 	}

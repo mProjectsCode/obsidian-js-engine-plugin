@@ -68,6 +68,11 @@ export class InternalAPI {
 		}
 	}
 
+	/**
+	 * Gets the execution context for a specific file, throws when the file does not exist.
+	 *
+	 * @param path
+	 */
 	public async getContextForFile(path: string): Promise<JsExecutionContext> {
 		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
 		if (!file || !(file instanceof TFile)) {
@@ -78,7 +83,7 @@ export class InternalAPI {
 
 		return {
 			file: file,
-			metadata: metadata,
+			metadata: metadata ?? undefined,
 			block: undefined,
 		};
 	}
