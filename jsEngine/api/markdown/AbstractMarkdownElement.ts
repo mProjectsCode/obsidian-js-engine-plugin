@@ -1,5 +1,5 @@
-import { type MarkdownElementType } from './MarkdownElementType';
-import { MarkdownString } from './MarkdownString';
+import { type MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 
 /**
  * @internal

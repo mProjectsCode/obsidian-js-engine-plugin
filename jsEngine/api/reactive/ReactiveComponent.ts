@@ -1,5 +1,5 @@
-import { type ResultRenderer } from '../../engine/ResultRenderer';
-import { type JsFunc } from '../../engine/JsExecution';
+import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
+import { type JsFunc } from 'jsEngine/engine/JsExecution';
 import { MessageType } from 'jsEngine/messages/MessageManager';
 import { type API } from 'jsEngine/api/API';
 
@@ -33,7 +33,6 @@ export class ReactiveComponent {
 		let result: unknown;
 
 		try {
-			// eslint-disable-next-line
 			result = await this._render(...args);
 		} catch (e) {
 			console.warn('failed to execute JS', e);

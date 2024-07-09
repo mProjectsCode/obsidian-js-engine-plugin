@@ -1,5 +1,5 @@
-import { type API } from './API';
-import { Message, type MessageManager, type MessageType, type MessageWrapper } from '../messages/MessageManager';
+import { type API } from 'jsEngine/api/API';
+import { Message, type MessageManager, type MessageType, type MessageWrapper } from 'jsEngine/messages/MessageManager';
 
 export class MessageAPI {
 	readonly apiInstance: API;

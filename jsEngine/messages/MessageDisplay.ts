@@ -1,6 +1,6 @@
 import { type App, Modal } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import MessageDisplayComponent from './MessageDisplayComponent.svelte';
+import type JsEnginePlugin from 'jsEngine/main';
+import MessageDisplayComponent from 'jsEngine/messages/MessageDisplayComponent.svelte';
 
 export class MessageDisplay extends Modal {
 	/**

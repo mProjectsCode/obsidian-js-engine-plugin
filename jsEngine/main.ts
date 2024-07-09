@@ -1,13 +1,12 @@
 import { type App, Plugin, type PluginManifest } from 'obsidian';
-import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from './Settings';
-import { type Mode } from 'codemirror';
-import { JsMDRC } from './JsMDRC';
-import { API } from './api/API';
-import { MessageManager } from './messages/MessageManager';
-import { InstanceId, InstanceType } from './api/InstanceId';
-import { Engine } from './engine/Engine';
+import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from 'jsEngine/Settings';
+import { JsMDRC } from 'jsEngine/JsMDRC';
+import { API } from 'jsEngine/api/API';
+import { MessageManager } from 'jsEngine/messages/MessageManager';
+import { InstanceId, InstanceType } from 'jsEngine/api/InstanceId';
+import { Engine } from 'jsEngine/engine/Engine';
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
-import { JSFileSelectModal } from './fileRunner/JSFileSelectModal';
+import { JSFileSelectModal } from 'jsEngine/fileRunner/JSFileSelectModal';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -31,8 +30,7 @@ export default class JsEnginePlugin extends Plugin {
 		this.messageManager.initStatusBarItem();
 
 		this.registerMarkdownCodeBlockProcessor('js-engine', (source, el, ctx) => {
-			const mdrc = new JsMDRC(el, this, source, ctx);
-			ctx.addChild(mdrc);
+			ctx.addChild(new JsMDRC(el, this, source, ctx));
 		});
 
 		this.addCommand({
@@ -66,7 +64,7 @@ export default class JsEnginePlugin extends Plugin {
 		/* eslint-disable */
 
 		window.CodeMirror.defineMode('js-engine', _config => {
-			const mbOverlay: Mode<any> = {
+			const mbOverlay: CodeMirror.Mode<any> = {
 				startState: () => {
 					return javascript.startState?.(4);
 				},

@@ -1,12 +1,12 @@
-import { MarkdownAPI } from './MarkdownAPI';
-import { type App, type Plugin } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import { type InstanceId } from './InstanceId';
-import { MessageAPI } from './MessageAPI';
-import { ReactiveComponent } from './reactive/ReactiveComponent';
-import { LibAPI } from './LibAPI';
-import { type JsFunc } from '../engine/JsExecution';
-import { InternalAPI } from './Internal';
+import { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
+import { type CachedMetadata, type TFile, type App, type Plugin } from 'obsidian';
+import type JsEnginePlugin from 'jsEngine/main';
+import { type InstanceId } from 'jsEngine/api/InstanceId';
+import { MessageAPI } from 'jsEngine/api/MessageAPI';
+import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+import { LibAPI } from 'jsEngine/api/LibAPI';
+import { type JsFunc } from 'jsEngine/engine/JsExecution';
+import { InternalAPI } from 'jsEngine/api/Internal';
 
 export class API {
 	/**
@@ -80,5 +80,9 @@ export class API {
 	 */
 	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
 		return new ReactiveComponent(this, fn, initialArgs);
+	}
+
+	public queryVault(query: (file: TFile, cache: CachedMetadata | null) => boolean): TFile[] {
+		return this.app.vault.getMarkdownFiles().filter(file => query(file, this.app.metadataCache.getFileCache(file)));
 	}
 }

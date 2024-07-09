@@ -1,8 +1,8 @@
-import { type API } from './API';
-import { type EngineExecutionParams } from '../engine/Engine';
-import { type JsExecution, type JsExecutionContext } from '../engine/JsExecution';
+import { type API } from 'jsEngine/api/API';
+import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
+import { type JsExecution, type JsExecutionContext } from 'jsEngine/engine/JsExecution';
 import { Component, TFile } from 'obsidian';
-import { ResultRenderer } from '../engine/ResultRenderer';
+import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 
 /**
  * The internal API provides access to some of js engines internals.

@@ -1,8 +1,8 @@
 import { type MarkdownPostProcessorContext, MarkdownRenderChild, Menu, setIcon, type TAbstractFile, TFile } from 'obsidian';
-import type JsEnginePlugin from './main';
+import type JsEnginePlugin from 'jsEngine/main';
 
-import { type JsExecutionContext, type JsExecution } from './engine/JsExecution';
-import { ResultRenderer } from './engine/ResultRenderer';
+import { type JsExecutionContext, type JsExecution } from 'jsEngine/engine/JsExecution';
+import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 
 export class JsMDRC extends MarkdownRenderChild {
 	plugin: JsEnginePlugin;

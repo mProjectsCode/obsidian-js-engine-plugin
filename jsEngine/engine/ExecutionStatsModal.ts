@@ -1,7 +1,7 @@
 import { type App, Modal } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import ExecutionStatsComponent from './ExecutionStatsComponent.svelte';
-import { type JsExecution } from './JsExecution';
+import type JsEnginePlugin from 'jsEngine/main';
+import ExecutionStatsComponent from 'jsEngine/engine/ExecutionStatsComponent.svelte';
+import { type JsExecution } from 'jsEngine/engine/JsExecution';
 
 /**
  * @internal

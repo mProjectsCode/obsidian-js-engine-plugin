@@ -147,13 +147,16 @@ return result;
 You can interact with other plugins APIs, in this example [Meta Bind](https://github.com/mProjectsCode/obsidian-meta-bind-plugin) is used.
 
 ```js-engine
-const mb = engine.getPlugin("obsidian-meta-bind-plugin").api
+const mb = engine.getPlugin("obsidian-meta-bind-plugin").api;
 
-const div1 = container.createDiv()
-const div2 = container.createDiv()
+const div1 = container.createDiv();
+const div2 = container.createDiv();
 
-const inputField = mb.createInputFieldFromString("INPUT[text:text]", "INLINE", context.file.path, div1, component, undefined);
-const inputField2 = mb.createInputFieldFromString("INPUT[number:number]", "INLINE", context.file.path, div2, component, undefined);
+const inputField1 = mb.createInlineFieldFromString("INPUT[text:text]", context.file.path, undefined);
+const inputField2 = mb.createInlineFieldFromString("INPUT[number:number]", context.file.path, undefined);
+
+mb.wrapInMDRC(inputField1, div1, component);
+mb.wrapInMDRC(inputField2, div2, component);
 ```
 
 # Reactive Components

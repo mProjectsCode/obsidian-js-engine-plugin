@@ -1,5 +1,5 @@
 import { FuzzySuggestModal, TFile } from 'obsidian';
-import type JsEnginePlugin from '../main';
+import type JsEnginePlugin from 'jsEngine/main';
 
 export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 	plugin: JsEnginePlugin;
@@ -13,7 +13,7 @@ export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 	}
 
 	getItems(): TFile[] {
-		const allFiles = this.app.vault.getAllLoadedFiles().filter(file => file instanceof TFile) as TFile[];
+		const allFiles = this.app.vault.getAllLoadedFiles().filter(file => file instanceof TFile);
 		return allFiles.filter(file => file.extension === 'js');
 	}
 

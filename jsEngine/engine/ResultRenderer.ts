@@ -1,10 +1,10 @@
-import { MarkdownBuilder } from '../api/markdown/MarkdownBuilder';
-import { MarkdownString } from '../api/markdown/MarkdownString';
-import { MessageWrapper } from '../messages/MessageManager';
-import MessageComponent from '../messages/MessageComponent.svelte';
+import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
+import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
+import { MessageWrapper } from 'jsEngine/messages/MessageManager';
+import MessageComponent from 'jsEngine/messages/MessageComponent.svelte';
 import { type Component } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import { ReactiveComponent } from '../api/reactive/ReactiveComponent';
+import type JsEnginePlugin from 'jsEngine/main';
+import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 
 /**
  * Attaches to a container and renders values.

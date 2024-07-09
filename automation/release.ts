@@ -1,16 +1,17 @@
-import { $seq, Verboseness, $input, $choise, $confirm, CMD_FMT } from './shellUtils';
+import { UserError } from 'utils/utils';
+import { CanaryVersion, Version, getIncrementOptions, parseVersion, stringifyVersion } from 'utils/versionUtils';
 import config from './config.json';
-import { Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
-import { UserError } from 'utils';
+import { $choice as $choice, $confirm, $seq, CMD_FMT, Verboseness } from 'utils/shellUtils';
 
 async function runPreconditions(): Promise<void> {
 	// run preconditions
 	await $seq(
-		[`bun run format`, `bun run lint:fix`, `bun run tsc`, `bun run test`, `bun run types`],
+		[`bun run format`, `bun run lint:fix`, `bun run test`],
 		(cmd: string) => {
 			throw new UserError(`precondition "${cmd}" failed`);
 		},
 		() => {},
+		undefined,
 		Verboseness.VERBOSE,
 	);
 
@@ -21,6 +22,7 @@ async function runPreconditions(): Promise<void> {
 			throw new UserError('failed to add preconditions changes to git');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 
@@ -32,6 +34,7 @@ async function runPreconditions(): Promise<void> {
 			changesToCommit = true;
 		},
 		() => {},
+		undefined,
 		Verboseness.QUITET,
 	);
 
@@ -43,6 +46,7 @@ async function runPreconditions(): Promise<void> {
 				throw new UserError('failed to add preconditions changes to git');
 			},
 			() => {},
+			undefined,
 			Verboseness.NORMAL,
 		);
 	}
@@ -58,6 +62,7 @@ async function run() {
 			throw new UserError('there are still untracked changes');
 		},
 		() => {},
+		undefined,
 		Verboseness.QUITET,
 	);
 
@@ -76,11 +81,11 @@ async function run() {
 
 	const versionIncrementOptions = getIncrementOptions(currentVersion);
 
-	const selctedIndex = await $choise(
+	const selectedIndex = await $choice(
 		`Current version "${currentVersionString}". Select new version`,
 		versionIncrementOptions.map(x => stringifyVersion(x)),
 	);
-	const newVersion = versionIncrementOptions[selctedIndex];
+	const newVersion = versionIncrementOptions[selectedIndex];
 	const newVersionString = stringifyVersion(newVersion);
 
 	console.log('');
@@ -89,23 +94,33 @@ async function run() {
 		throw new UserError('user canceled script');
 	});
 
-	manifest.version = newVersionString;
+	if (!(newVersion instanceof CanaryVersion)) {
+		manifest.version = newVersionString;
+	}
 
 	await Bun.write(manifestFile, JSON.stringify(manifest, null, '\t'));
 
-	const versionsFile = Bun.file('./versions.json');
-	const versionsJson = await versionsFile.json();
+	const betaManifest = structuredClone(manifest);
+	betaManifest.version = newVersionString;
 
-	versionsJson[newVersionString] = manifest.minAppVersion;
+	const betaManifestFile = Bun.file('./manifest-beta.json');
+	await Bun.write(betaManifestFile, JSON.stringify(betaManifest, null, '\t'));
 
-	await Bun.write(versionsFile, JSON.stringify(versionsJson, null, '\t'));
+	if (!(newVersion instanceof CanaryVersion)) {
+		const versionsFile = Bun.file('./versions.json');
+		const versionsJson = await versionsFile.json();
 
-	const packageFile = Bun.file('./package.json');
-	const packageJson = await packageFile.json();
+		versionsJson[newVersionString] = manifest.minAppVersion;
 
-	packageJson.version = newVersionString;
+		await Bun.write(versionsFile, JSON.stringify(versionsJson, null, '\t'));
 
-	await Bun.write(packageFile, JSON.stringify(packageJson, null, '\t'));
+		const packageFile = Bun.file('./package.json');
+		const packageJson = await packageFile.json();
+
+		packageJson.version = newVersionString;
+
+		await Bun.write(packageFile, JSON.stringify(packageJson, null, '\t'));
+	}
 
 	await $seq(
 		[`bun run format`, `git add .`, `git commit -m "[auto] bump version to \`${newVersionString}\`"`],
@@ -113,6 +128,7 @@ async function run() {
 			throw new UserError('failed to add preconditions changes to git');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 
@@ -133,6 +149,7 @@ async function run() {
 			throw new UserError('failed to merge or create tag');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 

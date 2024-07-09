@@ -1,10 +1,10 @@
 import { type App, moment, setIcon } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import { MessageDisplay } from './MessageDisplay';
-import { store, type Store } from '../utils/StoreObj';
+import type JsEnginePlugin from 'jsEngine/main';
+import { MessageDisplay } from 'jsEngine/messages/MessageDisplay';
+import { store, type Store } from 'jsEngine/utils/StoreObj';
 import type { Moment } from 'moment';
-import { type InstanceId } from '../api/InstanceId';
-import { iteratorToArray } from '../utils/Util';
+import { type InstanceId } from 'jsEngine/api/InstanceId';
+import { iteratorToArray } from 'jsEngine/utils/Util';
 
 export enum MessageType {
 	INFO = 'info',

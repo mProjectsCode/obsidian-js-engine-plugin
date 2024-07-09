@@ -1,5 +1,5 @@
-import { AbstractMarkdownElementContainer } from './AbstractMarkdownElementContainer';
-import { type AbstractMarkdownElement } from './AbstractMarkdownElement';
+import { AbstractMarkdownElementContainer } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
+import { type AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
 
 /**
  * Allows for easily building markdown using JavaScript.

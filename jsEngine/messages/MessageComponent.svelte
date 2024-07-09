@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { mapMessageTypeToClass, mapMessageTypeToIcon, MessageManager, MessageWrapper } from './MessageManager';
-	import { useIcon } from 'obsidian-svelte';
+	import { useIcon } from 'jsEngine/utils/UseIcon';
 	import { slide } from 'svelte/transition';
 
 	export let messageWrapper: MessageWrapper;

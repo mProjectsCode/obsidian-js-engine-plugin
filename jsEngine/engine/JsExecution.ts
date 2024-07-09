@@ -1,10 +1,10 @@
 import { type App, type CachedMetadata, type Component, type TFile } from 'obsidian';
-import type JsEnginePlugin from '../main';
-import { MessageType, type MessageWrapper } from '../messages/MessageManager';
-import { API } from '../api/API';
-import { InstanceId, InstanceType } from '../api/InstanceId';
+import type JsEnginePlugin from 'jsEngine/main';
+import { MessageType, type MessageWrapper } from 'jsEngine/messages/MessageManager';
+import { API } from 'jsEngine/api/API';
+import { InstanceId, InstanceType } from 'jsEngine/api/InstanceId';
 import * as Obsidian from 'obsidian';
-import { type EngineExecutionParams } from './Engine';
+import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
 
 /**
  * An async JavaScript function.
