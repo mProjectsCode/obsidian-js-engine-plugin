@@ -2,10 +2,14 @@
 	import { JsExecution } from './JsExecution';
 	import MessageComponent from '../messages/MessageComponent.svelte';
 
-	export let execution: JsExecution;
-	let messages = execution.getMessages();
+	const {
+		execution,
+	}: {
+		execution: JsExecution;
+	} = $props();
 
 	function highlightCode(code: string): string {
+		// @ts-expect-error
 		const prism = window.Prism;
 		try {
 			return prism.highlight(code, prism.languages.javascript, 'javascript');
@@ -55,7 +59,7 @@
 
 	<h3>Messages</h3>
 	<div>
-		{#each messages as messageWrapper}
+		{#each execution.getMessages() as messageWrapper}
 			<MessageComponent
 				messageWrapper={messageWrapper}
 				messageManager={execution.plugin.messageManager}

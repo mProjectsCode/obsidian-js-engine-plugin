@@ -14,8 +14,7 @@
 		"skipLibCheck": true,
 		"verbatimModuleSyntax": true,
 		"lib": ["DOM", "ESNext"],
-		// the web stuff is a workaround until https://github.com/oven-sh/bun/issues/5674 gets fixed
-		"types": ["svelte", "bun-types", "web"],
+		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true
 	},
 	"include": ["jsEngine/**/*.ts"]

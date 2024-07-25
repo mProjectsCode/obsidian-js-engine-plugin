@@ -1,5 +1,5 @@
 import { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
-import { type CachedMetadata, type TFile, type App, type Plugin } from 'obsidian';
+import { type App, type Plugin } from 'obsidian';
 import type JsEnginePlugin from 'jsEngine/main';
 import { type InstanceId } from 'jsEngine/api/InstanceId';
 import { MessageAPI } from 'jsEngine/api/MessageAPI';
@@ -7,6 +7,7 @@ import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import { LibAPI } from 'jsEngine/api/LibAPI';
 import { type JsFunc } from 'jsEngine/engine/JsExecution';
 import { InternalAPI } from 'jsEngine/api/Internal';
+import { QueryAPI } from 'jsEngine/api/QueryAPI';
 
 export class API {
 	/**
@@ -31,6 +32,10 @@ export class API {
 	 */
 	readonly lib: LibAPI;
 	/**
+	 * API to query your vault with simple javascript functions.
+	 */
+	readonly query: QueryAPI;
+	/**
 	 * API to interact with js engines internals.
 	 */
 	readonly internal: InternalAPI;
@@ -43,6 +48,7 @@ export class API {
 		this.markdown = new MarkdownAPI(this);
 		this.message = new MessageAPI(this);
 		this.lib = new LibAPI(this);
+		this.query = new QueryAPI(this);
 		this.internal = new InternalAPI(this);
 	}
 
@@ -80,9 +86,5 @@ export class API {
 	 */
 	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
 		return new ReactiveComponent(this, fn, initialArgs);
-	}
-
-	public queryVault(query: (file: TFile, cache: CachedMetadata | null) => boolean): TFile[] {
-		return this.app.vault.getMarkdownFiles().filter(file => query(file, this.app.metadataCache.getFileCache(file)));
 	}
 }

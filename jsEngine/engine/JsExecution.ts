@@ -79,12 +79,12 @@ export class JsExecution {
 	readonly app: App;
 	readonly plugin: JsEnginePlugin;
 
-	private readonly globals: JsExecutionGlobals;
 	private readonly context: (JsExecutionContext | undefined) & Record<string, unknown>;
 	private readonly apiInstance: API;
 	private messages: MessageWrapper[];
 	private func: JsFunc | undefined;
 
+	readonly globals: JsExecutionGlobals;
 	readonly uuid: string;
 	readonly code: string;
 	result: unknown;
