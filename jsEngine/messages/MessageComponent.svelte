@@ -3,12 +3,19 @@
 	import { useIcon } from 'jsEngine/utils/UseIcon';
 	import { slide } from 'svelte/transition';
 
-	export let messageWrapper: MessageWrapper;
-	export let messageManager: MessageManager;
-	export let showDeleteButton: boolean = true;
-	export let showMessageSource: boolean = true;
+	const {
+		messageWrapper,
+		messageManager,
+		showDeleteButton = true,
+		showMessageSource = true,
+	}: {
+		messageWrapper: MessageWrapper;
+		messageManager: MessageManager;
+		showDeleteButton?: boolean;
+		showMessageSource?: boolean;
+	} = $props();
 
-	let showMore: boolean = false;
+	let showMore: boolean = $state(false);
 </script>
 
 <div class="js-engine-message callout {mapMessageTypeToClass(messageWrapper.message.type)}" data-callout={messageWrapper.message.type}>
@@ -18,8 +25,8 @@
 		{#if showDeleteButton}
 			<div
 				class="js-engine-message-delete-icon callout-icon"
-				on:click={() => messageManager.removeMessage(messageWrapper.uuid)}
-				on:keydown={e => (e.key === ' ' ? messageManager.removeMessage(messageWrapper.uuid) : undefined)}
+				onclick={() => messageManager.removeMessage(messageWrapper.uuid)}
+				onkeydown={e => (e.key === ' ' ? messageManager.removeMessage(messageWrapper.uuid) : undefined)}
 				use:useIcon={'x'}
 				aria-label="remove"
 				role="button"
@@ -40,9 +47,9 @@
 		<div class="js-engine-message-detail">
 			<div
 				class="js-engine-message-detail-row"
-				on:click={() => (showMore = !showMore)}
+				onclick={() => (showMore = !showMore)}
 				aria-expanded={showMore ? 'true' : 'false'}
-				on:keydown={e => (e.key === ' ' ? (showMore = !showMore) : undefined)}
+				onkeydown={e => (e.key === ' ' ? (showMore = !showMore) : undefined)}
 				role="button"
 				tabindex="0"
 			>

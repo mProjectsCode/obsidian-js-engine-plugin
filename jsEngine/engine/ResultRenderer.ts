@@ -45,7 +45,7 @@ export class ResultRenderer {
 		}
 
 		if (value instanceof MarkdownString) {
-			//console.log('js-engine | Rendering Markdown String\n', value.content);
+			// console.log('js-engine | Rendering Markdown String\n', value.content);
 			await value.render(this.plugin.app, this.container, this.sourcePath, this.component);
 			return;
 		}

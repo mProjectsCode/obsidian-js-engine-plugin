@@ -39,7 +39,7 @@ export class JsMDRC extends MarkdownRenderChild {
 		const file = this.getExecutionFile();
 		return {
 			file: file,
-			metadata: file === undefined ? undefined : this.plugin.app.metadataCache.getFileCache(file) ?? undefined,
+			metadata: file === undefined ? undefined : (this.plugin.app.metadataCache.getFileCache(file) ?? undefined),
 			block: undefined,
 		};
 	}
@@ -102,7 +102,7 @@ export class JsMDRC extends MarkdownRenderChild {
 			await this.renderResults(this.containerEl);
 			this.renderExecutionStats(this.containerEl);
 		} catch (e) {
-			this.containerEl.innerText = e instanceof Error ? e.stack?.toString() ?? '' : (e as string);
+			this.containerEl.innerText = e instanceof Error ? (e.stack?.toString() ?? '') : (e as string);
 			this.containerEl.addClass('mod-warning');
 		}
 	}
