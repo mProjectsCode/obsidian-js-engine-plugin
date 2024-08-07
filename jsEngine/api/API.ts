@@ -8,6 +8,7 @@ import { LibAPI } from 'jsEngine/api/LibAPI';
 import { type JsFunc } from 'jsEngine/engine/JsExecution';
 import { InternalAPI } from 'jsEngine/api/Internal';
 import { QueryAPI } from 'jsEngine/api/QueryAPI';
+import { PromptAPI } from 'jsEngine/api/PromptAPI';
 
 export class API {
 	/**
@@ -35,6 +36,7 @@ export class API {
 	 * API to query your vault with simple javascript functions.
 	 */
 	readonly query: QueryAPI;
+	readonly prompt: PromptAPI;
 	/**
 	 * API to interact with js engines internals.
 	 */
@@ -49,6 +51,7 @@ export class API {
 		this.message = new MessageAPI(this);
 		this.lib = new LibAPI(this);
 		this.query = new QueryAPI(this);
+		this.prompt = new PromptAPI(this);
 		this.internal = new InternalAPI(this);
 	}
 

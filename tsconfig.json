@@ -2,8 +2,9 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"module": "ESNext",
-		"target": "ES6",
+		"target": "ESNext",
 		"allowJs": true,
+		"checkJs": true,
 		"noImplicitAny": true,
 		"strict": true,
 		"strictNullChecks": true,
@@ -13,8 +14,10 @@
 		"isolatedModules": true,
 		"skipLibCheck": true,
 		"verbatimModuleSyntax": true,
+		"resolveJsonModule": true,
+		"moduleDetection": "force",
+		"sourceMap": true,
 		"lib": ["DOM", "ESNext"],
-		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true
 	},
 	"include": ["jsEngine/**/*.ts"]

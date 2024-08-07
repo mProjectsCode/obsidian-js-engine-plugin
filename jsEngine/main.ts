@@ -43,6 +43,8 @@ export default class JsEnginePlugin extends Plugin {
 			},
 		});
 
+		this.app.workspace;
+
 		await this.registerCodeMirrorMode();
 	}
 
