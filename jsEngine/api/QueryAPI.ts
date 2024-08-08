@@ -11,13 +11,15 @@ export class QueryAPI {
 	/**
 	 * This function will run the `query` callback on every markdown file in the vault and then return a list of the results, with `undefined` filtered out.
 	 *
-	 * @example Find all markdown `TFiles` that start with the word "Foo":
+	 * @example
 	 * ```typescript
+	 * // Find all markdown `TFiles` that start with the word "Foo"
 	 * const files = engine.query.files(file => file.name.startsWith("Foo") ? file : undefined);
 	 * ```
 	 *
-	 * @example Find all the names of all markdown files that are in the "Foo" folder:
+	 * @example
 	 * ```typescript
+	 * // Find all the names of all markdown files that are in the "Foo" folder
 	 * const fileNames = engine.query.files(file => file.path.startsWith("Foo/") ? file.name : undefined);
 	 * ```
 	 */
@@ -31,8 +33,9 @@ export class QueryAPI {
 	/**
 	 * This function functions similarly tp {@link QueryAPI.files}, but also provides the cache and tags of each file to the `query` callback.
 	 *
-	 * @example Find the paths of all markdown files that have the tag "Foo":
+	 * @example
 	 * ```typescript
+	 * // Find the paths of all markdown files that have the tag "Foo"
 	 * const paths = engine.query.filesWithMetadata((file, cache, tags) => tags.includes("Foo") ? file.path : undefined);
 	 * ```
 	 */

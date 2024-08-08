@@ -78,6 +78,29 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a modal containing a list of buttons.
 	 * Returns the value of the button that was clicked, or undefined if the modal was closed.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Prompt the user with a true/false question.
+	 *
+	 * const ret = await engine.prompt.button({
+	 *     title: 'The set of natural numbers with zero and the addition operation is a monoid.',
+	 *     buttons: [
+	 *         {
+	 *             label: 'True',
+	 *             value: true,
+	 *         },
+	 *         {
+	 *             label: 'False',
+	 *             value: false,
+	 *         },
+	 *         {
+	 *             label: 'Cancel',
+	 *             value: undefined,
+	 *         }
+	 *     ]
+	 * });
+	 * ```
 	 */
 	public button<T>(options: ButtonPromptOptions<T>): Promise<T | undefined> {
 		return new Promise<T | undefined>((resolve, reject) => {
@@ -105,6 +128,16 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a confirm/cancel dialog.
 	 * Returns true if the user confirms, false if the user cancels or otherwise closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Ask the user if they want to confirm an action.
+	 *
+	 * const ret = await engine.prompt.confirm({
+	 *     title: 'Confirm File Deletion',
+	 *     content: 'Are you sure you want to delete this file? This action cannot be undone.',
+	 * });
+	 * ```
 	 */
 	public async confirm(options: ConfirmPromptOptions): Promise<boolean> {
 		return (
@@ -129,6 +162,15 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a yes/no dialog.
 	 * Returns true if the user selects yes, false if the user selects no, and undefined if the user otherwise closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Ask the user if they like Obsidian.
+	 *
+	 * const ret = await engine.prompt.yesNo({
+	 *     title: 'Is this a test?',
+	 *     content: 'Are you sure this is a test? Are you sure that your choice is really meaningless?',
+	 * });
 	 */
 	public async yesNo(options: YesNoPromptOptions): Promise<boolean | undefined> {
 		return await this.button<boolean>({
@@ -151,6 +193,23 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a fuzzy finder suggester dialog.
 	 * Returns the value of the selected option, or undefined if the user closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Query a list of files and prompt the user to select one.
+	 *
+	 * const files = engine.query.files((file) => {
+	 *     return {
+	 *         label: file.name,
+	 *         value: file.pat,
+	 *     };
+	 * });
+	 *
+	 * const ret = await engine.prompt.suggester({
+	 *     placeholder: 'Select a file',
+	 *     options: files,
+	 * });
+	 * ```
 	 */
 	public suggester<T>(options: SuggesterPromptOptions<T>): Promise<T | undefined> {
 		return new Promise<T | undefined>((resolve, reject) => {
@@ -165,6 +224,15 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a text input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Prompt the user to input their name.
+	 *
+	 * const ret = await engine.prompt.text({
+	 *     title: 'Please enter your name',
+	 *     content: 'Please enter your name in the field below.',
+	 * });
 	 */
 	public text(options: InputPromptOptions): Promise<string | undefined> {
 		return new Promise<string | undefined>((resolve, reject) => {
@@ -193,6 +261,17 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a textarea input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Prompt the user to input a multi-line message.
+	 *
+	 * const ret = await engine.prompt.textarea({
+	 *     title: 'Please enter your message',
+	 *     content: 'Please enter your message in the field below.',
+	 *     placeholder: 'Your message here...',
+	 * });
+	 * ```
 	 */
 	public textarea(options: InputPromptOptions): Promise<string | undefined> {
 		return new Promise<string | undefined>((resolve, reject) => {
@@ -221,6 +300,16 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a number input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Prompt the user to input their age.
+	 *
+	 * const ret = await engine.prompt.text({
+	 *     title: 'Please enter your age',
+	 *     content: 'Please enter your age in years in the field below.',
+	 * });
+	 * ```
 	 */
 	public number(options: InputPromptOptions): Promise<number | undefined> {
 		return new Promise<number | undefined>((resolve, reject) => {
