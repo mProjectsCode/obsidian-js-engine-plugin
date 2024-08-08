@@ -2,8 +2,8 @@ import { type App, Modal } from 'obsidian';
 import type JsEnginePlugin from 'jsEngine/main';
 import ExecutionStatsComponent from 'jsEngine/engine/ExecutionStatsComponent.svelte';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
-import { unmount } from 'svelte';
-import { customMount, type MountedComponent } from 'jsEngine/utils/SvelteUtils';
+import { mount, unmount } from 'svelte';
+import { type MountedComponent } from 'jsEngine/utils/SvelteUtils';
 
 /**
  * @internal
@@ -37,8 +37,11 @@ export class ExecutionStatsModal extends Modal {
 			return;
 		}
 
-		this.component = customMount(ExecutionStatsComponent, this.contentEl, {
-			execution: this.execution,
+		this.component = mount(ExecutionStatsComponent, {
+			target: this.contentEl,
+			props: {
+				execution: this.execution,
+			},
 		});
 	}
 

@@ -1,18 +1,19 @@
 import { type App, Modal } from 'obsidian';
-import { type Component as SvelteComponent, unmount } from 'svelte';
+import { unmount } from 'svelte';
 import type { ModalPromptOptions } from 'jsEngine/api/PromptAPI';
+import type { AnySvelteComponent, MountedComponent } from 'jsEngine/utils/SvelteUtils';
 
-export class SvelteModal<Component extends SvelteComponent, T> extends Modal {
-	private component: ReturnType<Component> | undefined;
+export class SvelteModal<Component extends AnySvelteComponent, T> extends Modal {
+	private component: MountedComponent<Component> | undefined;
 	private readonly options: ModalPromptOptions;
-	private readonly createComponent: (modal: SvelteModal<Component, T>, targetEl: HTMLElement) => ReturnType<Component>;
+	private readonly createComponent: (modal: SvelteModal<Component, T>, targetEl: HTMLElement) => MountedComponent<Component>;
 	private readonly onSubmit: (value: T | undefined) => void;
 	private submitted: boolean;
 
 	constructor(
 		app: App,
 		options: ModalPromptOptions,
-		createComponent: (modal: SvelteModal<Component, T>, targetEl: HTMLElement) => ReturnType<Component>,
+		createComponent: (modal: SvelteModal<Component, T>, targetEl: HTMLElement) => MountedComponent<Component>,
 		onSubmit: (value: T | undefined) => void,
 	) {
 		super(app);

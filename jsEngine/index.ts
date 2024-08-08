@@ -8,6 +8,8 @@ export * from './api/Internal';
 export * from './api/LibAPI';
 export * from './api/MarkdownAPI';
 export * from './api/MessageAPI';
+export * from './api/PromptAPI';
+export * from './api/QueryAPI';
 export * from './api/reactive/ReactiveComponent';
 export * from './api/markdown/AbstractMarkdownElement';
 export * from './api/markdown/AbstractMarkdownElementContainer';

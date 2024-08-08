@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { mount, type Component, type ComponentProps, type SvelteComponent } from 'svelte';
-
-export function customMount<Comp extends Component<any, any> | SvelteComponent>(
-	component: Component<any, any> | SvelteComponent,
-	target: HTMLElement,
-	props: ComponentProps<Comp>,
-): ComponentExports<Comp> {
-	return mount(component as any, { target, props });
-}
+import { type Component, type SvelteComponent } from 'svelte';
 
 export type AnyRecord = Record<string, any>;
 export type UnknownRecord = Record<string, unknown>;
+type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
 
 export type ComponentExports<Comp extends Component<any, any> | SvelteComponent> =
-	Comp extends SvelteComponent<any, infer Exports> ? (Exports extends any ? AnyRecord : Exports) : AnyRecord;
+	Comp extends SvelteComponent<any, infer Exports> ? IfAny<Exports, AnyRecord, Exports> : AnyRecord;
 
 export type MountedComponent<Comp extends Component<any, any> | SvelteComponent> = ComponentExports<Comp>;
+
+export type AnySvelteComponent = Component<any, any>;

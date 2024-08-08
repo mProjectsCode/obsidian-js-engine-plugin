@@ -1,4 +1,4 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import type { ButtonPromptOptions } from 'jsEngine/api/PromptAPI';
 	import Button from 'jsEngine/utils/Button.svelte';
 	import type { SvelteModal } from './SvelteModal';
@@ -8,8 +8,8 @@
 		options,
 		modal,
 	}: {
-		options: ButtonPromptOptions<T>;
-		modal: SvelteModal<any, T>;
+		options: ButtonPromptOptions<unknown>;
+		modal: SvelteModal<any, unknown>;
 	} = $props();
 </script>
 
