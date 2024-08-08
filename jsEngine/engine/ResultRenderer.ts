@@ -66,10 +66,10 @@ export class ResultRenderer {
 					showMessageSource: false,
 				},
 			});
-			
+
 			this.component.register(() => {
 				unmount(svelteComponent);
-			})
+			});
 			return;
 		}
 
