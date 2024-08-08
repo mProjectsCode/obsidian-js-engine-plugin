@@ -5,6 +5,7 @@ import MessageComponent from 'jsEngine/messages/MessageComponent.svelte';
 import { type Component } from 'obsidian';
 import type JsEnginePlugin from 'jsEngine/main';
 import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+import { mount, unmount } from 'svelte';
 
 /**
  * Attaches to a container and renders values.
@@ -56,7 +57,7 @@ export class ResultRenderer {
 		}
 
 		if (value instanceof MessageWrapper) {
-			new MessageComponent({
+			const svelteComponent = mount(MessageComponent, {
 				target: this.container,
 				props: {
 					messageWrapper: value,
@@ -65,6 +66,10 @@ export class ResultRenderer {
 					showMessageSource: false,
 				},
 			});
+			
+			this.component.register(() => {
+				unmount(svelteComponent);
+			})
 			return;
 		}
 
