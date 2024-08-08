@@ -2,6 +2,7 @@ import type { API } from 'jsEngine/api/API';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
 import { SvelteModal } from 'jsEngine/api/prompts/SvelteModal';
 import ButtonModalComponent from 'jsEngine/api/prompts/ButtonModalComponent.svelte';
+import InputModalComponent from 'jsEngine/api/prompts/InputModalComponent.svelte';
 import { Suggester } from 'jsEngine/api/prompts/Suggester';
 import { mount } from 'svelte';
 import type { AnySvelteComponent } from 'jsEngine/utils/SvelteUtils';
@@ -54,6 +55,17 @@ export interface SuggesterPromptOptions<T> {
 export interface SuggesterOption<T> {
 	value: T;
 	label: string;
+}
+
+export interface InputPromptOptions extends ModalPromptOptions {
+	/**
+	 * Text content to display in the modal.
+	 */
+	content?: string;
+	/**
+	 * The placeholder text for the input field.
+	 */
+	placeholder?: string;
 }
 
 export class PromptAPI {
@@ -144,6 +156,90 @@ export class PromptAPI {
 		return new Promise<T | undefined>((resolve, reject) => {
 			try {
 				new Suggester<T>(this.apiInstance.app, options, resolve).open();
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	/**
+	 * Prompts the user with a text input dialog.
+	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 */
+	public text(options: InputPromptOptions): Promise<string | undefined> {
+		return new Promise<string | undefined>((resolve, reject) => {
+			try {
+				new SvelteModal<AnySvelteComponent, unknown>(
+					this.apiInstance.app,
+					options,
+					(modal, targetEl) => {
+						return mount(InputModalComponent, {
+							target: targetEl,
+							props: {
+								options,
+								modal,
+								inputType: 'text',
+							},
+						});
+					},
+					resolve as (value: unknown) => void,
+				).open();
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	/**
+	 * Prompts the user with a textarea input dialog.
+	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 */
+	public textarea(options: InputPromptOptions): Promise<string | undefined> {
+		return new Promise<string | undefined>((resolve, reject) => {
+			try {
+				new SvelteModal<AnySvelteComponent, unknown>(
+					this.apiInstance.app,
+					options,
+					(modal, targetEl) => {
+						return mount(InputModalComponent, {
+							target: targetEl,
+							props: {
+								options,
+								modal,
+								inputType: 'textarea',
+							},
+						});
+					},
+					resolve as (value: unknown) => void,
+				).open();
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	/**
+	 * Prompts the user with a number input dialog.
+	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 */
+	public number(options: InputPromptOptions): Promise<number | undefined> {
+		return new Promise<number | undefined>((resolve, reject) => {
+			try {
+				new SvelteModal<AnySvelteComponent, unknown>(
+					this.apiInstance.app,
+					options,
+					(modal, targetEl) => {
+						return mount(InputModalComponent, {
+							target: targetEl,
+							props: {
+								options,
+								modal,
+								inputType: 'number',
+							},
+						});
+					},
+					resolve as (value: unknown) => void,
+				).open();
 			} catch (error) {
 				reject(error);
 			}

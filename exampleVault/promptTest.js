@@ -22,16 +22,22 @@
 // });
 
 
-const files = engine.query.files((file) => {
-    return {
-        label: file.name,
-        value: file.pat,
-    };
+// const files = engine.query.files((file) => {
+//     return {
+//         label: file.name,
+//         value: file.pat,
+//     };
+// });
+
+// const ret = await engine.prompt.suggester({
+//     placeholder: 'Select a file',
+//     options: files,
+// });
+
+const ret = await engine.prompt.text({
+    title: 'Input Something',
+    content: 'What ever you want to type...',
 });
 
-const ret = await engine.prompt.suggester({
-    placeholder: 'Select a file',
-    options: files,
-});
 
 console.log(ret);
