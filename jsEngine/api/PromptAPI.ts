@@ -171,6 +171,7 @@ export class PromptAPI {
 	 *     title: 'Is this a test?',
 	 *     content: 'Are you sure this is a test? Are you sure that your choice is really meaningless?',
 	 * });
+	 * ```
 	 */
 	public async yesNo(options: YesNoPromptOptions): Promise<boolean | undefined> {
 		return await this.button<boolean>({
