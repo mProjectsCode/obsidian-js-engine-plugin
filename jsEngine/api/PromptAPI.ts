@@ -1,9 +1,9 @@
 import type { API } from 'jsEngine/api/API';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
 import { SvelteModal } from 'jsEngine/api/prompts/SvelteModal';
-import { mount } from 'svelte';
-import ButtonModalComponent from 'jsEngine/api/prompts/ButtonModalComponent.svelte';
+import { ButtonModalComponent } from 'jsEngine/api/prompts/ButtonModalComponent';
 import { Suggester } from 'jsEngine/api/prompts/Suggester';
+import { customMount } from 'jsEngine/utils/SvelteUtils';
 
 export interface ModalPromptOptions {
 	/**
@@ -73,13 +73,9 @@ export class PromptAPI {
 					this.apiInstance.app,
 					options,
 					(modal, targetEl) => {
-						return mount(ButtonModalComponent, {
-							target: targetEl,
-							props: {
-								options,
-								// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-								modal: modal as any,
-							},
+						return customMount<ButtonModalComponent<T>>(ButtonModalComponent, targetEl, {
+							options,
+							modal,
 						});
 					},
 					// we cast to narrow the type, so that it is inferred correctly
