@@ -234,6 +234,7 @@ export class PromptAPI {
 	 *     title: 'Please enter your name',
 	 *     content: 'Please enter your name in the field below.',
 	 * });
+	 * ```
 	 */
 	public text(options: InputPromptOptions): Promise<string | undefined> {
 		return new Promise<string | undefined>((resolve, reject) => {
