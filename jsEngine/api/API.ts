@@ -73,11 +73,12 @@ export class API {
 
 	/**
 	 * Gets a plugin by its id. A plugin id can be found by looking at its manifest.
+	 * If the plugin is not enabled, this will return undefined.
 	 *
 	 * @param pluginId the id of the plugin.
 	 */
-	public getPlugin(pluginId: string): Plugin {
-		return this.app.plugins.getPlugin(pluginId);
+	public getPlugin(pluginId: string): Plugin | undefined {
+		return this.app.plugins.getPlugin(pluginId) ?? undefined;
 	}
 
 	/**

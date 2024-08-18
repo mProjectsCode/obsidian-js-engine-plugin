@@ -1,6 +1,7 @@
 ---
 text: this is reactive
 number: 12234234
+favoritePrime: 191
 ---
 
 ```js
