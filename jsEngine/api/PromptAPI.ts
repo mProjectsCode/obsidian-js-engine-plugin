@@ -63,9 +63,28 @@ export interface InputPromptOptions extends ModalPromptOptions {
 	 */
 	content?: string;
 	/**
-	 * The placeholder text for the input field.
+	 * The placeholder text for the input field. This will show when the input field is empty.
 	 */
 	placeholder?: string;
+	/**
+	 * The initial value of the input field that is pre-filled when the modal is opened.
+	 */
+	initialValue?: string;
+}
+
+export interface NumberInputPromptOptions extends ModalPromptOptions {
+	/**
+	 * Text content to display in the modal.
+	 */
+	content?: string;
+	/**
+	 * The placeholder text for the input field. This will show when the input field is empty.
+	 */
+	placeholder?: string;
+	/**
+	 * The initial value of the input field that is pre-filled when the modal is opened.
+	 */
+	initialValue?: number;
 }
 
 export class PromptAPI {
@@ -225,6 +244,7 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a text input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 * While the input field is focused, the user can use `enter` to submit the value and `esc` to cancel and close the modal.
 	 *
 	 * @example
 	 * ```typescript
@@ -263,6 +283,7 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a textarea input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 * While the input field is focused, the user can use `esc` to cancel and close the modal.
 	 *
 	 * @example
 	 * ```typescript
@@ -302,6 +323,7 @@ export class PromptAPI {
 	/**
 	 * Prompts the user with a number input dialog.
 	 * Returns the value of the input field, or undefined if the user closes the modal.
+	 * While the input field is focused, the user can use `enter` to submit the value and `esc` to cancel and close the modal.
 	 *
 	 * @example
 	 * ```typescript
@@ -313,7 +335,7 @@ export class PromptAPI {
 	 * });
 	 * ```
 	 */
-	public number(options: InputPromptOptions): Promise<number | undefined> {
+	public number(options: NumberInputPromptOptions): Promise<number | undefined> {
 		return new Promise<number | undefined>((resolve, reject) => {
 			try {
 				new SvelteModal<AnySvelteComponent, unknown>(

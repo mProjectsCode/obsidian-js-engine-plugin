@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from 'jsEngine/utils/Button.svelte';
-	import type { InputPromptOptions } from '../PromptAPI';
+	import type { InputPromptOptions, NumberInputPromptOptions } from '../PromptAPI';
 	import type { SvelteModal } from './SvelteModal';
 	import { ButtonStyleType } from 'jsEngine/utils/Util';
 
@@ -8,23 +8,39 @@
 		options,
 		modal,
 		inputType,
-	}: {
-		options: InputPromptOptions;
-		modal: SvelteModal<any, unknown>;
-		inputType: 'text' | 'number' | 'textarea';
-	} = $props();
+	}:
+		| {
+				options: InputPromptOptions;
+				modal: SvelteModal<any, unknown>;
+				inputType: 'text' | 'textarea';
+		  }
+		| {
+				options: NumberInputPromptOptions;
+				modal: SvelteModal<any, unknown>;
+				inputType: 'number';
+		  } = $props();
 
-	let value = $state();
+	let value = $state(options.initialValue);
+
+	function onKeydown(event: KeyboardEvent) {
+		if (event.key === 'Enter' && inputType !== 'textarea') {
+			modal.submit(value);
+		}
+		if (event.key === 'Escape') {
+			modal.submit(undefined);
+		}
+	}
 </script>
 
 <p>{options.content}</p>
 
 {#if inputType === 'textarea'}
-	<textarea style="width: 100%; resize: vertical; height: 200px" bind:value={value} placeholder={options.placeholder ?? 'Text here...'}></textarea>
+	<textarea style="width: 100%; resize: vertical; height: 200px" bind:value={value} placeholder={options.placeholder ?? 'Text here...'} onkeydown={onKeydown}
+	></textarea>
 {:else if inputType === 'text'}
-	<input style="width: 100%;" type="text" bind:value={value} placeholder={options.placeholder ?? 'Text here...'} />
+	<input style="width: 100%;" type="text" bind:value={value} placeholder={options.placeholder ?? 'Text here...'} onkeydown={onKeydown} />
 {:else}
-	<input style="width: 100%;" type="number" bind:value={value} placeholder={options.placeholder ?? 'Number here...'} />
+	<input style="width: 100%;" type="number" bind:value={value} placeholder={options.placeholder ?? 'Number here...'} onkeydown={onKeydown} />
 {/if}
 
 <div class="modal-button-container">
