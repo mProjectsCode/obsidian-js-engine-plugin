@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { type Component, type SvelteComponent } from 'svelte';
+import type { Component, SvelteComponent } from 'svelte';
 
 export type AnyRecord = Record<string, any>;
 export type UnknownRecord = Record<string, unknown>;

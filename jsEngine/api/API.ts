@@ -1,14 +1,14 @@
-import { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
-import { type App, type Plugin } from 'obsidian';
-import type JsEnginePlugin from 'jsEngine/main';
-import { type InstanceId } from 'jsEngine/api/InstanceId';
-import { MessageAPI } from 'jsEngine/api/MessageAPI';
-import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
-import { LibAPI } from 'jsEngine/api/LibAPI';
-import { type JsFunc } from 'jsEngine/engine/JsExecution';
+import type { InstanceId } from 'jsEngine/api/InstanceId';
 import { InternalAPI } from 'jsEngine/api/Internal';
-import { QueryAPI } from 'jsEngine/api/QueryAPI';
+import { LibAPI } from 'jsEngine/api/LibAPI';
+import { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
+import { MessageAPI } from 'jsEngine/api/MessageAPI';
 import { PromptAPI } from 'jsEngine/api/PromptAPI';
+import { QueryAPI } from 'jsEngine/api/QueryAPI';
+import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+import type { JsFunc } from 'jsEngine/engine/JsExecution';
+import type JsEnginePlugin from 'jsEngine/main';
+import type { App, Plugin } from 'obsidian';
 
 export class API {
 	/**

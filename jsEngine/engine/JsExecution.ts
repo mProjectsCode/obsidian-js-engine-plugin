@@ -1,10 +1,11 @@
-import { type App, type CachedMetadata, type Component, type TFile } from 'obsidian';
-import type JsEnginePlugin from 'jsEngine/main';
-import { MessageType, type MessageWrapper } from 'jsEngine/messages/MessageManager';
 import { API } from 'jsEngine/api/API';
 import { InstanceId, InstanceType } from 'jsEngine/api/InstanceId';
-import * as Obsidian from 'obsidian';
-import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
+import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+import type JsEnginePlugin from 'jsEngine/main';
+import type { MessageWrapper } from 'jsEngine/messages/MessageManager';
+import { MessageType } from 'jsEngine/messages/MessageManager';
+import type { App, CachedMetadata, Component, TFile } from 'obsidian';
+import type * as Obsidian from 'obsidian';
 
 /**
  * An async JavaScript function.
@@ -65,6 +66,29 @@ export interface JsExecutionGlobals {
 }
 
 /**
+ * Interface for constructing {@link JsExecutionGlobals}.
+ */
+export interface JsExecutionGlobalsConstructionOptions {
+	/**
+	 * Optional API instance.
+	 * If not provided, the one from which the execution globals are constructed is used.
+	 */
+	engine?: API;
+	/**
+	 * Obsidian [component](https://docs.obsidian.md/Reference/TypeScript+API/Component) for lifecycle management.
+	 */
+	component: Component;
+	/**
+	 * The context provided. This can be undefined and extended by other properties.
+	 */
+	context: (JsExecutionContext | undefined) & Record<string, unknown>;
+	/**
+	 * The container element that the execution can render to. This can be undefined.
+	 */
+	container?: HTMLElement | undefined;
+}
+
+/**
  * Parameters used to construct a {@link JsExecution}.
  */
 export interface JsExecutionParams extends EngineExecutionParams {
@@ -108,14 +132,11 @@ export class JsExecution {
 
 		this.func = undefined;
 
-		this.globals = {
-			app: this.app,
-			engine: this.apiInstance,
-			context: this.context,
+		this.globals = this.apiInstance.internal.createExecutionGlobals({
 			component: params.component,
+			context: this.context,
 			container: params.container,
-			obsidian: Obsidian,
-		};
+		});
 	}
 
 	/**

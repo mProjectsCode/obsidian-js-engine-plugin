@@ -1,4 +1,4 @@
-import { type MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+import type { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 
 /**

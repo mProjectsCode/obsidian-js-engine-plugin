@@ -1,7 +1,8 @@
-import type JsEnginePlugin from 'jsEngine/main';
-import { type App, type Component } from 'obsidian';
-import { JsExecution, type JsExecutionContext } from 'jsEngine/engine/JsExecution';
 import { ExecutionStatsModal } from 'jsEngine/engine/ExecutionStatsModal';
+import type { JsExecutionContext } from 'jsEngine/engine/JsExecution';
+import { JsExecution } from 'jsEngine/engine/JsExecution';
+import type JsEnginePlugin from 'jsEngine/main';
+import type { App, Component } from 'obsidian';
 
 /**
  * Parameters for the {@link Engine.execute} method.

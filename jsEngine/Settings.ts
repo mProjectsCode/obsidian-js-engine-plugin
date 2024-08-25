@@ -1,7 +1,8 @@
-import { type App, PluginSettingTab } from 'obsidian';
 import type JsEnginePlugin from 'jsEngine/main';
+import type { App } from 'obsidian';
+import { PluginSettingTab } from 'obsidian';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface JsEnginePluginSettings {}
 
 export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {};

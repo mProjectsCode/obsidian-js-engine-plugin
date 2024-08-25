@@ -1,7 +1,7 @@
-import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
-import { type JsFunc } from 'jsEngine/engine/JsExecution';
+import type { API } from 'jsEngine/api/API';
+import type { JsFunc } from 'jsEngine/engine/JsExecution';
+import type { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 import { MessageType } from 'jsEngine/messages/MessageManager';
-import { type API } from 'jsEngine/api/API';
 
 /**
  * A reactive component is a component that can be refreshed.

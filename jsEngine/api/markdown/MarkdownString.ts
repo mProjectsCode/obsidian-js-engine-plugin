@@ -1,4 +1,5 @@
-import { type App, type Component, MarkdownRenderer } from 'obsidian';
+import type { App, Component } from 'obsidian';
+import { MarkdownRenderer } from 'obsidian';
 
 /**
  * A string that should be rendered as markdown by the plugin.

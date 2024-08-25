@@ -1,5 +1,5 @@
-import { FuzzySuggestModal, TFile } from 'obsidian';
 import type JsEnginePlugin from 'jsEngine/main';
+import { FuzzySuggestModal, TFile } from 'obsidian';
 
 export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 	plugin: JsEnginePlugin;

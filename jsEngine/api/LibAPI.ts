@@ -1,10 +1,10 @@
-import { type API } from 'jsEngine/api/API';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
 import { ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
+import { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import * as IterTools from 'itertools-ts';
+import type { API } from 'jsEngine/api/API';
 
 export interface LibParsiNOM {
 	P: typeof P;

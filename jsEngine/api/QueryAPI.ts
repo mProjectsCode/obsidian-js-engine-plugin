@@ -1,5 +1,6 @@
-import { getAllTags, type CachedMetadata, type TFile } from 'obsidian';
 import type { API } from 'jsEngine/api/API';
+import type { CachedMetadata, TFile } from 'obsidian';
+import { getAllTags } from 'obsidian';
 
 export class QueryAPI {
 	readonly apiInstance: API;

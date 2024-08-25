@@ -1,10 +1,11 @@
-import { type App, moment, setIcon } from 'obsidian';
+import type { InstanceId } from 'jsEngine/api/InstanceId';
 import type JsEnginePlugin from 'jsEngine/main';
 import { MessageDisplay } from 'jsEngine/messages/MessageDisplay';
-import { store, type Store } from 'jsEngine/utils/StoreObj';
-import type { Moment } from 'moment';
-import { type InstanceId } from 'jsEngine/api/InstanceId';
+import { Signal } from 'jsEngine/utils/Signal';
 import { iteratorToArray } from 'jsEngine/utils/Util';
+import type { Moment } from 'moment';
+import type { App } from 'obsidian';
+import { moment, setIcon } from 'obsidian';
 
 export enum MessageType {
 	INFO = 'info',
@@ -75,7 +76,7 @@ export class MessageManager {
 	 */
 	private readonly plugin: JsEnginePlugin;
 
-	messages: Store<Map<string, MessageWrapper>>;
+	messages: Signal<MessageWrapper[]>;
 
 	statusBarItem: HTMLElement | undefined;
 	private messageDisplay: MessageDisplay | undefined;
@@ -84,7 +85,7 @@ export class MessageManager {
 		this.app = app;
 		this.plugin = plugin;
 
-		this.messages = store(new Map<string, MessageWrapper>());
+		this.messages = new Signal<MessageWrapper[]>([]);
 	}
 
 	initStatusBarItem(): void {
@@ -98,28 +99,32 @@ export class MessageManager {
 		});
 
 		this.updateStatusBarItem();
-		this.messages.subscribe(_ => {
-			this.updateStatusBarItem();
+		this.messages.registerListener({
+			callback: () => {
+				this.updateStatusBarItem();
+			},
 		});
 	}
 
 	addMessage(message: Message, source: InstanceId): MessageWrapper {
 		const messageWrapper = new MessageWrapper(message, source);
 
-		this.messages.get().set(messageWrapper.uuid, messageWrapper);
-		this.messages.notify();
+		this.messages.update(messages => {
+			messages.push(messageWrapper);
+			return messages;
+		});
 
 		return messageWrapper;
 	}
 
 	removeMessage(id: string): void {
-		this.messages.get().delete(id);
-		this.messages.notify();
+		this.messages.update(messages => {
+			return messages.filter(x => x.uuid !== id);
+		});
 	}
 
 	removeAllMessages(): void {
-		this.messages.get().clear();
-		this.messages.notify();
+		this.messages.set([]);
 	}
 
 	private updateStatusBarItem(): void {
@@ -134,7 +139,7 @@ export class MessageManager {
 
 		const messageCountEl = this.statusBarItem.createEl('span');
 		messageCountEl.addClass('js-engine-message-counter');
-		messageCountEl.innerText = this.messages.get().size.toString();
+		messageCountEl.innerText = this.messages.get().length.toString();
 
 		const messageTypeSet = new Set<string>(Array.from(this.messages.get().values()).map(x => x.message.type));
 		for (const messageType of messageTypeOrder) {

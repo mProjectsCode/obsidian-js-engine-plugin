@@ -1,7 +1,8 @@
-import { type App, Modal } from 'obsidian';
-import { unmount } from 'svelte';
 import type { ModalPromptOptions } from 'jsEngine/api/PromptAPI';
 import type { AnySvelteComponent, MountedComponent } from 'jsEngine/utils/SvelteUtils';
+import type { App } from 'obsidian';
+import { Modal } from 'obsidian';
+import { unmount } from 'svelte';
 
 export class SvelteModal<Component extends AnySvelteComponent, T> extends Modal {
 	private component: MountedComponent<Component> | undefined;

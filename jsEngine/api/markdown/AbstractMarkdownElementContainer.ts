@@ -1,6 +1,6 @@
 import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
-import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 import { AbstractMarkdownLiteral } from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
+import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 
 /**
  * @internal

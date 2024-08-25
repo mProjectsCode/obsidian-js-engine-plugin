@@ -1,8 +1,9 @@
-import { type API } from 'jsEngine/api/API';
-import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
-import { type JsExecution, type JsExecutionContext } from 'jsEngine/engine/JsExecution';
-import { Component, TFile } from 'obsidian';
+import type { API } from 'jsEngine/api/API';
+import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+import type { JsExecution, JsExecutionContext, JsExecutionGlobals, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
 import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
+import { Component, TFile } from 'obsidian';
+import * as Obsidian from 'obsidian';
 
 /**
  * The internal API provides access to some of js engines internals.
@@ -85,6 +86,17 @@ export class InternalAPI {
 			file: file,
 			metadata: metadata ?? undefined,
 			block: undefined,
+		};
+	}
+
+	public createExecutionGlobals(options: JsExecutionGlobalsConstructionOptions): JsExecutionGlobals {
+		return {
+			app: this.apiInstance.app,
+			engine: options.engine ?? this.apiInstance,
+			component: options.component,
+			context: options.context,
+			container: options.container,
+			obsidian: Obsidian,
 		};
 	}
 }

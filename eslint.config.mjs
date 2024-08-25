@@ -4,6 +4,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import only_warn from 'eslint-plugin-only-warn';
 import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
+import * as plugin_import from 'eslint-plugin-import';
 
 export default tseslint.config(
 	{
@@ -27,12 +28,22 @@ export default tseslint.config(
 			// @ts-ignore
 			'only-warn': only_warn,
 			'no-relative-import-paths': no_relative_import_paths,
+			import: plugin_import,
 		},
 		rules: {
 			'@typescript-eslint/no-explicit-any': ['warn'],
 
 			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' }],
-			'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'inline-type-imports' }],
+			'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'separate-type-imports' }],
+
+			'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+			'import/order': [
+				'error',
+				{
+					'newlines-between': 'never',
+					alphabetize: { order: 'asc', orderImportKind: 'asc', caseInsensitive: true },
+				},
+			],
 
 			'@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
 			'@typescript-eslint/restrict-template-expressions': 'off',

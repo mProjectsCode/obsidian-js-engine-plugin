@@ -1,12 +1,14 @@
-import { type App, Plugin, type PluginManifest } from 'obsidian';
-import { JS_ENGINE_DEFAULT_SETTINGS, type JsEnginePluginSettings } from 'jsEngine/Settings';
-import { JsMDRC } from 'jsEngine/JsMDRC';
+import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { API } from 'jsEngine/api/API';
-import { MessageManager } from 'jsEngine/messages/MessageManager';
 import { InstanceId, InstanceType } from 'jsEngine/api/InstanceId';
 import { Engine } from 'jsEngine/engine/Engine';
-import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { JSFileSelectModal } from 'jsEngine/fileRunner/JSFileSelectModal';
+import { JsMDRC } from 'jsEngine/JsMDRC';
+import { MessageManager } from 'jsEngine/messages/MessageManager';
+import type { JsEnginePluginSettings } from 'jsEngine/Settings';
+import { JS_ENGINE_DEFAULT_SETTINGS } from 'jsEngine/Settings';
+import type { App, PluginManifest } from 'obsidian';
+import { Plugin } from 'obsidian';
 
 export default class JsEnginePlugin extends Plugin {
 	settings: JsEnginePluginSettings | undefined;
@@ -22,6 +24,7 @@ export default class JsEnginePlugin extends Plugin {
 		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
@@ -42,8 +45,6 @@ export default class JsEnginePlugin extends Plugin {
 				}).open();
 			},
 		});
-
-		this.app.workspace;
 
 		await this.registerCodeMirrorMode();
 	}

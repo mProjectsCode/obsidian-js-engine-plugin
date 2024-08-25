@@ -1,5 +1,6 @@
-import { type API } from 'jsEngine/api/API';
-import { Message, type MessageManager, type MessageType, type MessageWrapper } from 'jsEngine/messages/MessageManager';
+import type { API } from 'jsEngine/api/API';
+import type { MessageManager, MessageType, MessageWrapper } from 'jsEngine/messages/MessageManager';
+import { Message } from 'jsEngine/messages/MessageManager';
 
 export class MessageAPI {
 	readonly apiInstance: API;
@@ -15,7 +16,7 @@ export class MessageAPI {
 	}
 
 	public getMessageById(id: string): MessageWrapper | undefined {
-		return this.messageManager.messages.get().get(id);
+		return this.messageManager.messages.get().find(message => message.uuid === id);
 	}
 
 	public getMessagesForInstance(): MessageWrapper[] {

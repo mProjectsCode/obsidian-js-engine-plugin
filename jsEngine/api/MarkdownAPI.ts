@@ -1,5 +1,4 @@
-import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
-import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
+import type { API } from 'jsEngine/api/API';
 import {
 	BlockQuoteElement,
 	CalloutElement,
@@ -11,7 +10,8 @@ import {
 	TableElement,
 	TextElement,
 } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
-import { type API } from 'jsEngine/api/API';
+import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
+import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 
 /**
  * The markdown API provides utilities for creating markdown using js.

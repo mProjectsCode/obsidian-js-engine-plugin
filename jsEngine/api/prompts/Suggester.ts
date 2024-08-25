@@ -1,5 +1,6 @@
-import { type App, FuzzySuggestModal } from 'obsidian';
 import type { SuggesterOption, SuggesterPromptOptions } from 'jsEngine/api/PromptAPI';
+import type { App } from 'obsidian';
+import { FuzzySuggestModal } from 'obsidian';
 
 export class Suggester<T> extends FuzzySuggestModal<SuggesterOption<T>> {
 	private readonly options: SuggesterPromptOptions<T>;
