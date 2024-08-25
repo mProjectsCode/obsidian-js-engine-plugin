@@ -89,6 +89,11 @@ export class InternalAPI {
 		};
 	}
 
+	/**
+	 * Creates execution globals.
+	 *
+	 * @param options
+	 */
 	public createExecutionGlobals(options: JsExecutionGlobalsConstructionOptions): JsExecutionGlobals {
 		return {
 			app: this.apiInstance.app,
