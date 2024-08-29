@@ -257,6 +257,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public text(options: InputPromptOptions): Promise<string | undefined> {
+		options.initialValue = options.initialValue ?? '';
+
 		return new Promise<string | undefined>((resolve, reject) => {
 			try {
 				new SvelteModal<AnySvelteComponent, unknown>(
@@ -297,6 +299,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public textarea(options: InputPromptOptions): Promise<string | undefined> {
+		options.initialValue = options.initialValue ?? '';
+
 		return new Promise<string | undefined>((resolve, reject) => {
 			try {
 				new SvelteModal<AnySvelteComponent, unknown>(
@@ -336,6 +340,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public number(options: NumberInputPromptOptions): Promise<number | undefined> {
+		options.initialValue = options.initialValue ?? 0;
+
 		return new Promise<number | undefined>((resolve, reject) => {
 			try {
 				new SvelteModal<AnySvelteComponent, unknown>(
