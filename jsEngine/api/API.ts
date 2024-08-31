@@ -57,17 +57,22 @@ export class API {
 
 	/**
 	 * Loads an ECMAScript module from a vault relative path.
+	 * Everything you import via this function will be loaded as an ECMAScript module.
+	 *
+	 * Since imports are cached by the browser (aka Obsidian),
+	 * you might need to reload Obsidian to see changes made to the imported file.
 	 *
 	 * @param path the vault relative path of the file to import
 	 */
 	public async importJs(path: string): Promise<unknown> {
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
-		if (!fullPath.includes('?')) {
-			const scriptFile = this.app.metadataCache.getFirstLinkpathDest(path, '');
-			if (scriptFile) {
-				fullPath += '?' + scriptFile.stat.mtime;
-			}
-		}
+
+		// we need to remove the query parameters from the path
+		// because other `import {} from '...'` statements don't add them
+		// and we would end up with multiple imports of the same file
+		// which would cause things like `instanceof` to produce false negatives
+		fullPath = fullPath.split('?')[0];
+
 		return import(fullPath);
 	}
 

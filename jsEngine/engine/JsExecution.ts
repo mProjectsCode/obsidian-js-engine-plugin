@@ -153,6 +153,8 @@ export class JsExecution {
 				)}`,
 			) as JsFunc;
 		} catch (e) {
+			console.warn('failed to parse JS', e);
+
 			if (e instanceof Error) {
 				this.functionBuildError = e;
 

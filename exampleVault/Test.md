@@ -112,6 +112,29 @@ const execution = await engine.internal.executeFile('testFile.js', {
 return execution.result
 ```
 
+Both of these following code blocks should say `Caught UserError`
+
+```js-engine
+const {bar} = await engine.importJs('importTest1.js');
+
+return bar(engine);
+```
+
+```js-engine
+const {UserError} = await engine.importJs('importTest2.js');
+const {foo} = await engine.importJs('importTest3.js');
+
+try {
+	foo();
+} catch (e) {
+	if (e instanceof UserError) {
+		return 'Caught UserError';
+	} else {
+		return 'Caught Other Error';
+	}
+}
+```
+
 # Lib Test
 
 Importing packaged libraries works. In this example [parsiNOM](https://github.com/mProjectsCode/parsiNOM) is used.
@@ -203,5 +226,5 @@ el.addEventListener("click", () => {
 # Test Error
 
 ```js-engine
-le
+le)
 ```
