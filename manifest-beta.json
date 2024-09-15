@@ -1,7 +1,7 @@
 {
 	"id": "js-engine",
 	"name": "JS Engine",
-	"version": "0.1.12-canary.20240831T104225",
+	"version": "0.1.13",
 	"minAppVersion": "1.4.0",
 	"description": "Run JavaScript from within your notes.",
 	"author": "Moritz Jung",
