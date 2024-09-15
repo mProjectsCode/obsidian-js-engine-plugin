@@ -86,7 +86,13 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	}
 
 	createCallout(title: string, type: string, args: string = ''): CalloutElement {
-		const element = new CalloutElement(title, type, args);
+		const element = new CalloutElement(title, type, args, false, false);
+		this.addElement(element);
+		return element;
+	}
+
+	createCollapsibleCallout(title: string, type: string, args: string = '', collapsed: boolean = false): CalloutElement {
+		const element = new CalloutElement(title, type, args, true, collapsed);
 		this.addElement(element);
 		return element;
 	}
@@ -338,13 +344,17 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 	title: string;
 	type: string;
 	args: string;
+	collapsible: boolean;
+	collapsed: boolean;
 
-	constructor(title: string, type: string, args: string) {
+	constructor(title: string, type: string, args: string, collapsible: boolean = false, collapsed: boolean = false) {
 		super();
 
 		this.title = title;
 		this.type = type;
 		this.args = args;
+		this.collapsible = collapsible;
+		this.collapsed = collapsed;
 	}
 
 	public allowElement(_: AbstractMarkdownElement): boolean {
@@ -352,7 +362,19 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 	}
 
 	public toString(): string {
-		return `> [!${this.type}|${this.args}] ${this.title}` + `\n> ` + this.markdownElements.map(x => x.toString().replaceAll('\n', '\n> ')).join('\n> \n> ');
+		return (
+			`> [!${this.type}|${this.args}]${this.collapseChar()} ${this.title}` +
+			`\n> ` +
+			this.markdownElements.map(x => x.toString().replaceAll('\n', '\n> ')).join('\n> \n> ')
+		);
+	}
+
+	private collapseChar(): string {
+		if (this.collapsible) {
+			return this.collapsed ? '-' : '+';
+		} else {
+			return '';
+		}
 	}
 }
 
