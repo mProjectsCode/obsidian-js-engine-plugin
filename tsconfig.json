@@ -20,5 +20,5 @@
 		"lib": ["DOM", "ESNext"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["jsEngine/**/*.ts"]
+	"include": ["jsEngine/**/*.ts", "jsEngine/**/*.svelte"]
 }

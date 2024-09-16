@@ -8,12 +8,14 @@
 		variant = ButtonStyleType.DEFAULT,
 		disabled = false,
 		tooltip = '',
+		other = {},
 		onclick = () => {},
 		children,
 	}: {
 		variant?: ButtonStyleType;
 		disabled?: boolean;
 		tooltip?: string;
+		other?: Record<string, unknown>;
 		onclick?: (e: MouseEvent) => void | Promise<void>;
 		children: Snippet;
 	} = $props();
@@ -28,6 +30,7 @@
 	aria-label={tooltip}
 	onclick={onclick}
 	disabled={disabled}
+	{...other}
 >
 	{@render children()}
 </button>

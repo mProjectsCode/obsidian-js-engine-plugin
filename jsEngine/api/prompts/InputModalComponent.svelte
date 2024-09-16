@@ -24,9 +24,22 @@
 
 	function onKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter' && inputType !== 'textarea') {
+			event.stopPropagation();
+			event.preventDefault();
+
 			modal.submit(value);
 		}
+		if (event.key === 'Enter' && event.ctrlKey && inputType === 'textarea') {
+			event.stopPropagation();
+			event.preventDefault();
+
+			modal.submit(value);
+		}
+
 		if (event.key === 'Escape') {
+			event.stopPropagation();
+			event.preventDefault();
+
 			modal.submit(undefined);
 		}
 	}
