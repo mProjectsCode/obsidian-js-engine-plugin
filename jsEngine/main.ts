@@ -7,6 +7,7 @@ import { JsMDRC } from 'jsEngine/JsMDRC';
 import { MessageManager } from 'jsEngine/messages/MessageManager';
 import type { JsEnginePluginSettings } from 'jsEngine/Settings';
 import { JS_ENGINE_DEFAULT_SETTINGS } from 'jsEngine/Settings';
+import { Validators } from 'jsEngine/utils/Validators';
 import type { App, PluginManifest } from 'obsidian';
 import { Plugin } from 'obsidian';
 
@@ -15,10 +16,12 @@ export default class JsEnginePlugin extends Plugin {
 	messageManager: MessageManager;
 	jsEngine: Engine;
 	api: API;
+	validators: Validators;
 
 	constructor(app: App, manifest: PluginManifest) {
 		super(app, manifest);
 
+		this.validators = new Validators();
 		this.messageManager = new MessageManager(this.app, this);
 		this.jsEngine = new Engine(this.app, this);
 		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));

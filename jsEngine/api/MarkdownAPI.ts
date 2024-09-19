@@ -12,6 +12,8 @@ import {
 } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
 import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
+import { z } from 'zod';
 
 /**
  * The markdown API provides utilities for creating markdown using js.
@@ -27,7 +29,7 @@ export class MarkdownAPI {
 	 * Creates a markdown builder.
 	 */
 	public createBuilder(): MarkdownBuilder {
-		return new MarkdownBuilder();
+		return new MarkdownBuilder(this.apiInstance);
 	}
 
 	/**
@@ -38,7 +40,9 @@ export class MarkdownAPI {
 	 * @param markdown the string to wrap
 	 */
 	public create(markdown: string): MarkdownString {
-		return new MarkdownString(markdown);
+		validateAPIArgs(z.object({ markdown: z.string() }), { markdown });
+
+		return new MarkdownString(this.apiInstance, markdown);
 	}
 
 	/**
@@ -47,7 +51,9 @@ export class MarkdownAPI {
 	 * @param text
 	 */
 	public createText(text: string): TextElement {
-		return new TextElement(text, false, false, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new TextElement(this.apiInstance, text, false, false, false);
 	}
 
 	/**
@@ -56,7 +62,9 @@ export class MarkdownAPI {
 	 * @param text
 	 */
 	public createBoldText(text: string): TextElement {
-		return new TextElement(text, true, false, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new TextElement(this.apiInstance, text, true, false, false);
 	}
 
 	/**
@@ -65,7 +73,9 @@ export class MarkdownAPI {
 	 * @param text
 	 */
 	public createCursiveText(text: string): TextElement {
-		return new TextElement(text, false, true, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new TextElement(this.apiInstance, text, false, true, false);
 	}
 
 	/**
@@ -74,7 +84,9 @@ export class MarkdownAPI {
 	 * @param text
 	 */
 	public createUnderlinedText(text: string): TextElement {
-		return new TextElement(text, false, false, true);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new TextElement(this.apiInstance, text, false, false, true);
 	}
 
 	/**
@@ -83,7 +95,9 @@ export class MarkdownAPI {
 	 * @param text
 	 */
 	public createCode(text: string): CodeElement {
-		return new CodeElement(text);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new CodeElement(this.apiInstance, text);
 	}
 
 	/**
@@ -92,7 +106,9 @@ export class MarkdownAPI {
 	 * @param content
 	 */
 	public createParagraph(content: string): ParagraphElement {
-		return new ParagraphElement(content);
+		validateAPIArgs(z.object({ content: z.string() }), { content });
+
+		return new ParagraphElement(this.apiInstance, content);
 	}
 
 	/**
@@ -102,14 +118,16 @@ export class MarkdownAPI {
 	 * @param content the text of the heading
 	 */
 	public createHeading(level: number, content: string): HeadingElement {
-		return new HeadingElement(level, content);
+		validateAPIArgs(z.object({ level: z.number(), content: z.string() }), { level, content });
+
+		return new HeadingElement(this.apiInstance, level, content);
 	}
 
 	/**
 	 * Creates a new markdown block quote element.
 	 */
 	public createBlockQuote(): BlockQuoteElement {
-		return new BlockQuoteElement();
+		return new BlockQuoteElement(this.apiInstance);
 	}
 
 	/**
@@ -120,7 +138,23 @@ export class MarkdownAPI {
 	 * @param args the callout args, optional
 	 */
 	public createCallout(title: string, type: string, args: string = ''): CalloutElement {
-		return new CalloutElement(title, type, args);
+		validateAPIArgs(z.object({ title: z.string(), type: z.string(), args: z.string() }), { title, type, args });
+
+		return new CalloutElement(this.apiInstance, title, type, args);
+	}
+
+	/**
+	 * Creates a new markdown collapsible callout element.
+	 *
+	 * @param title the title of the callout
+	 * @param type the type of the callout
+	 * @param args the callout args, optional
+	 * @param collapsed whether the callout should be collapsed by default, optional
+	 */
+	createCollapsibleCallout(title: string, type: string, args: string = '', collapsed: boolean = false): CalloutElement {
+		validateAPIArgs(z.object({ title: z.string(), type: z.string(), args: z.string(), collapsed: z.boolean() }), { title, type, args, collapsed });
+
+		return new CalloutElement(this.apiInstance, title, type, args, true, collapsed);
 	}
 
 	/**
@@ -130,7 +164,9 @@ export class MarkdownAPI {
 	 * @param content the content of the code block
 	 */
 	public createCodeBlock(language: string, content: string): CodeBlockElement {
-		return new CodeBlockElement(language, content);
+		validateAPIArgs(z.object({ language: z.string(), content: z.string() }), { language, content });
+
+		return new CodeBlockElement(this.apiInstance, language, content);
 	}
 
 	/**
@@ -140,7 +176,9 @@ export class MarkdownAPI {
 	 * @param body the table body
 	 */
 	public createTable(header: string[], body: string[][]): TableElement {
-		return new TableElement(header, body);
+		validateAPIArgs(z.object({ header: z.array(z.string()), body: z.array(z.array(z.string())) }), { header, body });
+
+		return new TableElement(this.apiInstance, header, body);
 	}
 
 	/**
@@ -149,6 +187,8 @@ export class MarkdownAPI {
 	 * @param ordered whether the list should be ordered or not (use 1. or -)
 	 */
 	createList(ordered: boolean): ListElement {
-		return new ListElement(ordered);
+		validateAPIArgs(z.object({ ordered: z.boolean() }), { ordered });
+
+		return new ListElement(this.apiInstance, ordered);
 	}
 }

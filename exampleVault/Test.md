@@ -228,3 +228,7 @@ el.addEventListener("click", () => {
 ```js-engine
 le)
 ```
+
+```js-engine
+engine.getPlugin(false)
+```

@@ -5,8 +5,14 @@ import { Suggester } from 'jsEngine/api/prompts/Suggester';
 import { SvelteModal } from 'jsEngine/api/prompts/SvelteModal';
 import type { AnySvelteComponent } from 'jsEngine/utils/SvelteUtils';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import { mount } from 'svelte';
+import { z } from 'zod';
 
+/**
+ * Basic options for a prompt modal.
+ * This interface is used as a base for other prompt options.
+ */
 export interface ModalPromptOptions {
 	/**
 	 * The title of the modal.
@@ -26,11 +32,13 @@ export interface ButtonPromptOptions<T> extends ModalPromptOptions {
 	/**
 	 * A list of buttons to display in the modal.
 	 */
-	buttons: {
-		label: string;
-		value: T;
-		variant?: ButtonStyleType;
-	}[];
+	buttons: ButtonPromptButtonOptions<T>[];
+}
+
+export interface ButtonPromptButtonOptions<T> {
+	label: string;
+	value: T;
+	variant?: ButtonStyleType;
 }
 
 export interface ConfirmPromptOptions extends ModalPromptOptions {
@@ -122,6 +130,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public button<T>(options: ButtonPromptOptions<T>): Promise<T | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.buttonModalPromptOptions }), { options });
+
 		return new Promise<T | undefined>((resolve, reject) => {
 			try {
 				new SvelteModal<AnySvelteComponent, unknown>(
@@ -159,6 +169,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public async confirm(options: ConfirmPromptOptions): Promise<boolean> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.confirmPromptOptions }), { options });
+
 		return (
 			(await this.button<boolean>({
 				...options,
@@ -193,6 +205,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public async yesNo(options: YesNoPromptOptions): Promise<boolean | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.yesNoPromptOptions }), { options });
+
 		return await this.button<boolean>({
 			...options,
 			buttons: [
@@ -232,6 +246,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public suggester<T>(options: SuggesterPromptOptions<T>): Promise<T | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.suggesterPromptOptions }), { options });
+
 		return new Promise<T | undefined>((resolve, reject) => {
 			try {
 				new Suggester<T>(this.apiInstance.app, options, resolve).open();
@@ -257,6 +273,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public text(options: InputPromptOptions): Promise<string | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.inputPromptOptions }), { options });
+
 		options.initialValue = options.initialValue ?? '';
 
 		return new Promise<string | undefined>((resolve, reject) => {
@@ -299,6 +317,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public textarea(options: InputPromptOptions): Promise<string | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.inputPromptOptions }), { options });
+
 		options.initialValue = options.initialValue ?? '';
 
 		return new Promise<string | undefined>((resolve, reject) => {
@@ -340,6 +360,8 @@ export class PromptAPI {
 	 * ```
 	 */
 	public number(options: NumberInputPromptOptions): Promise<number | undefined> {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.numberInputPromptOptions }), { options });
+
 		options.initialValue = options.initialValue ?? 0;
 
 		return new Promise<number | undefined>((resolve, reject) => {

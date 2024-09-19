@@ -1,6 +1,8 @@
 import type { API } from 'jsEngine/api/API';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { CachedMetadata, TFile } from 'obsidian';
 import { getAllTags } from 'obsidian';
+import { z } from 'zod';
 
 export class QueryAPI {
 	readonly apiInstance: API;
@@ -25,6 +27,8 @@ export class QueryAPI {
 	 * ```
 	 */
 	public files<T>(query: (file: TFile) => T | undefined): T[] {
+		validateAPIArgs(z.object({ query: z.function().args(this.apiInstance.validators.tFile).returns(z.unknown()) }), { query });
+
 		return this.apiInstance.app.vault
 			.getMarkdownFiles()
 			.map(file => query(file))
@@ -41,6 +45,16 @@ export class QueryAPI {
 	 * ```
 	 */
 	public filesWithMetadata<T>(query: (file: TFile, cache: CachedMetadata | null, tags: string[]) => T | undefined): T[] {
+		validateAPIArgs(
+			z.object({
+				query: z
+					.function()
+					.args(this.apiInstance.validators.tFile, this.apiInstance.validators.cachedMetadata.nullable(), z.string().array())
+					.returns(z.unknown()),
+			}),
+			{ query },
+		);
+
 		return this.apiInstance.app.vault
 			.getMarkdownFiles()
 			.map(file => {

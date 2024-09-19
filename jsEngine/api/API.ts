@@ -8,7 +8,10 @@ import { QueryAPI } from 'jsEngine/api/QueryAPI';
 import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import type { JsFunc } from 'jsEngine/engine/JsExecution';
 import type JsEnginePlugin from 'jsEngine/main';
+import type { Validators } from 'jsEngine/utils/Validators';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { App, Plugin } from 'obsidian';
+import { z } from 'zod';
 
 export class API {
 	/**
@@ -20,6 +23,7 @@ export class API {
 	 */
 	readonly plugin: JsEnginePlugin;
 	readonly instanceId: InstanceId;
+	readonly validators: Validators;
 	/**
 	 * API to interact with markdown.
 	 */
@@ -46,6 +50,7 @@ export class API {
 		this.app = app;
 		this.plugin = plugin;
 		this.instanceId = instanceId;
+		this.validators = plugin.validators;
 
 		this.markdown = new MarkdownAPI(this);
 		this.message = new MessageAPI(this);
@@ -65,6 +70,8 @@ export class API {
 	 * @param path the vault relative path of the file to import
 	 */
 	public async importJs(path: string): Promise<unknown> {
+		validateAPIArgs(z.object({ path: z.string() }), { path });
+
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 
 		// we need to remove the query parameters from the path
@@ -83,6 +90,8 @@ export class API {
 	 * @param pluginId the id of the plugin.
 	 */
 	public getPlugin(pluginId: string): Plugin | undefined {
+		validateAPIArgs(z.object({ pluginId: z.string() }), { pluginId });
+
 		return this.app.plugins.getPlugin(pluginId) ?? undefined;
 	}
 
@@ -94,6 +103,8 @@ export class API {
 	 * @param initialArgs the initial arguments (for the first render) to pass to the function.
 	 */
 	public reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent {
+		validateAPIArgs(z.object({ fn: z.function(), initialArgs: z.array(z.unknown()) }), { fn, initialArgs });
+
 		return new ReactiveComponent(this, fn, initialArgs);
 	}
 }

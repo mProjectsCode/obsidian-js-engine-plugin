@@ -19,15 +19,15 @@ export interface JsExecutionContext {
 	/**
 	 * The file that the execution was triggered from.
 	 */
-	file: TFile | undefined;
+	file?: TFile | undefined;
 	/**
 	 * The metadata of the file that the execution was triggered from.
 	 */
-	metadata: CachedMetadata | undefined;
+	metadata?: CachedMetadata | undefined;
 	/**
 	 * Currently unused.
 	 */
-	block: Block | undefined;
+	block?: Block | undefined;
 }
 
 export interface Block {

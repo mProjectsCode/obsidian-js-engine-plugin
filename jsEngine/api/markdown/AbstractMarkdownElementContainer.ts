@@ -1,6 +1,9 @@
+import type { API } from 'jsEngine/api/API';
 import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
 import { AbstractMarkdownLiteral } from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
 import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
+import { z } from 'zod';
 
 /**
  * @internal
@@ -8,8 +11,8 @@ import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownElement {
 	markdownElements: AbstractMarkdownElement[];
 
-	constructor() {
-		super();
+	constructor(apiInstance: API) {
+		super(apiInstance);
 
 		this.markdownElements = [];
 	}
@@ -30,6 +33,8 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	 * @throws Error if the element is not allowed in the container.
 	 */
 	addElement(element: AbstractMarkdownElement): void {
+		validateAPIArgs(z.object({ element: this.apiInstance.validators.abstractMarkdownElement }), { element });
+
 		if (this.allowElement(element)) {
 			this.markdownElements.push(element);
 		} else {
@@ -38,79 +43,103 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	}
 
 	addText(text: string): AbstractMarkdownElementContainer {
-		const element = new TextElement(text, false, false, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new TextElement(this.apiInstance, text, false, false, false);
 		this.addElement(element);
 		return this;
 	}
 
 	addBoldText(text: string): AbstractMarkdownElementContainer {
-		const element = new TextElement(text, true, false, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new TextElement(this.apiInstance, text, true, false, false);
 		this.addElement(element);
 		return this;
 	}
 
 	addCursiveText(text: string): AbstractMarkdownElementContainer {
-		const element = new TextElement(text, false, true, false);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new TextElement(this.apiInstance, text, false, true, false);
 		this.addElement(element);
 		return this;
 	}
 
 	addUnderlinedText(text: string): AbstractMarkdownElementContainer {
-		const element = new TextElement(text, false, false, true);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new TextElement(this.apiInstance, text, false, false, true);
 		this.addElement(element);
 		return this;
 	}
 
 	addCode(text: string): AbstractMarkdownElementContainer {
-		const element = new CodeElement(text);
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new CodeElement(this.apiInstance, text);
 		this.addElement(element);
 		return this;
 	}
 
 	createParagraph(content: string): ParagraphElement {
-		const element = new ParagraphElement(content);
+		validateAPIArgs(z.object({ content: z.string() }), { content });
+
+		const element = new ParagraphElement(this.apiInstance, content);
 		this.addElement(element);
 		return element;
 	}
 
 	createHeading(level: number, content: string): HeadingElement {
-		const element = new HeadingElement(level, content);
+		validateAPIArgs(z.object({ level: z.number(), content: z.string() }), { level, content });
+
+		const element = new HeadingElement(this.apiInstance, level, content);
 		this.addElement(element);
 		return element;
 	}
 
 	createBlockQuote(): BlockQuoteElement {
-		const element = new BlockQuoteElement();
+		const element = new BlockQuoteElement(this.apiInstance);
 		this.addElement(element);
 		return element;
 	}
 
 	createCallout(title: string, type: string, args: string = ''): CalloutElement {
-		const element = new CalloutElement(title, type, args, false, false);
+		validateAPIArgs(z.object({ title: z.string(), type: z.string(), args: z.string() }), { title, type, args });
+
+		const element = new CalloutElement(this.apiInstance, title, type, args, false, false);
 		this.addElement(element);
 		return element;
 	}
 
 	createCollapsibleCallout(title: string, type: string, args: string = '', collapsed: boolean = false): CalloutElement {
-		const element = new CalloutElement(title, type, args, true, collapsed);
+		validateAPIArgs(z.object({ title: z.string(), type: z.string(), args: z.string(), collapsed: z.boolean() }), { title, type, args, collapsed });
+
+		const element = new CalloutElement(this.apiInstance, title, type, args, true, collapsed);
 		this.addElement(element);
 		return element;
 	}
 
 	createCodeBlock(language: string, content: string): CodeBlockElement {
-		const element = new CodeBlockElement(language, content);
+		validateAPIArgs(z.object({ language: z.string(), content: z.string() }), { language, content });
+
+		const element = new CodeBlockElement(this.apiInstance, language, content);
 		this.addElement(element);
 		return element;
 	}
 
 	createTable(header: string[], body: string[][]): TableElement {
-		const element = new TableElement(header, body);
+		validateAPIArgs(z.object({ header: z.array(z.string()), body: z.array(z.array(z.string())) }), { header, body });
+
+		const element = new TableElement(this.apiInstance, header, body);
 		this.addElement(element);
 		return element;
 	}
 
 	createList(ordered: boolean): ListElement {
-		const element = new ListElement(ordered);
+		validateAPIArgs(z.object({ ordered: z.boolean() }), { ordered });
+
+		const element = new ListElement(this.apiInstance, ordered);
 		this.addElement(element);
 		return element;
 	}
@@ -129,8 +158,8 @@ export class TextElement extends AbstractMarkdownLiteral {
 	cursive: boolean;
 	underline: boolean;
 
-	constructor(content: string, bold: boolean, cursive: boolean, underline: boolean) {
-		super();
+	constructor(apiInstance: API, content: string, bold: boolean, cursive: boolean, underline: boolean) {
+		super(apiInstance);
 
 		this.content = content;
 		this.bold = bold;
@@ -167,8 +196,8 @@ export class TextElement extends AbstractMarkdownLiteral {
 export class CodeElement extends AbstractMarkdownLiteral {
 	content: string;
 
-	constructor(content: string) {
-		super();
+	constructor(apiInstance: API, content: string) {
+		super(apiInstance);
 
 		this.content = content;
 	}
@@ -185,8 +214,8 @@ export class TableElement extends AbstractMarkdownLiteral {
 	header: string[];
 	body: string[][];
 
-	constructor(header: string[], body: string[][]) {
-		super();
+	constructor(apiInstance: API, header: string[], body: string[][]) {
+		super(apiInstance);
 
 		this.header = header;
 		this.body = body;
@@ -267,8 +296,8 @@ export class TableElement extends AbstractMarkdownLiteral {
 export class HeadingElement extends AbstractMarkdownElementContainer {
 	level: number;
 
-	constructor(level: number, content: string) {
-		super();
+	constructor(apiInstance: API, level: number, content: string) {
+		super(apiInstance);
 
 		this.level = level;
 		this.addText(content);
@@ -287,8 +316,8 @@ export class HeadingElement extends AbstractMarkdownElementContainer {
  * Represents a markdown paragraph.
  */
 export class ParagraphElement extends AbstractMarkdownElementContainer {
-	constructor(content: string) {
-		super();
+	constructor(apiInstance: API, content: string) {
+		super(apiInstance);
 
 		this.addText(content);
 	}
@@ -308,19 +337,19 @@ export class ParagraphElement extends AbstractMarkdownElementContainer {
 export class CodeBlockElement extends AbstractMarkdownElementContainer {
 	language: string;
 
-	constructor(language: string, content: string) {
-		super();
+	constructor(apiInstance: API, language: string, content: string) {
+		super(apiInstance);
 
 		this.language = language;
 		this.addText(content);
 	}
 
-	public allowElement(element: AbstractMarkdownElement): boolean {
-		return element.getType() === MarkdownElementType.LITERAL;
-	}
-
 	public toString(): string {
 		return `\`\`\`${this.language}\n${this.markdownElements.map(x => x.toString()).join('')}\n\`\`\``;
+	}
+
+	public allowElement(element: AbstractMarkdownElement): boolean {
+		return element.getType() === MarkdownElementType.LITERAL;
 	}
 }
 
@@ -328,12 +357,12 @@ export class CodeBlockElement extends AbstractMarkdownElementContainer {
  * Represents a markdown block quote.
  */
 export class BlockQuoteElement extends AbstractMarkdownElementContainer {
-	public allowElement(_: AbstractMarkdownElement): boolean {
-		return true;
-	}
-
 	public toString(): string {
 		return `> ` + this.markdownElements.map(x => x.toString().replaceAll('\n', '\n> ')).join('\n> \n> ');
+	}
+
+	public allowElement(_: AbstractMarkdownElement): boolean {
+		return true;
 	}
 }
 
@@ -347,18 +376,14 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 	collapsible: boolean;
 	collapsed: boolean;
 
-	constructor(title: string, type: string, args: string, collapsible: boolean = false, collapsed: boolean = false) {
-		super();
+	constructor(apiInstance: API, title: string, type: string, args: string, collapsible: boolean = false, collapsed: boolean = false) {
+		super(apiInstance);
 
 		this.title = title;
 		this.type = type;
 		this.args = args;
 		this.collapsible = collapsible;
 		this.collapsed = collapsed;
-	}
-
-	public allowElement(_: AbstractMarkdownElement): boolean {
-		return true;
 	}
 
 	public toString(): string {
@@ -376,19 +401,19 @@ export class CalloutElement extends AbstractMarkdownElementContainer {
 			return '';
 		}
 	}
+
+	public allowElement(_: AbstractMarkdownElement): boolean {
+		return true;
+	}
 }
 
 export class ListElement extends AbstractMarkdownElementContainer {
 	ordered: boolean;
 
-	constructor(ordered: boolean) {
-		super();
+	constructor(apiInstance: API, ordered: boolean) {
+		super(apiInstance);
 
 		this.ordered = ordered;
-	}
-
-	public allowElement(_: AbstractMarkdownElement): boolean {
-		return true;
 	}
 
 	private getPrefix(i: number): string {
@@ -409,5 +434,9 @@ export class ListElement extends AbstractMarkdownElementContainer {
 				return `${this.getPrefix(i)}${x.toString().replaceAll('\n', '\n\t')}`;
 			})
 			.join('\n');
+	}
+
+	public allowElement(_: AbstractMarkdownElement): boolean {
+		return true;
 	}
 }

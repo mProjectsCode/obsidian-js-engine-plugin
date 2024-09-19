@@ -2,8 +2,10 @@ import type { API } from 'jsEngine/api/API';
 import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
 import type { JsExecution, JsExecutionContext, JsExecutionGlobals, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
 import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
+import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import { Component, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
+import { z } from 'zod';
 
 /**
  * The internal API provides access to some of js engines internals.
@@ -21,6 +23,8 @@ export class InternalAPI {
 	 * @param params
 	 */
 	public async execute(params: EngineExecutionParams): Promise<JsExecution> {
+		validateAPIArgs(z.object({ params: this.apiInstance.validators.engineExecutionParams }), { params });
+
 		return await this.apiInstance.plugin.jsEngine.execute(params);
 	}
 
@@ -32,6 +36,11 @@ export class InternalAPI {
 	 * @param component
 	 */
 	public createRenderer(container: HTMLElement, sourcePath: string, component: Component): ResultRenderer {
+		validateAPIArgs(
+			z.object({ container: this.apiInstance.validators.htmlElement, sourcePath: z.string(), component: this.apiInstance.validators.component }),
+			{ container, sourcePath, component },
+		);
+
 		return new ResultRenderer(this.apiInstance.plugin, container, sourcePath, component);
 	}
 
@@ -42,6 +51,8 @@ export class InternalAPI {
 	 * @param params
 	 */
 	public async executeFile(path: string, params: Omit<EngineExecutionParams, 'code'>): Promise<JsExecution> {
+		validateAPIArgs(z.object({ path: z.string(), params: this.apiInstance.validators.engineExecutionParamsNoCode }), { path, params });
+
 		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
 		if (!file || !(file instanceof TFile)) {
 			throw new Error(`File ${path} not found.`);
@@ -60,6 +71,11 @@ export class InternalAPI {
 	 * @param params
 	 */
 	public async executeFileSimple(path: string, params?: Omit<EngineExecutionParams, 'code' | 'component'>): Promise<JsExecution> {
+		validateAPIArgs(z.object({ path: z.string(), params: this.apiInstance.validators.engineExecutionParamsNoCodeAndComponent.optional() }), {
+			path,
+			params,
+		});
+
 		const component = new Component();
 		component.load();
 		try {
@@ -75,6 +91,8 @@ export class InternalAPI {
 	 * @param path
 	 */
 	public async getContextForFile(path: string): Promise<JsExecutionContext> {
+		validateAPIArgs(z.object({ path: z.string() }), { path });
+
 		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
 		if (!file || !(file instanceof TFile)) {
 			throw new Error(`File ${path} not found.`);
@@ -95,6 +113,8 @@ export class InternalAPI {
 	 * @param options
 	 */
 	public createExecutionGlobals(options: JsExecutionGlobalsConstructionOptions): JsExecutionGlobals {
+		validateAPIArgs(z.object({ options: this.apiInstance.validators.jsExecutionGlobalsConstructionOptions }), { options });
+
 		return {
 			app: this.apiInstance.app,
 			engine: options.engine ?? this.apiInstance,
