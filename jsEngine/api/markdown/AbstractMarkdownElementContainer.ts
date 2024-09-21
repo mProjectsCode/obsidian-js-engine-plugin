@@ -45,7 +45,7 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	addText(text: string): AbstractMarkdownElementContainer {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		const element = new TextElement(this.apiInstance, text, false, false, false);
+		const element = new TextElement(this.apiInstance, text, false, false, false, false);
 		this.addElement(element);
 		return this;
 	}
@@ -53,7 +53,7 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	addBoldText(text: string): AbstractMarkdownElementContainer {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		const element = new TextElement(this.apiInstance, text, true, false, false);
+		const element = new TextElement(this.apiInstance, text, true, false, false, false);
 		this.addElement(element);
 		return this;
 	}
@@ -61,7 +61,7 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	addCursiveText(text: string): AbstractMarkdownElementContainer {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		const element = new TextElement(this.apiInstance, text, false, true, false);
+		const element = new TextElement(this.apiInstance, text, false, true, false, false);
 		this.addElement(element);
 		return this;
 	}
@@ -69,7 +69,15 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 	addUnderlinedText(text: string): AbstractMarkdownElementContainer {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		const element = new TextElement(this.apiInstance, text, false, false, true);
+		const element = new TextElement(this.apiInstance, text, false, false, true, false);
+		this.addElement(element);
+		return this;
+	}
+
+	addHighlightedText(text: string): AbstractMarkdownElementContainer {
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		const element = new TextElement(this.apiInstance, text, false, false, false, true);
 		this.addElement(element);
 		return this;
 	}
@@ -136,10 +144,16 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 		return element;
 	}
 
-	createList(ordered: boolean): ListElement {
+	createList(ordered: boolean = false): ListElement {
 		validateAPIArgs(z.object({ ordered: z.boolean() }), { ordered });
 
 		const element = new ListElement(this.apiInstance, ordered);
+		this.addElement(element);
+		return element;
+	}
+
+	createOrderedList(): ListElement {
+		const element = new ListElement(this.apiInstance, true);
 		this.addElement(element);
 		return element;
 	}
@@ -157,14 +171,16 @@ export class TextElement extends AbstractMarkdownLiteral {
 	bold: boolean;
 	cursive: boolean;
 	underline: boolean;
+	highlight: boolean;
 
-	constructor(apiInstance: API, content: string, bold: boolean, cursive: boolean, underline: boolean) {
+	constructor(apiInstance: API, content: string, bold: boolean, cursive: boolean, underline: boolean, highlight: boolean) {
 		super(apiInstance);
 
 		this.content = content;
 		this.bold = bold;
 		this.cursive = cursive;
 		this.underline = underline;
+		this.highlight = highlight;
 	}
 
 	public toString(): string {
@@ -172,8 +188,8 @@ export class TextElement extends AbstractMarkdownLiteral {
 		let postfix: string = '';
 
 		if (this.underline) {
-			prefix += '<b>';
-			postfix = '</b>' + postfix;
+			prefix += '<u>';
+			postfix = '</u>' + postfix;
 		}
 
 		if (this.bold) {
@@ -184,6 +200,11 @@ export class TextElement extends AbstractMarkdownLiteral {
 		if (this.cursive) {
 			prefix += '*';
 			postfix = '*' + postfix;
+		}
+
+		if (this.highlight) {
+			prefix += '==';
+			postfix = '==' + postfix;
 		}
 
 		return prefix + this.content + postfix;

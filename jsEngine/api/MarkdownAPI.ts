@@ -53,7 +53,7 @@ export class MarkdownAPI {
 	public createText(text: string): TextElement {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		return new TextElement(this.apiInstance, text, false, false, false);
+		return new TextElement(this.apiInstance, text, false, false, false, false);
 	}
 
 	/**
@@ -64,7 +64,7 @@ export class MarkdownAPI {
 	public createBoldText(text: string): TextElement {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		return new TextElement(this.apiInstance, text, true, false, false);
+		return new TextElement(this.apiInstance, text, true, false, false, false);
 	}
 
 	/**
@@ -75,7 +75,7 @@ export class MarkdownAPI {
 	public createCursiveText(text: string): TextElement {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		return new TextElement(this.apiInstance, text, false, true, false);
+		return new TextElement(this.apiInstance, text, false, true, false, false);
 	}
 
 	/**
@@ -86,7 +86,18 @@ export class MarkdownAPI {
 	public createUnderlinedText(text: string): TextElement {
 		validateAPIArgs(z.object({ text: z.string() }), { text });
 
-		return new TextElement(this.apiInstance, text, false, false, true);
+		return new TextElement(this.apiInstance, text, false, false, true, false);
+	}
+
+	/**
+	 * Creates a new markdown text element with highlighted formatting.
+	 *
+	 * @param text
+	 */
+	public createHighlightedText(text: string): TextElement {
+		validateAPIArgs(z.object({ text: z.string() }), { text });
+
+		return new TextElement(this.apiInstance, text, false, false, false, true);
 	}
 
 	/**
@@ -151,7 +162,7 @@ export class MarkdownAPI {
 	 * @param args the callout args, optional
 	 * @param collapsed whether the callout should be collapsed by default, optional
 	 */
-	createCollapsibleCallout(title: string, type: string, args: string = '', collapsed: boolean = false): CalloutElement {
+	public createCollapsibleCallout(title: string, type: string, args: string = '', collapsed: boolean = false): CalloutElement {
 		validateAPIArgs(z.object({ title: z.string(), type: z.string(), args: z.string(), collapsed: z.boolean() }), { title, type, args, collapsed });
 
 		return new CalloutElement(this.apiInstance, title, type, args, true, collapsed);
@@ -184,11 +195,18 @@ export class MarkdownAPI {
 	/**
 	 * Creates a new markdown list element.
 	 *
-	 * @param ordered whether the list should be ordered or not (use 1. or -)
+	 * @param ordered whether the list should be ordered or not (use 1. or -), defaults to unordered
 	 */
-	createList(ordered: boolean): ListElement {
+	public createList(ordered: boolean = false): ListElement {
 		validateAPIArgs(z.object({ ordered: z.boolean() }), { ordered });
 
 		return new ListElement(this.apiInstance, ordered);
+	}
+
+	/**
+	 * Creates a new ordered markdown list element.
+	 */
+	public createOrderedList(): ListElement {
+		return new ListElement(this.apiInstance, true);
 	}
 }
