@@ -11,6 +11,7 @@ import type JsEnginePlugin from 'jsEngine/main';
 import type { Validators } from 'jsEngine/utils/Validators';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { App, Plugin } from 'obsidian';
+import * as Obsidian from 'obsidian';
 import { z } from 'zod';
 
 export class API {
@@ -93,6 +94,20 @@ export class API {
 		validateAPIArgs(z.object({ pluginId: z.string() }), { pluginId });
 
 		return this.app.plugins.getPlugin(pluginId) ?? undefined;
+	}
+
+	/**
+	 * Gets the obsidian module.
+	 * This allows you to access all things exported by the obsidian module.
+	 *
+	 * @example
+	 * ```js
+	 * const obsidian = engine.getObsidianModule();
+	 * new obsidian.Notice('Hello World!');
+	 * ```
+	 */
+	public getObsidianModule(): typeof Obsidian {
+		return Obsidian;
 	}
 
 	/**
