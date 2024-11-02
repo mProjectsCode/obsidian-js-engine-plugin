@@ -27,7 +27,6 @@ export default class JsEnginePlugin extends Plugin {
 		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));
 	}
 
-	 
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
