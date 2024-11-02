@@ -15,7 +15,7 @@ import type {
 import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
 import type { Block, JsExecutionContext, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
 import { MessageType } from 'jsEngine/messages/MessageManager';
-import { ErrorLevel, JSEngineInternalError } from 'jsEngine/utils/Errors';
+import { ErrorLevel, JSEngineValidationError } from 'jsEngine/utils/Errors';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
 import type { CachedMetadata } from 'obsidian';
 import { Component, TFile } from 'obsidian';
@@ -31,7 +31,7 @@ export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void {
 	const result = validator.safeParse(args);
 
 	if (!result.success) {
-		throw new JSEngineInternalError({
+		throw new JSEngineValidationError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'Failed to run function due to invalid arguments. Check that the arguments that you are passing to the function match the type definition of the function.',
 			cause: result.error,

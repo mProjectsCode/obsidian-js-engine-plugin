@@ -27,7 +27,7 @@ export default class JsEnginePlugin extends Plugin {
 		this.api = new API(this.app, this, InstanceId.create(InstanceType.PLUGIN));
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	 
 	async onload(): Promise<void> {
 		await this.loadSettings();
 

@@ -11,7 +11,7 @@ import { mount, unmount } from 'svelte';
  */
 export class ExecutionStatsModal extends Modal {
 	private readonly plugin: JsEnginePlugin;
-	private component: MountedComponent<ExecutionStatsComponent> | undefined;
+	private component: MountedComponent<typeof ExecutionStatsComponent> | undefined;
 	private execution: JsExecution | undefined;
 
 	constructor(app: App, plugin: JsEnginePlugin) {

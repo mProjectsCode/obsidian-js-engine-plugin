@@ -10,7 +10,7 @@ export class MessageDisplay extends Modal {
 	 * Reference the JS Engine plugin.
 	 */
 	private readonly plugin: JsEnginePlugin;
-	private component: MountedComponent<MessageDisplayComponent> | undefined;
+	private component: MountedComponent<typeof MessageDisplayComponent> | undefined;
 
 	constructor(app: App, plugin: JsEnginePlugin) {
 		super(app);

@@ -5,7 +5,8 @@ export enum ErrorLevel {
 }
 
 export enum ErrorType {
-	INTERNAL = 'MB_INTERNAL',
+	INTERNAL = 'JSE_INTERNAL',
+	VALIDATION = 'JSE_VALIDATION',
 
 	OTHER = 'OTHER',
 }
@@ -61,5 +62,11 @@ export abstract class JSEngineError extends Error {
 export class JSEngineInternalError extends JSEngineError {
 	public getErrorType(): ErrorType {
 		return ErrorType.INTERNAL;
+	}
+}
+
+export class JSEngineValidationError extends JSEngineError {
+	public getErrorType(): ErrorType {
+		return ErrorType.VALIDATION;
 	}
 }
