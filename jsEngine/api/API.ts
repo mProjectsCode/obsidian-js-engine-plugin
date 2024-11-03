@@ -8,10 +8,10 @@ import { QueryAPI } from 'jsEngine/api/QueryAPI';
 import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import type { JsFunc } from 'jsEngine/engine/JsExecution';
 import type JsEnginePlugin from 'jsEngine/main';
+import { MarkdownLink } from 'jsEngine/utils/Link';
 import type { Validators } from 'jsEngine/utils/Validators';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { App, Plugin, TFile } from 'obsidian';
-import { getLinkpath } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import { z } from 'zod';
 
@@ -135,9 +135,8 @@ export class API {
 	public getLinkTarget(link: string, sourcePath: string): TFile | undefined {
 		validateAPIArgs(z.object({ link: z.string() }), { link });
 
-		const linkText = link.startsWith('[[') && link.endsWith(']]') ? link.slice(2, -2) : link;
-		const linkTarget = getLinkpath(linkText);
+		const parsedLink = MarkdownLink.fromString(link);
 
-		return this.app.metadataCache.getFirstLinkpathDest(linkTarget, sourcePath) ?? undefined;
+		return parsedLink?.toTFile(this.app, sourcePath);
 	}
 }
