@@ -10,8 +10,8 @@ import type { JsFunc } from 'jsEngine/engine/JsExecution';
 import type JsEnginePlugin from 'jsEngine/main';
 import type { Validators } from 'jsEngine/utils/Validators';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import type {App, Plugin, TFile} from 'obsidian';
-import { getLinkpath    } from 'obsidian';
+import type { App, Plugin, TFile } from 'obsidian';
+import { getLinkpath } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import { z } from 'zod';
 
