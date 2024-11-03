@@ -10,7 +10,8 @@ import type { JsFunc } from 'jsEngine/engine/JsExecution';
 import type JsEnginePlugin from 'jsEngine/main';
 import type { Validators } from 'jsEngine/utils/Validators';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import type { App, Plugin } from 'obsidian';
+import type {App, Plugin, TFile} from 'obsidian';
+import { getLinkpath    } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import { z } from 'zod';
 
@@ -121,5 +122,22 @@ export class API {
 		validateAPIArgs(z.object({ fn: z.function(), initialArgs: z.array(z.unknown()) }), { fn, initialArgs });
 
 		return new ReactiveComponent(this, fn, initialArgs);
+	}
+
+	/**
+	 * Gets the target file of a link.
+	 * The link must be a valid wiki link with or without the brackets, so `[[file|foo]]` or `file|foo`.
+	 * If the link is not found, this will return undefined.
+	 *
+	 * @param link the link to get the target file of.
+	 * @param sourcePath the path of the file that contains the link. This is needed to resolve relative links.
+	 */
+	public getLinkTarget(link: string, sourcePath: string): TFile | undefined {
+		validateAPIArgs(z.object({ link: z.string() }), { link });
+
+		const linkText = link.startsWith('[[') && link.endsWith(']]') ? link.slice(2, -2) : link;
+		const linkTarget = getLinkpath(linkText);
+
+		return this.app.metadataCache.getFirstLinkpathDest(linkTarget, sourcePath) ?? undefined;
 	}
 }
