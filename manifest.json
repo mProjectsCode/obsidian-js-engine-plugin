@@ -1,7 +1,7 @@
 {
 	"id": "js-engine",
 	"name": "JS Engine",
-	"version": "0.1.19",
+	"version": "0.1.20",
 	"minAppVersion": "1.4.0",
 	"description": "Run JavaScript from within your notes.",
 	"author": "Moritz Jung",
