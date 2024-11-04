@@ -66,7 +66,7 @@ export class QueryAPI {
 			.filter(x => x !== undefined);
 	}
 
-	public outgoingLinks(file: TFile): { file: TFile; cache: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
+	public outgoingLinks(file: TFile): { file: TFile; metadata: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
 		validateAPIArgs(z.object({ file: this.apiInstance.validators.tFile }), { file });
 
 		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
@@ -82,14 +82,14 @@ export class QueryAPI {
 			const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
 			return {
 				file: file,
-				cache: metadata ?? undefined,
+				metadata: metadata ?? undefined,
 				tags: metadata ? (getAllTags(metadata) ?? []) : [],
 				frontmatterTags: (metadata?.frontmatter?.tags as string[] | undefined) ?? [],
 			};
 		});
 	}
 
-	public incomingLinks(file: TFile): { file: TFile; cache: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
+	public incomingLinks(file: TFile): { file: TFile; metadata: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
 		validateAPIArgs(z.object({ file: this.apiInstance.validators.tFile }), { file });
 
 		const files = this.apiInstance.app.vault.getMarkdownFiles();
@@ -111,7 +111,7 @@ export class QueryAPI {
 				) {
 					return {
 						file: f,
-						cache: metadata,
+						metadata: metadata,
 						tags: getAllTags(metadata) ?? [],
 						frontmatterTags: (metadata?.frontmatter?.tags as string[] | undefined) ?? [],
 					};
