@@ -2,14 +2,23 @@ import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { App, TFile } from 'obsidian';
 
-export const P_FilePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
+/**
+ * @internal
+ */
+const P_FilePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
+/**
+ * @internal
+ */
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
 	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );
 
+/**
+ * @internal
+ */
 const P_MDLink: Parser<MarkdownLink> = P.or(
 	// wiki links
 	P.sequenceMap(
@@ -41,6 +50,9 @@ export function isUrl(str: string): boolean {
 	}
 }
 
+/**
+ * Represents a markdown link.
+ */
 export class MarkdownLink {
 	isEmbed: boolean;
 	target: string;
@@ -69,6 +81,21 @@ export class MarkdownLink {
 	}
 
 	toTFile(app: App, sourcePath: string): TFile | undefined {
+		if (!this.internal) {
+			return undefined;
+		}
 		return app.metadataCache.getFirstLinkpathDest(this.target, sourcePath) ?? undefined;
+	}
+
+	toString(): string {
+		const embed = this.isEmbed ? '!' : '';
+
+		if (this.internal) {
+			const alias = this.alias ? `|${this.alias}` : '';
+			return `${embed}[[${this.fullTarget()}${alias}]]`;
+		} else {
+			const alias = this.alias ?? this.fullTarget();
+			return `${embed}[${alias}](${this.fullTarget()})`;
+		}
 	}
 }

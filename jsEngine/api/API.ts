@@ -126,17 +126,29 @@ export class API {
 
 	/**
 	 * Gets the target file of a link.
-	 * The link must be a valid wiki link with or without the brackets, so `[[file|foo]]` or `file|foo`.
-	 * If the link is not found, this will return undefined.
+	 * This link can be a markdown link or a wiki link.
+	 * If the link target is not found, this will return undefined.
 	 *
 	 * @param link the link to get the target file of.
 	 * @param sourcePath the path of the file that contains the link. This is needed to resolve relative links.
 	 */
-	public getLinkTarget(link: string, sourcePath: string): TFile | undefined {
+	public resolveLinkToTFile(link: string, sourcePath: string): TFile | undefined {
 		validateAPIArgs(z.object({ link: z.string() }), { link });
 
 		const parsedLink = MarkdownLink.fromString(link);
 
 		return parsedLink?.toTFile(this.app, sourcePath);
+	}
+
+	/**
+	 * Parses a markdown link.
+	 * This link can be a markdown link or a wiki link.
+	 *
+	 * @param link the link to parse.
+	 */
+	public parseLink(link: string): MarkdownLink | undefined {
+		validateAPIArgs(z.object({ link: z.string() }), { link });
+
+		return MarkdownLink.fromString(link);
 	}
 }

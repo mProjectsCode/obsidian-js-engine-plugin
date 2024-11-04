@@ -44,12 +44,12 @@ export class QueryAPI {
 	 * const paths = engine.query.filesWithMetadata((file, cache, tags) => tags.includes("Foo") ? file.path : undefined);
 	 * ```
 	 */
-	public filesWithMetadata<T>(query: (file: TFile, cache: CachedMetadata | null, tags: string[]) => T | undefined): T[] {
+	public filesWithMetadata<T>(query: (file: TFile, cache: CachedMetadata | undefined, tags: string[], frontmatterTags: string[]) => T | undefined): T[] {
 		validateAPIArgs(
 			z.object({
 				query: z
 					.function()
-					.args(this.apiInstance.validators.tFile, this.apiInstance.validators.cachedMetadata.nullable(), z.string().array())
+					.args(this.apiInstance.validators.tFile, this.apiInstance.validators.cachedMetadata.optional(), z.string().array(), z.string().array())
 					.returns(z.unknown()),
 			}),
 			{ query },
@@ -60,7 +60,64 @@ export class QueryAPI {
 			.map(file => {
 				const cache = this.apiInstance.app.metadataCache.getFileCache(file);
 				const tags = cache ? (getAllTags(cache) ?? []) : [];
-				return query(file, cache, tags);
+				const frontmatterTags = (cache?.frontmatter?.tags as string[] | undefined) ?? [];
+				return query(file, cache ?? undefined, tags, frontmatterTags);
+			})
+			.filter(x => x !== undefined);
+	}
+
+	public outgoingLinks(file: TFile): { file: TFile; cache: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
+		validateAPIArgs(z.object({ file: this.apiInstance.validators.tFile }), { file });
+
+		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+		if (!metadata) {
+			return [];
+		}
+
+		const links = metadata.links ?? [];
+		const files = links.map(link => this.apiInstance.app.metadataCache.getFirstLinkpathDest(link.link, file.path)).filter(file => file != null);
+		const uniqueFiles = Array.from(new Set(files));
+
+		return uniqueFiles.map(file => {
+			const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+			return {
+				file: file,
+				cache: metadata ?? undefined,
+				tags: metadata ? (getAllTags(metadata) ?? []) : [],
+				frontmatterTags: (metadata?.frontmatter?.tags as string[] | undefined) ?? [],
+			};
+		});
+	}
+
+	public incomingLinks(file: TFile): { file: TFile; cache: CachedMetadata | undefined; tags: string[]; frontmatterTags: string[] }[] {
+		validateAPIArgs(z.object({ file: this.apiInstance.validators.tFile }), { file });
+
+		const files = this.apiInstance.app.vault.getMarkdownFiles();
+
+		return files
+			.map(file => {
+				const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+				if (!metadata) {
+					return undefined;
+				}
+
+				const links = metadata.links ?? [];
+
+				if (
+					links.some(link => {
+						const linkFile = this.apiInstance.app.metadataCache.getFirstLinkpathDest(link.link, file.path);
+						return linkFile?.path === file.path;
+					})
+				) {
+					return {
+						file: file,
+						cache: metadata,
+						tags: getAllTags(metadata) ?? [],
+						frontmatterTags: (metadata?.frontmatter?.tags as string[] | undefined) ?? [],
+					};
+				}
+
+				return undefined;
 			})
 			.filter(x => x !== undefined);
 	}
