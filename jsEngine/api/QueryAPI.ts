@@ -95,8 +95,8 @@ export class QueryAPI {
 		const files = this.apiInstance.app.vault.getMarkdownFiles();
 
 		return files
-			.map(file => {
-				const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+			.map(f => {
+				const metadata = this.apiInstance.app.metadataCache.getFileCache(f);
 				if (!metadata) {
 					return undefined;
 				}
@@ -105,12 +105,12 @@ export class QueryAPI {
 
 				if (
 					links.some(link => {
-						const linkFile = this.apiInstance.app.metadataCache.getFirstLinkpathDest(link.link, file.path);
+						const linkFile = this.apiInstance.app.metadataCache.getFirstLinkpathDest(link.link, f.path);
 						return linkFile?.path === file.path;
 					})
 				) {
 					return {
-						file: file,
+						file: f,
 						cache: metadata,
 						tags: getAllTags(metadata) ?? [],
 						frontmatterTags: (metadata?.frontmatter?.tags as string[] | undefined) ?? [],
