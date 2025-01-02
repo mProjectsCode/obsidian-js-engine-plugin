@@ -9,6 +9,10 @@ declare module 'obsidian' {
 			getPlugin: (plugin: string) => Plugin;
 		};
 	}
+
+	interface MenuItem {
+		setWarning(warn: boolean): void;
+	}
 }
 
 export {};

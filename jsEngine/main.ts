@@ -5,14 +5,14 @@ import { Engine } from 'jsEngine/engine/Engine';
 import { JSFileSelectModal } from 'jsEngine/fileRunner/JSFileSelectModal';
 import { JsMDRC } from 'jsEngine/JsMDRC';
 import { MessageManager } from 'jsEngine/messages/MessageManager';
-import type { JsEnginePluginSettings } from 'jsEngine/Settings';
-import { JS_ENGINE_DEFAULT_SETTINGS } from 'jsEngine/Settings';
+import type { JsEnginePluginSettings } from 'jsEngine/settings/Settings';
+import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettingTab } from 'jsEngine/settings/Settings';
 import { Validators } from 'jsEngine/utils/Validators';
 import type { App, PluginManifest } from 'obsidian';
 import { Plugin } from 'obsidian';
 
 export default class JsEnginePlugin extends Plugin {
-	settings: JsEnginePluginSettings | undefined;
+	settings!: JsEnginePluginSettings;
 	messageManager: MessageManager;
 	jsEngine: Engine;
 	api: API;
@@ -30,7 +30,7 @@ export default class JsEnginePlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		// this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
+		this.addSettingTab(new JsEnginePluginSettingTab(this.app, this));
 
 		this.messageManager.initStatusBarItem();
 
@@ -46,6 +46,10 @@ export default class JsEnginePlugin extends Plugin {
 					await this.api.internal.executeFileSimple(selected.path);
 				}).open();
 			},
+		});
+
+		this.app.workspace.onLayoutReady(() => {
+			void this.api.internal.executeStartupScripts();
 		});
 
 		await this.registerCodeMirrorMode();
