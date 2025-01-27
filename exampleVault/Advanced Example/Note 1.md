@@ -54,8 +54,8 @@ mdBuilder.createTable(
 	quests.map(x => [
 		x.name,
 		x.removed !== -1 ? "☑" : "☐",
-		x.added,
-		x.removed !== -1 ? x.removed : "", 
+		x.added.toString(),
+		x.removed !== -1 ? x.removed.toString() : "", 
 	])
 );
 
