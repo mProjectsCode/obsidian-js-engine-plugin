@@ -136,8 +136,8 @@ export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownE
 		return element;
 	}
 
-	createTable(header: string[], body: string[][]): TableElement {
-		validateAPIArgs(z.object({ header: z.array(z.string()), body: z.array(z.array(z.string())) }), { header, body });
+	createTable(header: string[], body: TableElementType[][]): TableElement {
+		validateAPIArgs(z.object({ header: z.array(z.string()), body: this.apiInstance.validators.tableElementBody }), { header, body });
 
 		const element = new TableElement(this.apiInstance, header, body);
 		this.addElement(element);
@@ -228,6 +228,8 @@ export class CodeElement extends AbstractMarkdownLiteral {
 	}
 }
 
+export type TableElementType = string | number | boolean | null | undefined;
+
 /**
  * Represents a markdown table.
  */
@@ -235,11 +237,11 @@ export class TableElement extends AbstractMarkdownLiteral {
 	header: string[];
 	body: string[][];
 
-	constructor(apiInstance: API, header: string[], body: string[][]) {
+	constructor(apiInstance: API, header: string[], body: TableElementType[][]) {
 		super(apiInstance);
 
 		this.header = header;
-		this.body = body;
+		this.body = body.map(row => row.map(cell => (cell === null || cell === undefined ? '' : cell.toString())));
 	}
 
 	public toString(): string {

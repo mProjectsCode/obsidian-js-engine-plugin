@@ -2,6 +2,7 @@
 
 import { API } from 'jsEngine/api/API';
 import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+import type { TableElementType } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 import type {
 	ButtonPromptButtonOptions,
 	ButtonPromptOptions,
@@ -46,6 +47,8 @@ export class Validators {
 	tFile: z.ZodType<TFile, any, any>;
 	cachedMetadata: z.ZodType<CachedMetadata, any, any>;
 	block: z.ZodType<Block, any, any>;
+	tableElementType: z.ZodType<TableElementType, any, any>;
+	tableElementBody: z.ZodType<TableElementType[][], any, any>;
 	jsExecutionContext: z.ZodType<JsExecutionContext, any, any>;
 	engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
 	engineExecutionParamsNoCode: z.ZodType<Omit<EngineExecutionParams, 'code'>, any, any>;
@@ -75,6 +78,8 @@ export class Validators {
 				to: z.number(),
 			}),
 		);
+		this.tableElementType = schemaForType<TableElementType>()(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()]));
+		this.tableElementBody = schemaForType<TableElementType[][]>()(z.array(z.array(this.tableElementType)));
 		this.jsExecutionContext = schemaForType<JsExecutionContext>()(
 			z.object({
 				file: this.tFile.optional(),

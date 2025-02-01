@@ -187,7 +187,7 @@ export class MarkdownAPI {
 	 * @param body the table body
 	 */
 	public createTable(header: string[], body: string[][]): TableElement {
-		validateAPIArgs(z.object({ header: z.array(z.string()), body: z.array(z.array(z.string())) }), { header, body });
+		validateAPIArgs(z.object({ header: z.array(z.string()), body: this.apiInstance.validators.tableElementBody }), { header, body });
 
 		return new TableElement(this.apiInstance, header, body);
 	}
