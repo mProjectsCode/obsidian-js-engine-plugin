@@ -14,7 +14,8 @@ import type {
 	YesNoPromptOptions,
 } from 'jsEngine/api/PromptAPI';
 import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
-import type { Block, JsExecutionContext, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
+import type { Block, ExecutionContext, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
+import { ExecutionSource } from 'jsEngine/engine/JsExecution';
 import { MessageType } from 'jsEngine/messages/MessageManager';
 import { ErrorLevel, JSEngineValidationError } from 'jsEngine/utils/Errors';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
@@ -49,10 +50,10 @@ export class Validators {
 	block: z.ZodType<Block, any, any>;
 	tableElementType: z.ZodType<TableElementType, any, any>;
 	tableElementBody: z.ZodType<TableElementType[][], any, any>;
-	jsExecutionContext: z.ZodType<JsExecutionContext, any, any>;
+	executionContext: z.ZodType<ExecutionContext, any, any>;
 	engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
-	engineExecutionParamsNoCode: z.ZodType<Omit<EngineExecutionParams, 'code'>, any, any>;
-	engineExecutionParamsNoCodeAndComponent: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component'>, any, any>;
+	engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>, any, any>;
+	engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>, any, any>;
 	jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions, any, any>;
 	abstractMarkdownElement: z.ZodType<AbstractMarkdownElement, any, any>;
 	messageType: z.ZodType<MessageType, any, any>;
@@ -80,34 +81,45 @@ export class Validators {
 		);
 		this.tableElementType = schemaForType<TableElementType>()(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()]));
 		this.tableElementBody = schemaForType<TableElementType[][]>()(z.array(z.array(this.tableElementType)));
-		this.jsExecutionContext = schemaForType<JsExecutionContext>()(
-			z.object({
-				file: this.tFile.optional(),
-				metadata: this.cachedMetadata.optional(),
-				block: this.block.optional(),
-			}),
+		this.executionContext = schemaForType<ExecutionContext>()(
+			z.discriminatedUnion('executionSource', [
+				z.object({
+					executionSource: z.literal(ExecutionSource.MarkdownCodeBlock),
+					file: this.tFile,
+					metadata: this.cachedMetadata.optional(),
+					block: this.block.optional(),
+				}),
+				z.object({
+					executionSource: z.literal(ExecutionSource.JSFile),
+					file: this.tFile,
+				}),
+				z.object({
+					executionSource: z.literal(ExecutionSource.Unknown),
+					file: this.tFile.optional(),
+				}),
+			]),
 		);
 		this.engineExecutionParams = schemaForType<EngineExecutionParams>()(
 			z.object({
 				code: z.string(),
 				component: this.component,
 				container: this.htmlElement.optional(),
-				context: this.jsExecutionContext.optional(),
+				context: this.executionContext,
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);
-		this.engineExecutionParamsNoCode = schemaForType<Omit<EngineExecutionParams, 'code'>>()(
+		this.engineExecutionParamsFile = schemaForType<Omit<EngineExecutionParams, 'code' | 'context'>>()(
 			z.object({
 				component: this.component,
 				container: this.htmlElement.optional(),
-				context: this.jsExecutionContext.optional(),
+				context: this.executionContext.optional(),
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);
-		this.engineExecutionParamsNoCodeAndComponent = schemaForType<Omit<EngineExecutionParams, 'code' | 'component'>>()(
+		this.engineExecutionParamsFileSimple = schemaForType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>>()(
 			z.object({
 				container: this.htmlElement.optional(),
-				context: this.jsExecutionContext.optional(),
+				context: this.executionContext.optional(),
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);
@@ -115,7 +127,7 @@ export class Validators {
 			z.object({
 				engine: z.instanceof(API).optional(),
 				component: this.component,
-				context: z.record(z.unknown()),
+				context: z.intersection(this.executionContext, z.record(z.unknown())),
 				container: this.htmlElement.optional(),
 			}),
 		);

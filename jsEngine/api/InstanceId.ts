@@ -1,3 +1,5 @@
+import type { ExecutionContext } from 'jsEngine/engine/JsExecution';
+
 export enum InstanceType {
 	JS_EXECUTION = 'JS_EXECUTION',
 	PLUGIN = 'PLUGIN',
@@ -11,10 +13,12 @@ export enum InstanceType {
 export class InstanceId {
 	readonly name: InstanceType | string;
 	readonly id: string;
+	readonly executionContext: ExecutionContext | undefined;
 
-	constructor(name: InstanceType | string, id: string) {
+	constructor(name: InstanceType | string, id: string, executionContext?: ExecutionContext) {
 		this.name = name;
 		this.id = id;
+		this.executionContext = executionContext;
 	}
 
 	toString(): string {

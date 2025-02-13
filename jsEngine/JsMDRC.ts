@@ -1,4 +1,5 @@
-import type { JsExecutionContext, JsExecution } from 'jsEngine/engine/JsExecution';
+import type { ExecutionContext, JsExecution } from 'jsEngine/engine/JsExecution';
+import { ExecutionSource } from 'jsEngine/engine/JsExecution';
 import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 import type JsEnginePlugin from 'jsEngine/main';
 import type { MarkdownPostProcessorContext, TAbstractFile } from 'obsidian';
@@ -34,17 +35,21 @@ export class JsMDRC extends MarkdownRenderChild {
 		}
 	}
 
-	buildExecutionContext(): JsExecutionContext {
+	buildExecutionContext(): ExecutionContext {
 		// console.log(this.ctx);
 		const file = this.getExecutionFile();
+		if (file === undefined) {
+			throw new Error('Could not find file for execution context.');
+		}
 		return {
+			executionSource: ExecutionSource.MarkdownCodeBlock,
 			file: file,
-			metadata: file === undefined ? undefined : (this.plugin.app.metadataCache.getFileCache(file) ?? undefined),
+			metadata: this.plugin.app.metadataCache.getFileCache(file) ?? undefined,
 			block: undefined,
 		};
 	}
 
-	async tryRun(context: JsExecutionContext): Promise<JsExecution> {
+	async tryRun(context: ExecutionContext): Promise<JsExecution> {
 		return this.plugin.jsEngine.execute({
 			code: this.content,
 			context: context,

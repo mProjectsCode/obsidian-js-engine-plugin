@@ -1,5 +1,5 @@
 import { ExecutionStatsModal } from 'jsEngine/engine/ExecutionStatsModal';
-import type { JsExecutionContext } from 'jsEngine/engine/JsExecution';
+import type { ExecutionContext } from 'jsEngine/engine/JsExecution';
 import { JsExecution } from 'jsEngine/engine/JsExecution';
 import type JsEnginePlugin from 'jsEngine/main';
 import type { App, Component } from 'obsidian';
@@ -21,9 +21,9 @@ export interface EngineExecutionParams {
 	 */
 	container?: HTMLElement | undefined;
 	/**
-	 * Optional context to provide to the JavaScript code.
+	 * Context about the location the code was executed from.
 	 */
-	context?: JsExecutionContext | undefined;
+	context: ExecutionContext;
 	/**
 	 * Optional extra context variables to provide to the JavaScript code.
 	 */

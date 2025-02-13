@@ -12,16 +12,20 @@ import type * as Obsidian from 'obsidian';
  */
 export type JsFunc = (...args: unknown[]) => Promise<unknown>;
 
-/**
- * Context provided to a {@link JsExecution}.
- */
-export interface JsExecutionContext {
+export enum ExecutionSource {
+	MarkdownCodeBlock = 'markdown-code-block',
+	JSFile = 'js-file',
+	Unknown = 'unknown',
+}
+
+export interface CodeBlockExecutionContext {
+	executionSource: ExecutionSource.MarkdownCodeBlock;
 	/**
-	 * The file that the execution was triggered from.
+	 * The file that the code block is in.
 	 */
-	file?: TFile | undefined;
+	file: TFile;
 	/**
-	 * The metadata of the file that the execution was triggered from.
+	 * The metadata of the file.
 	 */
 	metadata?: CachedMetadata | undefined;
 	/**
@@ -34,6 +38,27 @@ export interface Block {
 	from: number;
 	to: number;
 }
+
+export interface JSFileExecutionContext {
+	executionSource: ExecutionSource.JSFile;
+	/**
+	 * The JS that is being executed.
+	 */
+	file: TFile;
+}
+
+export interface UnknownExecutionContext {
+	executionSource: ExecutionSource.Unknown;
+	/**
+	 * The file that the execution was triggered from.
+	 */
+	file?: TFile | undefined;
+}
+
+/**
+ * Context provided to a {@link JsExecution}.
+ */
+export type ExecutionContext = CodeBlockExecutionContext | JSFileExecutionContext | UnknownExecutionContext;
 
 /**
  * Global variables provided to a {@link JsExecution}.
@@ -54,7 +79,7 @@ export interface JsExecutionGlobals {
 	/**
 	 * The context provided. This can be undefined and extended by other properties.
 	 */
-	context: (JsExecutionContext | undefined) & Record<string, unknown>;
+	context: ExecutionContext & Record<string, unknown>;
 	/**
 	 * The container element that the execution can render to. This can be undefined.
 	 */
@@ -81,7 +106,7 @@ export interface JsExecutionGlobalsConstructionOptions {
 	/**
 	 * The context provided. This can be undefined and extended by other properties.
 	 */
-	context: (JsExecutionContext | undefined) & Record<string, unknown>;
+	context: ExecutionContext & Record<string, unknown>;
 	/**
 	 * The container element that the execution can render to. This can be undefined.
 	 */
@@ -103,7 +128,7 @@ export class JsExecution {
 	readonly app: App;
 	readonly plugin: JsEnginePlugin;
 
-	private readonly context: (JsExecutionContext | undefined) & Record<string, unknown>;
+	private readonly context: (ExecutionContext | undefined) & Record<string, unknown>;
 	private readonly apiInstance: API;
 	private messages: MessageWrapper[];
 	private func: JsFunc | undefined;
@@ -124,10 +149,13 @@ export class JsExecution {
 		this.plugin = params.plugin;
 
 		this.code = params.code;
-		this.context = Object.assign({}, params.context, params.contextOverrides);
+		this.context = {
+			...params.context,
+			...params.contextOverrides,
+		};
 
 		this.uuid = self.crypto.randomUUID();
-		this.apiInstance = new API(this.app, this.plugin, new InstanceId(InstanceType.JS_EXECUTION, this.uuid));
+		this.apiInstance = new API(this.app, this.plugin, new InstanceId(InstanceType.JS_EXECUTION, this.uuid, params.context));
 		this.messages = [];
 
 		this.func = undefined;

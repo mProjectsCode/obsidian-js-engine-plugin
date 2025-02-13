@@ -15,6 +15,8 @@
 		showMessageSource?: boolean;
 	} = $props();
 
+	console.log(messageWrapper.source.executionContext);
+
 	let showMore: boolean = $state(false);
 </script>
 
@@ -63,6 +65,11 @@
 					{#if showMessageSource}
 						<p>Source Name: {messageWrapper.source.name}</p>
 						<p>Source ID: {messageWrapper.source.id}</p>
+						{@const executionContext = messageWrapper.source.executionContext}
+						{#if executionContext}
+							<p>Execution Context Type: {executionContext.executionSource}</p>
+							<p>Execution Context File: {executionContext.file?.path ?? 'none'}</p>
+						{/if}
 					{/if}
 				</div>
 			{/if}
