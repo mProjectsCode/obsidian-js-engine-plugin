@@ -14,11 +14,13 @@ export type JsFunc = (...args: unknown[]) => Promise<unknown>;
 
 export enum ExecutionSource {
 	MarkdownCodeBlock = 'markdown-code-block',
+	MarkdownCallingJSFile = 'markdown-calling-js-file',
+	MarkdownOther = 'markdown-other',
 	JSFile = 'js-file',
 	Unknown = 'unknown',
 }
 
-export interface CodeBlockExecutionContext {
+export interface MarkdownCodeBlockExecutionContext {
 	executionSource: ExecutionSource.MarkdownCodeBlock;
 	/**
 	 * The file that the code block is in.
@@ -39,12 +41,40 @@ export interface Block {
 	to: number;
 }
 
+export interface MarkdownCallingJSFileExecutionContext {
+	executionSource: ExecutionSource.MarkdownCallingJSFile;
+	/**
+	 * The markdown file that the JS File is called from.
+	 */
+	file: TFile;
+	/**
+	 * The metadata of the markdown file.
+	 */
+	metadata?: CachedMetadata | undefined;
+	/**
+	 * The JS that is being called.
+	 */
+	jsFile: TFile;
+}
+
+export interface MarkdownOtherExecutionContext {
+	executionSource: ExecutionSource.MarkdownOther;
+	/**
+	 * The file that the code block is in.
+	 */
+	file: TFile;
+	/**
+	 * The metadata of the file.
+	 */
+	metadata?: CachedMetadata | undefined;
+}
+
 export interface JSFileExecutionContext {
 	executionSource: ExecutionSource.JSFile;
 	/**
 	 * The JS that is being executed.
 	 */
-	file: TFile;
+	jsFile: TFile;
 }
 
 export interface UnknownExecutionContext {
@@ -58,7 +88,12 @@ export interface UnknownExecutionContext {
 /**
  * Context provided to a {@link JsExecution}.
  */
-export type ExecutionContext = CodeBlockExecutionContext | JSFileExecutionContext | UnknownExecutionContext;
+export type ExecutionContext =
+	| MarkdownCodeBlockExecutionContext
+	| MarkdownCallingJSFileExecutionContext
+	| MarkdownOtherExecutionContext
+	| JSFileExecutionContext
+	| UnknownExecutionContext;
 
 /**
  * Global variables provided to a {@link JsExecution}.

@@ -1,4 +1,5 @@
-declare module 'api/InstanceId' {
+declare module 'jsEngine/api/InstanceId' {
+	import type { ExecutionContext } from 'jsEngine/engine/JsExecution';
 	export enum InstanceType {
 		JS_EXECUTION = 'JS_EXECUTION',
 		PLUGIN = 'PLUGIN',
@@ -11,13 +12,14 @@ declare module 'api/InstanceId' {
 	export class InstanceId {
 		readonly name: InstanceType | string;
 		readonly id: string;
-		constructor(name: InstanceType | string, id: string);
+		readonly executionContext: ExecutionContext | undefined;
+		constructor(name: InstanceType | string, id: string, executionContext?: ExecutionContext);
 		toString(): string;
 		static create(name: string): InstanceId;
 	}
 }
-declare module 'fileRunner/JSFileSelectModal' {
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/fileRunner/JSFileSelectModal' {
+	import type JsEnginePlugin from 'jsEngine/main';
 	import { FuzzySuggestModal, TFile } from 'obsidian';
 	export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 		plugin: JsEnginePlugin;
@@ -28,7 +30,7 @@ declare module 'fileRunner/JSFileSelectModal' {
 		onChooseItem(item: TFile, _evt: MouseEvent | KeyboardEvent): void;
 	}
 }
-declare module 'utils/SvelteUtils' {
+declare module 'jsEngine/utils/SvelteUtils' {
 	import type { Component, SvelteComponent } from 'svelte';
 	export type AnyRecord = Record<string, any>;
 	export type UnknownRecord = Record<string, unknown>;
@@ -38,8 +40,8 @@ declare module 'utils/SvelteUtils' {
 	export type MountedComponent<Comp extends Component<any, any> | SvelteComponent> = ComponentExports<Comp>;
 	export type AnySvelteComponent = Component<any, any>;
 }
-declare module 'messages/MessageDisplay' {
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/messages/MessageDisplay' {
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { App } from 'obsidian';
 	import { Modal } from 'obsidian';
 	export class MessageDisplay extends Modal {
@@ -53,7 +55,7 @@ declare module 'messages/MessageDisplay' {
 		onClose(): void;
 	}
 }
-declare module 'utils/Signal' {
+declare module 'jsEngine/utils/Signal' {
 	export interface NotifierInterface<T, TListener extends Listener<T>> {
 		registerListener(listener: Omit<TListener, 'uuid'>): TListener;
 		unregisterListener(listener: TListener): void;
@@ -92,7 +94,7 @@ declare module 'utils/Signal' {
 		destroy(): void;
 	}
 }
-declare module 'utils/Util' {
+declare module 'jsEngine/utils/Util' {
 	export function iteratorToArray<T>(iterator: Iterable<T>): T[];
 	export enum ButtonStyleType {
 		DEFAULT = 'default',
@@ -102,10 +104,10 @@ declare module 'utils/Util' {
 	}
 	export function mod(a: number, b: number): number;
 }
-declare module 'messages/MessageManager' {
-	import type { InstanceId } from 'api/InstanceId';
-	import type JsEnginePlugin from 'main';
-	import { Signal } from 'utils/Signal';
+declare module 'jsEngine/messages/MessageManager' {
+	import type { InstanceId } from 'jsEngine/api/InstanceId';
+	import type JsEnginePlugin from 'jsEngine/main';
+	import { Signal } from 'jsEngine/utils/Signal';
 	import type { Moment } from 'moment';
 	import type { App } from 'obsidian';
 	export enum MessageType {
@@ -154,11 +156,26 @@ declare module 'messages/MessageManager' {
 		getMessagesFromSource(source: InstanceId): MessageWrapper[];
 	}
 }
-declare module 'Settings' {
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/settings/StartupScriptModal' {
+	import type JsEnginePlugin from 'jsEngine/main';
+	import StartupScripts from 'jsEngine/settings/StartupScripts.svelte';
+	import { Modal } from 'obsidian';
+	export class StartupScriptsModal extends Modal {
+		plugin: JsEnginePlugin;
+		component?: ReturnType<typeof StartupScripts>;
+		constructor(plugin: JsEnginePlugin);
+		onOpen(): void;
+		onClose(): void;
+		save(startupScripts: string[]): void;
+	}
+}
+declare module 'jsEngine/settings/Settings' {
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { App } from 'obsidian';
 	import { PluginSettingTab } from 'obsidian';
-	export interface JsEnginePluginSettings {}
+	export interface JsEnginePluginSettings {
+		startupScripts?: string[];
+	}
 	export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings;
 	export class JsEnginePluginSettingTab extends PluginSettingTab {
 		plugin: JsEnginePlugin;
@@ -166,7 +183,7 @@ declare module 'Settings' {
 		display(): void;
 	}
 }
-declare module 'api/markdown/MarkdownElementType' {
+declare module 'jsEngine/api/markdown/MarkdownElementType' {
 	/**
 	 * @internal
 	 */
@@ -175,8 +192,8 @@ declare module 'api/markdown/MarkdownElementType' {
 		NON_LITERAL = 'NON_LITERAL',
 	}
 }
-declare module 'api/markdown/MarkdownString' {
-	import type { API } from 'api/API';
+declare module 'jsEngine/api/markdown/MarkdownString' {
+	import type { API } from 'jsEngine/api/API';
 	import type { App, Component } from 'obsidian';
 	/**
 	 * A string that should be rendered as markdown by the plugin.
@@ -191,10 +208,10 @@ declare module 'api/markdown/MarkdownString' {
 		render(app: App, element: HTMLElement, sourcePath: string, component: Component): Promise<void>;
 	}
 }
-declare module 'api/markdown/AbstractMarkdownElement' {
-	import type { API } from 'api/API';
-	import type { MarkdownElementType } from 'api/markdown/MarkdownElementType';
-	import { MarkdownString } from 'api/markdown/MarkdownString';
+declare module 'jsEngine/api/markdown/AbstractMarkdownElement' {
+	import type { API } from 'jsEngine/api/API';
+	import type { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 	/**
 	 * @internal
 	 */
@@ -215,8 +232,142 @@ declare module 'api/markdown/AbstractMarkdownElement' {
 		toMarkdown(): MarkdownString;
 	}
 }
-declare module 'api/prompts/Suggester' {
-	import type { SuggesterOption, SuggesterPromptOptions } from 'api/PromptAPI';
+declare module 'jsEngine/api/markdown/AbstractMarkdownLiteral' {
+	import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	/**
+	 * @internal
+	 */
+	export abstract class AbstractMarkdownLiteral extends AbstractMarkdownElement {
+		getType(): MarkdownElementType;
+	}
+}
+declare module 'jsEngine/api/markdown/AbstractMarkdownElementContainer' {
+	import type { API } from 'jsEngine/api/API';
+	import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	import { AbstractMarkdownLiteral } from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
+	import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	/**
+	 * @internal
+	 */
+	export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownElement {
+		markdownElements: AbstractMarkdownElement[];
+		constructor(apiInstance: API);
+		/**
+		 * @internal
+		 */
+		abstract allowElement(element: AbstractMarkdownElement): boolean;
+		getType(): MarkdownElementType;
+		/**
+		 * Adds a child element to the container.
+		 *
+		 * @param element
+		 * @throws Error if the element is not allowed in the container.
+		 */
+		addElement(element: AbstractMarkdownElement): void;
+		addText(text: string): AbstractMarkdownElementContainer;
+		addBoldText(text: string): AbstractMarkdownElementContainer;
+		addCursiveText(text: string): AbstractMarkdownElementContainer;
+		addUnderlinedText(text: string): AbstractMarkdownElementContainer;
+		addHighlightedText(text: string): AbstractMarkdownElementContainer;
+		addCode(text: string): AbstractMarkdownElementContainer;
+		createParagraph(content: string): ParagraphElement;
+		createHeading(level: number, content: string): HeadingElement;
+		createBlockQuote(): BlockQuoteElement;
+		createCallout(title: string, type: string, args?: string): CalloutElement;
+		createCollapsibleCallout(title: string, type: string, args?: string, collapsed?: boolean): CalloutElement;
+		createCodeBlock(language: string, content: string): CodeBlockElement;
+		createTable(header: string[], body: TableElementType[][]): TableElement;
+		createList(ordered?: boolean): ListElement;
+		createOrderedList(): ListElement;
+	}
+	/**
+	 * Represents a piece of pure markdown text.
+	 */
+	export class TextElement extends AbstractMarkdownLiteral {
+		content: string;
+		bold: boolean;
+		cursive: boolean;
+		underline: boolean;
+		highlight: boolean;
+		constructor(apiInstance: API, content: string, bold: boolean, cursive: boolean, underline: boolean, highlight: boolean);
+		toString(): string;
+	}
+	/**
+	 * Represents an inline markdown code block.
+	 */
+	export class CodeElement extends AbstractMarkdownLiteral {
+		content: string;
+		constructor(apiInstance: API, content: string);
+		toString(): string;
+	}
+	export type TableElementType = string | number | boolean | null | undefined;
+	/**
+	 * Represents a markdown table.
+	 */
+	export class TableElement extends AbstractMarkdownLiteral {
+		header: string[];
+		body: string[][];
+		constructor(apiInstance: API, header: string[], body: TableElementType[][]);
+		toString(): string;
+	}
+	/**
+	 * Represents a markdown heading.
+	 */
+	export class HeadingElement extends AbstractMarkdownElementContainer {
+		level: number;
+		constructor(apiInstance: API, level: number, content: string);
+		toString(): string;
+		allowElement(element: AbstractMarkdownElement): boolean;
+	}
+	/**
+	 * Represents a markdown paragraph.
+	 */
+	export class ParagraphElement extends AbstractMarkdownElementContainer {
+		constructor(apiInstance: API, content: string);
+		toString(): string;
+		allowElement(element: AbstractMarkdownElement): boolean;
+	}
+	/**
+	 * Represents a markdown code block.
+	 */
+	export class CodeBlockElement extends AbstractMarkdownElementContainer {
+		language: string;
+		constructor(apiInstance: API, language: string, content: string);
+		toString(): string;
+		allowElement(element: AbstractMarkdownElement): boolean;
+	}
+	/**
+	 * Represents a markdown block quote.
+	 */
+	export class BlockQuoteElement extends AbstractMarkdownElementContainer {
+		toString(): string;
+		allowElement(_: AbstractMarkdownElement): boolean;
+	}
+	/**
+	 * Represents a markdown callout.
+	 */
+	export class CalloutElement extends AbstractMarkdownElementContainer {
+		title: string;
+		type: string;
+		args: string;
+		collapsible: boolean;
+		collapsed: boolean;
+		constructor(apiInstance: API, title: string, type: string, args: string, collapsible?: boolean, collapsed?: boolean);
+		toString(): string;
+		private collapseChar;
+		allowElement(_: AbstractMarkdownElement): boolean;
+	}
+	export class ListElement extends AbstractMarkdownElementContainer {
+		ordered: boolean;
+		constructor(apiInstance: API, ordered: boolean);
+		private getPrefix;
+		toString(): string;
+		allowElement(_: AbstractMarkdownElement): boolean;
+	}
+}
+declare module 'jsEngine/api/prompts/Suggester' {
+	import type { SuggesterOption, SuggesterPromptOptions } from 'jsEngine/api/PromptAPI';
 	import type { App } from 'obsidian';
 	import { FuzzySuggestModal } from 'obsidian';
 	export class Suggester<T> extends FuzzySuggestModal<SuggesterOption<T>> {
@@ -231,9 +382,9 @@ declare module 'api/prompts/Suggester' {
 		onClose(): void;
 	}
 }
-declare module 'api/prompts/SvelteModal' {
-	import type { ModalPromptOptions } from 'api/PromptAPI';
-	import type { AnySvelteComponent, MountedComponent } from 'utils/SvelteUtils';
+declare module 'jsEngine/api/prompts/SvelteModal' {
+	import type { ModalPromptOptions } from 'jsEngine/api/PromptAPI';
+	import type { AnySvelteComponent, MountedComponent } from 'jsEngine/utils/SvelteUtils';
 	import type { App } from 'obsidian';
 	import { Modal } from 'obsidian';
 	export class SvelteModal<Component extends AnySvelteComponent, T> extends Modal {
@@ -253,9 +404,9 @@ declare module 'api/prompts/SvelteModal' {
 		submit(value: T): void;
 	}
 }
-declare module 'api/PromptAPI' {
-	import type { API } from 'api/API';
-	import { ButtonStyleType } from 'utils/Util';
+declare module 'jsEngine/api/PromptAPI' {
+	import type { API } from 'jsEngine/api/API';
+	import { ButtonStyleType } from 'jsEngine/utils/Util';
 	/**
 	 * Basic options for a prompt modal.
 	 * This interface is used as a base for other prompt options.
@@ -467,7 +618,7 @@ declare module 'api/PromptAPI' {
 		number(options: NumberInputPromptOptions): Promise<number | undefined>;
 	}
 }
-declare module 'utils/Errors' {
+declare module 'jsEngine/utils/Errors' {
 	export enum ErrorLevel {
 		CRITICAL = 'CRITICAL',
 		ERROR = 'ERROR',
@@ -507,8 +658,9 @@ declare module 'utils/Errors' {
 		getErrorType(): ErrorType;
 	}
 }
-declare module 'utils/Validators' {
-	import { AbstractMarkdownElement } from 'api/markdown/AbstractMarkdownElement';
+declare module 'jsEngine/utils/Validators' {
+	import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	import type { TableElementType } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 	import type {
 		ButtonPromptButtonOptions,
 		ButtonPromptOptions,
@@ -518,11 +670,20 @@ declare module 'utils/Validators' {
 		SuggesterOption,
 		SuggesterPromptOptions,
 		YesNoPromptOptions,
-	} from 'api/PromptAPI';
-	import type { EngineExecutionParams } from 'engine/Engine';
-	import type { Block, JsExecutionContext, JsExecutionGlobalsConstructionOptions } from 'engine/JsExecution';
-	import { MessageType } from 'messages/MessageManager';
-	import { ButtonStyleType } from 'utils/Util';
+	} from 'jsEngine/api/PromptAPI';
+	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+	import type {
+		Block,
+		ExecutionContext,
+		JsExecutionGlobalsConstructionOptions,
+		JSFileExecutionContext,
+		MarkdownCallingJSFileExecutionContext,
+		MarkdownCodeBlockExecutionContext,
+		MarkdownOtherExecutionContext,
+		UnknownExecutionContext,
+	} from 'jsEngine/engine/JsExecution';
+	import { MessageType } from 'jsEngine/messages/MessageManager';
+	import { ButtonStyleType } from 'jsEngine/utils/Util';
 	import type { CachedMetadata } from 'obsidian';
 	import { Component, TFile } from 'obsidian';
 	import { z } from 'zod';
@@ -535,10 +696,17 @@ declare module 'utils/Validators' {
 		tFile: z.ZodType<TFile, any, any>;
 		cachedMetadata: z.ZodType<CachedMetadata, any, any>;
 		block: z.ZodType<Block, any, any>;
-		jsExecutionContext: z.ZodType<JsExecutionContext, any, any>;
+		tableElementType: z.ZodType<TableElementType, any, any>;
+		tableElementBody: z.ZodType<TableElementType[][], any, any>;
+		markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext, any, any>;
+		markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext, any, any>;
+		markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext, any, any>;
+		jsFileExecutionContext: z.ZodType<JSFileExecutionContext, any, any>;
+		unknownExecutionContext: z.ZodType<UnknownExecutionContext, any, any>;
+		executionContext: z.ZodType<ExecutionContext, any, any>;
 		engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
-		engineExecutionParamsNoCode: z.ZodType<Omit<EngineExecutionParams, 'code'>, any, any>;
-		engineExecutionParamsNoCodeAndComponent: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component'>, any, any>;
+		engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>, any, any>;
+		engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>, any, any>;
 		jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions, any, any>;
 		abstractMarkdownElement: z.ZodType<AbstractMarkdownElement, any, any>;
 		messageType: z.ZodType<MessageType, any, any>;
@@ -554,16 +722,16 @@ declare module 'utils/Validators' {
 		constructor();
 	}
 }
-declare module 'main' {
-	import { API } from 'api/API';
-	import { Engine } from 'engine/Engine';
-	import { MessageManager } from 'messages/MessageManager';
-	import type { JsEnginePluginSettings } from 'Settings';
-	import { Validators } from 'utils/Validators';
+declare module 'jsEngine/main' {
+	import { API } from 'jsEngine/api/API';
+	import { Engine } from 'jsEngine/engine/Engine';
+	import { MessageManager } from 'jsEngine/messages/MessageManager';
+	import type { JsEnginePluginSettings } from 'jsEngine/settings/Settings';
+	import { Validators } from 'jsEngine/utils/Validators';
 	import type { App, PluginManifest } from 'obsidian';
 	import { Plugin } from 'obsidian';
 	export default class JsEnginePlugin extends Plugin {
-		settings: JsEnginePluginSettings | undefined;
+		settings: JsEnginePluginSettings;
 		messageManager: MessageManager;
 		jsEngine: Engine;
 		api: API;
@@ -579,9 +747,9 @@ declare module 'main' {
 		registerCodeMirrorMode(): Promise<void>;
 	}
 }
-declare module 'engine/ExecutionStatsModal' {
-	import type { JsExecution } from 'engine/JsExecution';
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/engine/ExecutionStatsModal' {
+	import type { JsExecution } from 'jsEngine/engine/JsExecution';
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { App } from 'obsidian';
 	import { Modal } from 'obsidian';
 	/**
@@ -597,10 +765,10 @@ declare module 'engine/ExecutionStatsModal' {
 		onClose(): void;
 	}
 }
-declare module 'engine/Engine' {
-	import type { JsExecutionContext } from 'engine/JsExecution';
-	import { JsExecution } from 'engine/JsExecution';
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/engine/Engine' {
+	import type { ExecutionContext } from 'jsEngine/engine/JsExecution';
+	import { JsExecution } from 'jsEngine/engine/JsExecution';
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { App, Component } from 'obsidian';
 	/**
 	 * Parameters for the {@link Engine.execute} method.
@@ -619,9 +787,9 @@ declare module 'engine/Engine' {
 		 */
 		container?: HTMLElement | undefined;
 		/**
-		 * Optional context to provide to the JavaScript code.
+		 * Context about the location the code was executed from.
 		 */
-		context?: JsExecutionContext | undefined;
+		context: ExecutionContext;
 		/**
 		 * Optional extra context variables to provide to the JavaScript code.
 		 */
@@ -647,143 +815,10 @@ declare module 'engine/Engine' {
 		openExecutionStatsModal(jsExecution: JsExecution): void;
 	}
 }
-declare module 'api/markdown/AbstractMarkdownLiteral' {
-	import { AbstractMarkdownElement } from 'api/markdown/AbstractMarkdownElement';
-	import { MarkdownElementType } from 'api/markdown/MarkdownElementType';
-	/**
-	 * @internal
-	 */
-	export abstract class AbstractMarkdownLiteral extends AbstractMarkdownElement {
-		getType(): MarkdownElementType;
-	}
-}
-declare module 'api/markdown/AbstractMarkdownElementContainer' {
-	import type { API } from 'api/API';
-	import { AbstractMarkdownElement } from 'api/markdown/AbstractMarkdownElement';
-	import { AbstractMarkdownLiteral } from 'api/markdown/AbstractMarkdownLiteral';
-	import { MarkdownElementType } from 'api/markdown/MarkdownElementType';
-	/**
-	 * @internal
-	 */
-	export abstract class AbstractMarkdownElementContainer extends AbstractMarkdownElement {
-		markdownElements: AbstractMarkdownElement[];
-		constructor(apiInstance: API);
-		/**
-		 * @internal
-		 */
-		abstract allowElement(element: AbstractMarkdownElement): boolean;
-		getType(): MarkdownElementType;
-		/**
-		 * Adds a child element to the container.
-		 *
-		 * @param element
-		 * @throws Error if the element is not allowed in the container.
-		 */
-		addElement(element: AbstractMarkdownElement): void;
-		addText(text: string): AbstractMarkdownElementContainer;
-		addBoldText(text: string): AbstractMarkdownElementContainer;
-		addCursiveText(text: string): AbstractMarkdownElementContainer;
-		addUnderlinedText(text: string): AbstractMarkdownElementContainer;
-		addHighlightedText(text: string): AbstractMarkdownElementContainer;
-		addCode(text: string): AbstractMarkdownElementContainer;
-		createParagraph(content: string): ParagraphElement;
-		createHeading(level: number, content: string): HeadingElement;
-		createBlockQuote(): BlockQuoteElement;
-		createCallout(title: string, type: string, args?: string): CalloutElement;
-		createCollapsibleCallout(title: string, type: string, args?: string, collapsed?: boolean): CalloutElement;
-		createCodeBlock(language: string, content: string): CodeBlockElement;
-		createTable(header: string[], body: string[][]): TableElement;
-		createList(ordered?: boolean): ListElement;
-		createOrderedList(): ListElement;
-	}
-	/**
-	 * Represents a piece of pure markdown text.
-	 */
-	export class TextElement extends AbstractMarkdownLiteral {
-		content: string;
-		bold: boolean;
-		cursive: boolean;
-		underline: boolean;
-		highlight: boolean;
-		constructor(apiInstance: API, content: string, bold: boolean, cursive: boolean, underline: boolean, highlight: boolean);
-		toString(): string;
-	}
-	/**
-	 * Represents an inline markdown code block.
-	 */
-	export class CodeElement extends AbstractMarkdownLiteral {
-		content: string;
-		constructor(apiInstance: API, content: string);
-		toString(): string;
-	}
-	/**
-	 * Represents a markdown table.
-	 */
-	export class TableElement extends AbstractMarkdownLiteral {
-		header: string[];
-		body: string[][];
-		constructor(apiInstance: API, header: string[], body: string[][]);
-		toString(): string;
-	}
-	/**
-	 * Represents a markdown heading.
-	 */
-	export class HeadingElement extends AbstractMarkdownElementContainer {
-		level: number;
-		constructor(apiInstance: API, level: number, content: string);
-		toString(): string;
-		allowElement(element: AbstractMarkdownElement): boolean;
-	}
-	/**
-	 * Represents a markdown paragraph.
-	 */
-	export class ParagraphElement extends AbstractMarkdownElementContainer {
-		constructor(apiInstance: API, content: string);
-		toString(): string;
-		allowElement(element: AbstractMarkdownElement): boolean;
-	}
-	/**
-	 * Represents a markdown code block.
-	 */
-	export class CodeBlockElement extends AbstractMarkdownElementContainer {
-		language: string;
-		constructor(apiInstance: API, language: string, content: string);
-		toString(): string;
-		allowElement(element: AbstractMarkdownElement): boolean;
-	}
-	/**
-	 * Represents a markdown block quote.
-	 */
-	export class BlockQuoteElement extends AbstractMarkdownElementContainer {
-		toString(): string;
-		allowElement(_: AbstractMarkdownElement): boolean;
-	}
-	/**
-	 * Represents a markdown callout.
-	 */
-	export class CalloutElement extends AbstractMarkdownElementContainer {
-		title: string;
-		type: string;
-		args: string;
-		collapsible: boolean;
-		collapsed: boolean;
-		constructor(apiInstance: API, title: string, type: string, args: string, collapsible?: boolean, collapsed?: boolean);
-		toString(): string;
-		private collapseChar;
-		allowElement(_: AbstractMarkdownElement): boolean;
-	}
-	export class ListElement extends AbstractMarkdownElementContainer {
-		ordered: boolean;
-		constructor(apiInstance: API, ordered: boolean);
-		private getPrefix;
-		toString(): string;
-		allowElement(_: AbstractMarkdownElement): boolean;
-	}
-}
-declare module 'api/markdown/MarkdownBuilder' {
-	import type { API } from 'api/API';
-	import type { AbstractMarkdownElement } from 'api/markdown/AbstractMarkdownElement';
-	import { AbstractMarkdownElementContainer } from 'api/markdown/AbstractMarkdownElementContainer';
+declare module 'jsEngine/api/markdown/MarkdownBuilder' {
+	import type { API } from 'jsEngine/api/API';
+	import type { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	import { AbstractMarkdownElementContainer } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 	/**
 	 * Allows for easily building markdown using JavaScript.
 	 */
@@ -793,10 +828,10 @@ declare module 'api/markdown/MarkdownBuilder' {
 		allowElement(_: AbstractMarkdownElement): boolean;
 	}
 }
-declare module 'api/reactive/ReactiveComponent' {
-	import type { API } from 'api/API';
-	import type { JsFunc } from 'engine/JsExecution';
-	import type { ResultRenderer } from 'engine/ResultRenderer';
+declare module 'jsEngine/api/reactive/ReactiveComponent' {
+	import type { API } from 'jsEngine/api/API';
+	import type { JsFunc } from 'jsEngine/engine/JsExecution';
+	import type { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 	/**
 	 * A reactive component is a component that can be refreshed.
 	 * This is useful for rendering dynamic content.
@@ -828,8 +863,8 @@ declare module 'api/reactive/ReactiveComponent' {
 		setRenderer(renderer: ResultRenderer): void;
 	}
 }
-declare module 'engine/ResultRenderer' {
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/engine/ResultRenderer' {
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { Component } from 'obsidian';
 	/**
 	 * Attaches to a container and renders values.
@@ -857,12 +892,28 @@ declare module 'engine/ResultRenderer' {
 		convertToSimpleObject(value: unknown): unknown;
 	}
 }
-declare module 'api/Internal' {
-	import type { API } from 'api/API';
-	import type { EngineExecutionParams } from 'engine/Engine';
-	import type { JsExecution, JsExecutionContext, JsExecutionGlobals, JsExecutionGlobalsConstructionOptions } from 'engine/JsExecution';
-	import { ResultRenderer } from 'engine/ResultRenderer';
+declare module 'jsEngine/api/Internal' {
+	import type { API } from 'jsEngine/api/API';
+	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+	import type {
+		JsExecution,
+		ExecutionContext,
+		JsExecutionGlobals,
+		JsExecutionGlobalsConstructionOptions,
+		MarkdownCodeBlockExecutionContext,
+		JSFileExecutionContext,
+		UnknownExecutionContext,
+		MarkdownCallingJSFileExecutionContext,
+		MarkdownOtherExecutionContext,
+	} from 'jsEngine/engine/JsExecution';
+	import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 	import { Component } from 'obsidian';
+	export type ExecuteFileEngineExecutionParams = Omit<EngineExecutionParams, 'code' | 'context'> & {
+		context?: JSFileExecutionContext | MarkdownCallingJSFileExecutionContext;
+	};
+	export type ExecuteFileSimpleEngineExecutionParams = Omit<EngineExecutionParams, 'code' | 'component' | 'context'> & {
+		context?: JSFileExecutionContext | MarkdownCallingJSFileExecutionContext;
+	};
 	/**
 	 * The internal API provides access to some of js engines internals.
 	 */
@@ -889,7 +940,7 @@ declare module 'api/Internal' {
 		 * @param path
 		 * @param params
 		 */
-		executeFile(path: string, params: Omit<EngineExecutionParams, 'code'>): Promise<JsExecution>;
+		executeFile(path: string, params: ExecuteFileEngineExecutionParams): Promise<JsExecution>;
 		/**
 		 * Lead and execute the given file.
 		 * This method also handles the lifetime of the execution.
@@ -898,29 +949,72 @@ declare module 'api/Internal' {
 		 * @param path
 		 * @param params
 		 */
-		executeFileSimple(path: string, params?: Omit<EngineExecutionParams, 'code' | 'component'>): Promise<JsExecution>;
+		executeFileSimple(path: string, params?: ExecuteFileSimpleEngineExecutionParams): Promise<JsExecution>;
 		/**
 		 * Gets the execution context for a specific file, throws when the file does not exist.
 		 *
 		 * @param path
+		 * @deprecated use {@link getContextForMarkdownCodeBlock}, {@link getContextForJSFile}, or {@link getContextForUnknown} instead
 		 */
-		getContextForFile(path: string): Promise<JsExecutionContext>;
+		getContextForFile(path: string): Promise<ExecutionContext>;
+		/**
+		 * Gets the execution context for a markdown code block.
+		 *
+		 * @param path The file path of the markdown file the code block is in.
+		 * @returns
+		 */
+		getContextForMarkdownCodeBlock(path: string): Promise<MarkdownCodeBlockExecutionContext>;
+		/**
+		 * Gets the execution context for when a markdown file calls a JS file.
+		 * This adds some extra info about the markdown file into the context, compared to {@link getContextForJSFile}.
+		 *
+		 * @param markdownPath The file path of the markdown file.
+		 * @param jsPath The file path of the JS file.
+		 * @returns
+		 */
+		getContextForMarkdownCallingJSFile(markdownPath: string, jsPath: string): Promise<MarkdownCallingJSFileExecutionContext>;
+		/**
+		 * Gets the execution context for a markdown code block.
+		 *
+		 * @param path The file path of the markdown file the code block is in.
+		 * @returns
+		 */
+		getContextForMarkdownOther(path: string): Promise<MarkdownOtherExecutionContext>;
+		/**
+		 * Gets the execution context for a JS file.
+		 *
+		 * @param path The file path of the JS file.
+		 * @returns
+		 */
+		getContextForJSFile(path: string): Promise<JSFileExecutionContext>;
+		/**
+		 * Gets an unknown execution context for anything that is not a markdown code block or a JS file.
+		 *
+		 * @param path An optional file path that will get resolved to a {@link TFile}.
+		 * @returns
+		 */
+		getContextForUnknown(path?: string): Promise<UnknownExecutionContext>;
 		/**
 		 * Creates execution globals.
 		 *
 		 * @param options
 		 */
 		createExecutionGlobals(options: JsExecutionGlobalsConstructionOptions): JsExecutionGlobals;
+		/**
+		 * Runs all startup scripts defined in the plugins settings.
+		 */
+		executeStartupScripts(): Promise<void>;
+		private getFileWithExtension;
 	}
 }
-declare module 'api/LibAPI' {
+declare module 'jsEngine/api/LibAPI' {
 	import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 	import { ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
 	import { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
 	import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 	import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 	import * as IterTools from 'itertools-ts';
-	import type { API } from 'api/API';
+	import type { API } from 'jsEngine/api/API';
 	export interface LibParsiNOM {
 		P: typeof P;
 		P_UTILS: typeof P_UTILS;
@@ -945,8 +1039,8 @@ declare module 'api/LibAPI' {
 		itertools(): typeof IterTools;
 	}
 }
-declare module 'api/MarkdownAPI' {
-	import type { API } from 'api/API';
+declare module 'jsEngine/api/MarkdownAPI' {
+	import type { API } from 'jsEngine/api/API';
 	import {
 		BlockQuoteElement,
 		CalloutElement,
@@ -957,9 +1051,9 @@ declare module 'api/MarkdownAPI' {
 		ParagraphElement,
 		TableElement,
 		TextElement,
-	} from 'api/markdown/AbstractMarkdownElementContainer';
-	import { MarkdownBuilder } from 'api/markdown/MarkdownBuilder';
-	import { MarkdownString } from 'api/markdown/MarkdownString';
+	} from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
+	import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
+	import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 	/**
 	 * The markdown API provides utilities for creating markdown using js.
 	 */
@@ -1074,9 +1168,9 @@ declare module 'api/MarkdownAPI' {
 		createOrderedList(): ListElement;
 	}
 }
-declare module 'api/MessageAPI' {
-	import type { API } from 'api/API';
-	import type { MessageManager, MessageType, MessageWrapper } from 'messages/MessageManager';
+declare module 'jsEngine/api/MessageAPI' {
+	import type { API } from 'jsEngine/api/API';
+	import type { MessageManager, MessageType, MessageWrapper } from 'jsEngine/messages/MessageManager';
 	export class MessageAPI {
 		readonly apiInstance: API;
 		readonly messageManager: MessageManager;
@@ -1086,8 +1180,8 @@ declare module 'api/MessageAPI' {
 		getMessagesForInstance(): MessageWrapper[];
 	}
 }
-declare module 'api/QueryAPI' {
-	import type { API } from 'api/API';
+declare module 'jsEngine/api/QueryAPI' {
+	import type { API } from 'jsEngine/api/API';
 	import type { CachedMetadata, TFile } from 'obsidian';
 	export class QueryAPI {
 		readonly apiInstance: API;
@@ -1117,14 +1211,27 @@ declare module 'api/QueryAPI' {
 		 * const paths = engine.query.filesWithMetadata((file, cache, tags) => tags.includes("Foo") ? file.path : undefined);
 		 * ```
 		 */
-		filesWithMetadata<T>(query: (file: TFile, cache: CachedMetadata | null, tags: string[]) => T | undefined): T[];
+		filesWithMetadata<T>(query: (file: TFile, cache: CachedMetadata | undefined, tags: string[], frontmatterTags: string[]) => T | undefined): T[];
+		outgoingLinks(file: TFile): {
+			file: TFile;
+			metadata: CachedMetadata | undefined;
+			tags: string[];
+			frontmatterTags: string[];
+		}[];
+		incomingLinks(file: TFile): {
+			file: TFile;
+			metadata: CachedMetadata | undefined;
+			tags: string[];
+			frontmatterTags: string[];
+		}[];
 	}
 }
-declare module 'utils/Link' {
-	import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
+declare module 'jsEngine/utils/Link' {
 	import type { App, TFile } from 'obsidian';
-	export const P_FilePath: Parser<string>;
 	export function isUrl(str: string): boolean;
+	/**
+	 * Represents a markdown link.
+	 */
 	export class MarkdownLink {
 		isEmbed: boolean;
 		target: string;
@@ -1136,20 +1243,22 @@ declare module 'utils/Link' {
 		static fromString(str: string): MarkdownLink | undefined;
 		fullTarget(): string;
 		toTFile(app: App, sourcePath: string): TFile | undefined;
+		toString(): string;
 	}
 }
-declare module 'api/API' {
-	import type { InstanceId } from 'api/InstanceId';
-	import { InternalAPI } from 'api/Internal';
-	import { LibAPI } from 'api/LibAPI';
-	import { MarkdownAPI } from 'api/MarkdownAPI';
-	import { MessageAPI } from 'api/MessageAPI';
-	import { PromptAPI } from 'api/PromptAPI';
-	import { QueryAPI } from 'api/QueryAPI';
-	import { ReactiveComponent } from 'api/reactive/ReactiveComponent';
-	import type { JsFunc } from 'engine/JsExecution';
-	import type JsEnginePlugin from 'main';
-	import type { Validators } from 'utils/Validators';
+declare module 'jsEngine/api/API' {
+	import type { InstanceId } from 'jsEngine/api/InstanceId';
+	import { InternalAPI } from 'jsEngine/api/Internal';
+	import { LibAPI } from 'jsEngine/api/LibAPI';
+	import { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
+	import { MessageAPI } from 'jsEngine/api/MessageAPI';
+	import { PromptAPI } from 'jsEngine/api/PromptAPI';
+	import { QueryAPI } from 'jsEngine/api/QueryAPI';
+	import { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+	import type { JsFunc } from 'jsEngine/engine/JsExecution';
+	import type JsEnginePlugin from 'jsEngine/main';
+	import { MarkdownLink } from 'jsEngine/utils/Link';
+	import type { Validators } from 'jsEngine/utils/Validators';
 	import type { App, Plugin, TFile } from 'obsidian';
 	import * as Obsidian from 'obsidian';
 	export class API {
@@ -1223,36 +1332,48 @@ declare module 'api/API' {
 		reactive(fn: JsFunc, ...initialArgs: unknown[]): ReactiveComponent;
 		/**
 		 * Gets the target file of a link.
-		 * The link must be a valid wiki link with or without the brackets, so `[[file|foo]]` or `file|foo`.
-		 * If the link is not found, this will return undefined.
+		 * This link can be a markdown link or a wiki link.
+		 * If the link target is not found, this will return undefined.
 		 *
 		 * @param link the link to get the target file of.
 		 * @param sourcePath the path of the file that contains the link. This is needed to resolve relative links.
 		 */
-		getLinkTarget(link: string, sourcePath: string): TFile | undefined;
+		resolveLinkToTFile(link: string, sourcePath: string): TFile | undefined;
+		/**
+		 * Parses a markdown link.
+		 * This link can be a markdown link or a wiki link.
+		 *
+		 * @param link the link to parse.
+		 */
+		parseLink(link: string): MarkdownLink | undefined;
 	}
 }
-declare module 'engine/JsExecution' {
-	import { API } from 'api/API';
-	import type { EngineExecutionParams } from 'engine/Engine';
-	import type JsEnginePlugin from 'main';
-	import type { MessageWrapper } from 'messages/MessageManager';
+declare module 'jsEngine/engine/JsExecution' {
+	import { API } from 'jsEngine/api/API';
+	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+	import type JsEnginePlugin from 'jsEngine/main';
+	import type { MessageWrapper } from 'jsEngine/messages/MessageManager';
 	import type { App, CachedMetadata, Component, TFile } from 'obsidian';
 	import type * as Obsidian from 'obsidian';
 	/**
 	 * An async JavaScript function.
 	 */
 	export type JsFunc = (...args: unknown[]) => Promise<unknown>;
-	/**
-	 * Context provided to a {@link JsExecution}.
-	 */
-	export interface JsExecutionContext {
+	export enum ExecutionSource {
+		MarkdownCodeBlock = 'markdown-code-block',
+		MarkdownCallingJSFile = 'markdown-calling-js-file',
+		MarkdownOther = 'markdown-other',
+		JSFile = 'js-file',
+		Unknown = 'unknown',
+	}
+	export interface MarkdownCodeBlockExecutionContext {
+		executionSource: ExecutionSource.MarkdownCodeBlock;
 		/**
-		 * The file that the execution was triggered from.
+		 * The file that the code block is in.
 		 */
-		file?: TFile | undefined;
+		file: TFile;
 		/**
-		 * The metadata of the file that the execution was triggered from.
+		 * The metadata of the file.
 		 */
 		metadata?: CachedMetadata | undefined;
 		/**
@@ -1264,6 +1385,55 @@ declare module 'engine/JsExecution' {
 		from: number;
 		to: number;
 	}
+	export interface MarkdownCallingJSFileExecutionContext {
+		executionSource: ExecutionSource.MarkdownCallingJSFile;
+		/**
+		 * The markdown file that the JS File is called from.
+		 */
+		file: TFile;
+		/**
+		 * The metadata of the markdown file.
+		 */
+		metadata?: CachedMetadata | undefined;
+		/**
+		 * The JS that is being called.
+		 */
+		jsFile: TFile;
+	}
+	export interface MarkdownOtherExecutionContext {
+		executionSource: ExecutionSource.MarkdownOther;
+		/**
+		 * The file that the code block is in.
+		 */
+		file: TFile;
+		/**
+		 * The metadata of the file.
+		 */
+		metadata?: CachedMetadata | undefined;
+	}
+	export interface JSFileExecutionContext {
+		executionSource: ExecutionSource.JSFile;
+		/**
+		 * The JS that is being executed.
+		 */
+		jsFile: TFile;
+	}
+	export interface UnknownExecutionContext {
+		executionSource: ExecutionSource.Unknown;
+		/**
+		 * The file that the execution was triggered from.
+		 */
+		file?: TFile | undefined;
+	}
+	/**
+	 * Context provided to a {@link JsExecution}.
+	 */
+	export type ExecutionContext =
+		| MarkdownCodeBlockExecutionContext
+		| MarkdownCallingJSFileExecutionContext
+		| MarkdownOtherExecutionContext
+		| JSFileExecutionContext
+		| UnknownExecutionContext;
 	/**
 	 * Global variables provided to a {@link JsExecution}.
 	 */
@@ -1283,7 +1453,7 @@ declare module 'engine/JsExecution' {
 		/**
 		 * The context provided. This can be undefined and extended by other properties.
 		 */
-		context: (JsExecutionContext | undefined) & Record<string, unknown>;
+		context: ExecutionContext & Record<string, unknown>;
 		/**
 		 * The container element that the execution can render to. This can be undefined.
 		 */
@@ -1309,7 +1479,7 @@ declare module 'engine/JsExecution' {
 		/**
 		 * The context provided. This can be undefined and extended by other properties.
 		 */
-		context: (JsExecutionContext | undefined) & Record<string, unknown>;
+		context: ExecutionContext & Record<string, unknown>;
 		/**
 		 * The container element that the execution can render to. This can be undefined.
 		 */
@@ -1363,9 +1533,9 @@ declare module 'engine/JsExecution' {
 		openStatsModal(): void;
 	}
 }
-declare module 'JsMDRC' {
-	import type { JsExecutionContext, JsExecution } from 'engine/JsExecution';
-	import type JsEnginePlugin from 'main';
+declare module 'jsEngine/JsMDRC' {
+	import type { ExecutionContext, JsExecution } from 'jsEngine/engine/JsExecution';
+	import type JsEnginePlugin from 'jsEngine/main';
 	import type { MarkdownPostProcessorContext } from 'obsidian';
 	import { MarkdownRenderChild, TFile } from 'obsidian';
 	export class JsMDRC extends MarkdownRenderChild {
@@ -1375,8 +1545,8 @@ declare module 'JsMDRC' {
 		jsExecution: JsExecution | undefined;
 		constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, ctx: MarkdownPostProcessorContext);
 		getExecutionFile(): TFile | undefined;
-		buildExecutionContext(): JsExecutionContext;
-		tryRun(context: JsExecutionContext): Promise<JsExecution>;
+		buildExecutionContext(): ExecutionContext;
+		tryRun(context: ExecutionContext): Promise<JsExecution>;
 		renderResults(container: HTMLElement): Promise<void>;
 		renderExecutionStats(container: HTMLElement): void;
 		render(): Promise<void>;
@@ -1384,27 +1554,27 @@ declare module 'JsMDRC' {
 		onunload(): void;
 	}
 }
-declare module 'index' {
-	export * from 'engine/Engine';
-	export * from 'engine/JsExecution';
-	export * from 'engine/ResultRenderer';
-	export * from 'api/API';
-	export * from 'api/InstanceId';
-	export * from 'api/Internal';
-	export * from 'api/LibAPI';
-	export * from 'api/MarkdownAPI';
-	export * from 'api/MessageAPI';
-	export * from 'api/PromptAPI';
-	export * from 'api/QueryAPI';
-	export * from 'api/reactive/ReactiveComponent';
-	export * from 'api/markdown/AbstractMarkdownElement';
-	export * from 'api/markdown/AbstractMarkdownElementContainer';
-	export * from 'api/markdown/AbstractMarkdownLiteral';
-	export * from 'api/markdown/MarkdownString';
-	export * from 'api/markdown/MarkdownBuilder';
-	export * from 'api/markdown/MarkdownElementType';
+declare module 'jsEngine/index' {
+	export * from 'jsEngine/engine/Engine';
+	export * from 'jsEngine/engine/JsExecution';
+	export * from 'jsEngine/engine/ResultRenderer';
+	export * from 'jsEngine/api/API';
+	export * from 'jsEngine/api/InstanceId';
+	export * from 'jsEngine/api/Internal';
+	export * from 'jsEngine/api/LibAPI';
+	export * from 'jsEngine/api/MarkdownAPI';
+	export * from 'jsEngine/api/MessageAPI';
+	export * from 'jsEngine/api/PromptAPI';
+	export * from 'jsEngine/api/QueryAPI';
+	export * from 'jsEngine/api/reactive/ReactiveComponent';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
+	export * from 'jsEngine/api/markdown/MarkdownString';
+	export * from 'jsEngine/api/markdown/MarkdownBuilder';
+	export * from 'jsEngine/api/markdown/MarkdownElementType';
 }
-declare module 'utils/UseIcon' {
+declare module 'jsEngine/utils/UseIcon' {
 	export function useIcon(
 		node: HTMLElement,
 		icon: string,
@@ -1412,3 +1582,4 @@ declare module 'utils/UseIcon' {
 		update: (icon: string) => void;
 	};
 }
+declare module 'index' {}

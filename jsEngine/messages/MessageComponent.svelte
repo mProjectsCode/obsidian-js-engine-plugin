@@ -67,8 +67,13 @@
 						<p>Source ID: {messageWrapper.source.id}</p>
 						{@const executionContext = messageWrapper.source.executionContext}
 						{#if executionContext}
-							<p>Execution Context Type: {executionContext.executionSource}</p>
-							<p>Execution Context File: {executionContext.file?.path ?? 'none'}</p>
+							<p>Execution Type: {executionContext.executionSource}</p>
+							{#if 'file' in executionContext}
+								<p>Execution File: {executionContext.file?.path ?? 'none'}</p>
+							{/if}
+							{#if 'jsFile' in executionContext}
+								<p>Execution JS File: {executionContext.jsFile?.path ?? 'none'}</p>
+							{/if}
 						{/if}
 					{/if}
 				</div>

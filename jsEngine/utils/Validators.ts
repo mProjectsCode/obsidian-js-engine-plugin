@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { API } from 'jsEngine/api/API';
+import type { ExecuteFileEngineExecutionParams, ExecuteFileSimpleEngineExecutionParams } from 'jsEngine/api/Internal';
 import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
 import type { TableElementType } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 import type {
@@ -14,7 +15,16 @@ import type {
 	YesNoPromptOptions,
 } from 'jsEngine/api/PromptAPI';
 import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
-import type { Block, ExecutionContext, JsExecutionGlobalsConstructionOptions } from 'jsEngine/engine/JsExecution';
+import type {
+	Block,
+	ExecutionContext,
+	JsExecutionGlobalsConstructionOptions,
+	JSFileExecutionContext,
+	MarkdownCallingJSFileExecutionContext,
+	MarkdownCodeBlockExecutionContext,
+	MarkdownOtherExecutionContext,
+	UnknownExecutionContext,
+} from 'jsEngine/engine/JsExecution';
 import { ExecutionSource } from 'jsEngine/engine/JsExecution';
 import { MessageType } from 'jsEngine/messages/MessageManager';
 import { ErrorLevel, JSEngineValidationError } from 'jsEngine/utils/Errors';
@@ -50,6 +60,11 @@ export class Validators {
 	block: z.ZodType<Block, any, any>;
 	tableElementType: z.ZodType<TableElementType, any, any>;
 	tableElementBody: z.ZodType<TableElementType[][], any, any>;
+	markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext, any, any>;
+	markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext, any, any>;
+	markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext, any, any>;
+	jsFileExecutionContext: z.ZodType<JSFileExecutionContext, any, any>;
+	unknownExecutionContext: z.ZodType<UnknownExecutionContext, any, any>;
 	executionContext: z.ZodType<ExecutionContext, any, any>;
 	engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
 	engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>, any, any>;
@@ -81,23 +96,49 @@ export class Validators {
 		);
 		this.tableElementType = schemaForType<TableElementType>()(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()]));
 		this.tableElementBody = schemaForType<TableElementType[][]>()(z.array(z.array(this.tableElementType)));
+		this.markdownCodeBlockExecutionContext = schemaForType<MarkdownCodeBlockExecutionContext>()(
+			z.object({
+				executionSource: z.literal(ExecutionSource.MarkdownCodeBlock),
+				file: this.tFile,
+				metadata: this.cachedMetadata.optional(),
+				block: this.block.optional(),
+			}),
+		);
+		this.markdownCallingJSFileExecutionContext = schemaForType<MarkdownCallingJSFileExecutionContext>()(
+			z.object({
+				executionSource: z.literal(ExecutionSource.MarkdownCallingJSFile),
+				file: this.tFile,
+				metadata: this.cachedMetadata.optional(),
+				jsFile: this.tFile,
+			}),
+		);
+		this.markdownOtherExecutionContext = schemaForType<MarkdownOtherExecutionContext>()(
+			z.object({
+				executionSource: z.literal(ExecutionSource.MarkdownOther),
+				file: this.tFile,
+				metadata: this.cachedMetadata.optional(),
+			}),
+		);
+		this.jsFileExecutionContext = schemaForType<JSFileExecutionContext>()(
+			z.object({
+				executionSource: z.literal(ExecutionSource.JSFile),
+				jsFile: this.tFile,
+			}),
+		);
+		this.unknownExecutionContext = schemaForType<UnknownExecutionContext>()(
+			z.object({
+				executionSource: z.literal(ExecutionSource.Unknown),
+				file: this.tFile.optional(),
+			}),
+		);
 		this.executionContext = schemaForType<ExecutionContext>()(
 			z.discriminatedUnion('executionSource', [
-				z.object({
-					executionSource: z.literal(ExecutionSource.MarkdownCodeBlock),
-					file: this.tFile,
-					metadata: this.cachedMetadata.optional(),
-					block: this.block.optional(),
-				}),
-				z.object({
-					executionSource: z.literal(ExecutionSource.JSFile),
-					file: this.tFile,
-				}),
-				z.object({
-					executionSource: z.literal(ExecutionSource.Unknown),
-					file: this.tFile.optional(),
-				}),
-			]),
+				this.markdownCodeBlockExecutionContext,
+				this.markdownCallingJSFileExecutionContext,
+				this.markdownOtherExecutionContext,
+				this.jsFileExecutionContext,
+				this.unknownExecutionContext,
+			] as any) as z.ZodType<ExecutionContext, any, any>,
 		);
 		this.engineExecutionParams = schemaForType<EngineExecutionParams>()(
 			z.object({
@@ -108,18 +149,18 @@ export class Validators {
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);
-		this.engineExecutionParamsFile = schemaForType<Omit<EngineExecutionParams, 'code' | 'context'>>()(
+		this.engineExecutionParamsFile = schemaForType<ExecuteFileEngineExecutionParams>()(
 			z.object({
 				component: this.component,
 				container: this.htmlElement.optional(),
-				context: this.executionContext.optional(),
+				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);
-		this.engineExecutionParamsFileSimple = schemaForType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>>()(
+		this.engineExecutionParamsFileSimple = schemaForType<ExecuteFileSimpleEngineExecutionParams>()(
 			z.object({
 				container: this.htmlElement.optional(),
-				context: this.executionContext.optional(),
+				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
 				contextOverrides: z.record(z.unknown()).optional(),
 			}),
 		);

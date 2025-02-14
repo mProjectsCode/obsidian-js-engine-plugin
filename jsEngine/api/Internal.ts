@@ -5,9 +5,11 @@ import type {
 	ExecutionContext,
 	JsExecutionGlobals,
 	JsExecutionGlobalsConstructionOptions,
-	CodeBlockExecutionContext,
+	MarkdownCodeBlockExecutionContext,
 	JSFileExecutionContext,
 	UnknownExecutionContext,
+	MarkdownCallingJSFileExecutionContext,
+	MarkdownOtherExecutionContext,
 } from 'jsEngine/engine/JsExecution';
 import { ExecutionSource } from 'jsEngine/engine/JsExecution';
 import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
@@ -15,6 +17,14 @@ import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import { Component, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import { z } from 'zod';
+
+export type ExecuteFileEngineExecutionParams = Omit<EngineExecutionParams, 'code' | 'context'> & {
+	context?: JSFileExecutionContext | MarkdownCallingJSFileExecutionContext;
+};
+
+export type ExecuteFileSimpleEngineExecutionParams = Omit<EngineExecutionParams, 'code' | 'component' | 'context'> & {
+	context?: JSFileExecutionContext | MarkdownCallingJSFileExecutionContext;
+};
 
 /**
  * The internal API provides access to some of js engines internals.
@@ -59,7 +69,7 @@ export class InternalAPI {
 	 * @param path
 	 * @param params
 	 */
-	public async executeFile(path: string, params: Omit<EngineExecutionParams, 'code' | 'context'>): Promise<JsExecution> {
+	public async executeFile(path: string, params: ExecuteFileEngineExecutionParams): Promise<JsExecution> {
 		validateAPIArgs(z.object({ path: z.string(), params: this.apiInstance.validators.engineExecutionParamsFile }), { path, params });
 
 		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
@@ -67,12 +77,12 @@ export class InternalAPI {
 			throw new Error(`File ${path} not found.`);
 		}
 		return await this.execute({
-			...params,
-			code: await this.apiInstance.app.vault.read(file),
 			context: {
 				executionSource: ExecutionSource.JSFile,
-				file: file,
+				jsFile: file,
 			},
+			...params,
+			code: await this.apiInstance.app.vault.read(file),
 		});
 	}
 
@@ -84,7 +94,7 @@ export class InternalAPI {
 	 * @param path
 	 * @param params
 	 */
-	public async executeFileSimple(path: string, params?: Omit<EngineExecutionParams, 'code' | 'component' | 'context'>): Promise<JsExecution> {
+	public async executeFileSimple(path: string, params?: ExecuteFileSimpleEngineExecutionParams): Promise<JsExecution> {
 		validateAPIArgs(z.object({ path: z.string(), params: this.apiInstance.validators.engineExecutionParamsFileSimple.optional() }), {
 			path,
 			params,
@@ -132,17 +142,10 @@ export class InternalAPI {
 	 * @param path The file path of the markdown file the code block is in.
 	 * @returns
 	 */
-	public async getContextForMarkdownCodeBlock(path: string): Promise<CodeBlockExecutionContext> {
+	public async getContextForMarkdownCodeBlock(path: string): Promise<MarkdownCodeBlockExecutionContext> {
 		validateAPIArgs(z.object({ path: z.string() }), { path });
 
-		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
-		if (!file || !(file instanceof TFile)) {
-			throw new Error(`File ${path} not found.`);
-		}
-		if (file.extension !== 'md' && file.extension !== '.md') {
-			throw new Error(`File ${path} is not a markdown file. Expected file extension to be ".md".`);
-		}
-
+		const file = this.getFileWithExtension(path, 'md');
 		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
 
 		return {
@@ -150,6 +153,49 @@ export class InternalAPI {
 			file: file,
 			metadata: metadata ?? undefined,
 			block: undefined,
+		};
+	}
+
+	/**
+	 * Gets the execution context for when a markdown file calls a JS file.
+	 * This adds some extra info about the markdown file into the context, compared to {@link getContextForJSFile}.
+	 *
+	 * @param markdownPath The file path of the markdown file.
+	 * @param jsPath The file path of the JS file.
+	 * @returns
+	 */
+	public async getContextForMarkdownCallingJSFile(markdownPath: string, jsPath: string): Promise<MarkdownCallingJSFileExecutionContext> {
+		validateAPIArgs(z.object({ markdownPath: z.string(), jsPath: z.string() }), { markdownPath, jsPath });
+
+		const markdownFile = this.getFileWithExtension(markdownPath, 'md');
+		const metadata = this.apiInstance.app.metadataCache.getFileCache(markdownFile);
+
+		const jsFile = this.getFileWithExtension(jsPath, 'js');
+
+		return {
+			executionSource: ExecutionSource.MarkdownCallingJSFile,
+			file: markdownFile,
+			metadata: metadata ?? undefined,
+			jsFile: jsFile,
+		};
+	}
+
+	/**
+	 * Gets the execution context for a markdown code block.
+	 *
+	 * @param path The file path of the markdown file the code block is in.
+	 * @returns
+	 */
+	public async getContextForMarkdownOther(path: string): Promise<MarkdownOtherExecutionContext> {
+		validateAPIArgs(z.object({ path: z.string() }), { path });
+
+		const file = this.getFileWithExtension(path, 'md');
+		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+
+		return {
+			executionSource: ExecutionSource.MarkdownOther,
+			file: file,
+			metadata: metadata ?? undefined,
 		};
 	}
 
@@ -162,17 +208,11 @@ export class InternalAPI {
 	public async getContextForJSFile(path: string): Promise<JSFileExecutionContext> {
 		validateAPIArgs(z.object({ path: z.string() }), { path });
 
-		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
-		if (!file || !(file instanceof TFile)) {
-			throw new Error(`File ${path} not found.`);
-		}
-		if (file.extension !== 'js' && file.extension !== '.js') {
-			throw new Error(`File ${path} is not a JS file. Expected file extension to be ".js".`);
-		}
+		const file = this.getFileWithExtension(path, 'js');
 
 		return {
 			executionSource: ExecutionSource.JSFile,
-			file: file,
+			jsFile: file,
 		};
 	}
 
@@ -227,5 +267,16 @@ export class InternalAPI {
 		for (const script of this.apiInstance.plugin.settings.startupScripts ?? []) {
 			await this.executeFileSimple(script);
 		}
+	}
+
+	private getFileWithExtension(path: string, extension: string): TFile {
+		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
+		if (!file || !(file instanceof TFile)) {
+			throw new Error(`File ${path} not found.`);
+		}
+		if (file.extension !== extension && file.extension !== `.${extension}`) {
+			throw new Error(`File ${path} is not of the expected file type. Expected file extension to be ".${extension}".`);
+		}
+		return file;
 	}
 }
