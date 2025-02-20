@@ -24,8 +24,9 @@ export interface MarkdownCodeBlockExecutionContext {
 	executionSource: ExecutionSource.MarkdownCodeBlock;
 	/**
 	 * The file that the code block is in.
+	 * Since rendered markdown does not necessarily have an associated file, this can be undefined.
 	 */
-	file: TFile;
+	file?: TFile;
 	/**
 	 * The metadata of the file.
 	 */
@@ -45,8 +46,9 @@ export interface MarkdownCallingJSFileExecutionContext {
 	executionSource: ExecutionSource.MarkdownCallingJSFile;
 	/**
 	 * The markdown file that the JS File is called from.
+	 * Since rendered markdown does not necessarily have an associated file, this can be undefined.
 	 */
-	file: TFile;
+	file?: TFile;
 	/**
 	 * The metadata of the markdown file.
 	 */
@@ -60,9 +62,10 @@ export interface MarkdownCallingJSFileExecutionContext {
 export interface MarkdownOtherExecutionContext {
 	executionSource: ExecutionSource.MarkdownOther;
 	/**
-	 * The file that the code block is in.
+	 * The file that the markdown is associated with.
+	 * Since rendered markdown does not necessarily have an associated file, this can be undefined.
 	 */
-	file: TFile;
+	file?: TFile;
 	/**
 	 * The metadata of the file.
 	 */

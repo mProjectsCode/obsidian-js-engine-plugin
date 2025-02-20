@@ -145,8 +145,8 @@ export class InternalAPI {
 	public async getContextForMarkdownCodeBlock(path: string): Promise<MarkdownCodeBlockExecutionContext> {
 		validateAPIArgs(z.object({ path: z.string() }), { path });
 
-		const file = this.getFileWithExtension(path, 'md');
-		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+		const file = this.tryGetFileWithExtension(path, 'md');
+		const metadata = file ? this.apiInstance.app.metadataCache.getFileCache(file) : undefined;
 
 		return {
 			executionSource: ExecutionSource.MarkdownCodeBlock,
@@ -167,8 +167,8 @@ export class InternalAPI {
 	public async getContextForMarkdownCallingJSFile(markdownPath: string, jsPath: string): Promise<MarkdownCallingJSFileExecutionContext> {
 		validateAPIArgs(z.object({ markdownPath: z.string(), jsPath: z.string() }), { markdownPath, jsPath });
 
-		const markdownFile = this.getFileWithExtension(markdownPath, 'md');
-		const metadata = this.apiInstance.app.metadataCache.getFileCache(markdownFile);
+		const markdownFile = this.tryGetFileWithExtension(markdownPath, 'md');
+		const metadata = markdownFile ? this.apiInstance.app.metadataCache.getFileCache(markdownFile) : undefined;
 
 		const jsFile = this.getFileWithExtension(jsPath, 'js');
 
@@ -189,8 +189,8 @@ export class InternalAPI {
 	public async getContextForMarkdownOther(path: string): Promise<MarkdownOtherExecutionContext> {
 		validateAPIArgs(z.object({ path: z.string() }), { path });
 
-		const file = this.getFileWithExtension(path, 'md');
-		const metadata = this.apiInstance.app.metadataCache.getFileCache(file);
+		const file = this.tryGetFileWithExtension(path, 'md');
+		const metadata = file ? this.apiInstance.app.metadataCache.getFileCache(file) : undefined;
 
 		return {
 			executionSource: ExecutionSource.MarkdownOther,
@@ -276,6 +276,17 @@ export class InternalAPI {
 		}
 		if (file.extension !== extension && file.extension !== `.${extension}`) {
 			throw new Error(`File ${path} is not of the expected file type. Expected file extension to be ".${extension}".`);
+		}
+		return file;
+	}
+
+	private tryGetFileWithExtension(path: string, extension: string): TFile | undefined {
+		const file = this.apiInstance.app.vault.getAbstractFileByPath(path);
+		if (!file || !(file instanceof TFile)) {
+			return undefined;
+		}
+		if (file.extension !== extension && file.extension !== `.${extension}`) {
+			return undefined;
 		}
 		return file;
 	}

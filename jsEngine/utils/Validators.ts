@@ -99,7 +99,7 @@ export class Validators {
 		this.markdownCodeBlockExecutionContext = schemaForType<MarkdownCodeBlockExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownCodeBlock),
-				file: this.tFile,
+				file: this.tFile.optional(),
 				metadata: this.cachedMetadata.optional(),
 				block: this.block.optional(),
 			}),
@@ -107,7 +107,7 @@ export class Validators {
 		this.markdownCallingJSFileExecutionContext = schemaForType<MarkdownCallingJSFileExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownCallingJSFile),
-				file: this.tFile,
+				file: this.tFile.optional(),
 				metadata: this.cachedMetadata.optional(),
 				jsFile: this.tFile,
 			}),
@@ -115,7 +115,7 @@ export class Validators {
 		this.markdownOtherExecutionContext = schemaForType<MarkdownOtherExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownOther),
-				file: this.tFile,
+				file: this.tFile.optional(),
 				metadata: this.cachedMetadata.optional(),
 			}),
 		);
