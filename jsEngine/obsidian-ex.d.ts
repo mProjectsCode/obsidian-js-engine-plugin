@@ -8,6 +8,12 @@ declare module 'obsidian' {
 			plugins: Record<string, Plugin>;
 			getPlugin: (plugin: string) => Plugin;
 		};
+
+		/**
+		 * Open a file or folder with the systems default app for it.
+		 * @param path a normalized path to open
+		 */
+		openWithDefaultApp(path: string): void;
 	}
 
 	interface MenuItem {
