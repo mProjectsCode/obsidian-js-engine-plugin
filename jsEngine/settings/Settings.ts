@@ -20,15 +20,17 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		this.containerEl.empty();
+		const containerEl = this.containerEl;
+		const settings = this.plugin.settings;
+		containerEl.empty();
 
-		if (!this.plugin.settings) {
+		if (!settings) {
 			return;
 		}
 
 		// this.containerEl.createEl('p', { text: 'Currently Empty, but there will be stuff here later.' });
 
-		new Setting(this.containerEl).setName('Startup scripts').addButton(button => {
+		new Setting(containerEl).setName('Startup scripts').addButton(button => {
 			button.setButtonText('Manage').onClick(() => {
 				new StartupScriptsModal(this.plugin).open();
 			});
