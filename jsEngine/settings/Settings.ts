@@ -22,6 +22,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 
 	display(): void {
 		const containerEl = this.containerEl;
+		const vault = this.app.vault;
 		const settings = this.plugin.settings;
 		containerEl.empty();
 
@@ -55,7 +56,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 					});
 			});
 
-		const startupScriptsDirectory = this.app.vault.getFolderByPath(settings.startupScriptsDirectory ?? '/');
+		const startupScriptsDirectory = vault.getFolderByPath(settings.startupScriptsDirectory ?? '/');
 		let startupScripts: TFile[] = [];
 		if (startupScriptsDirectory != null) {
 			startupScripts = this.listJSfilesInDirectory(startupScriptsDirectory);
@@ -69,6 +70,23 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 				.setDesc(`Apply JS snippet from "vault/${file.path}"`)
 				.addToggle(el => {
 					el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
+				});
+		}
+
+		const oldScripts = settings.startupScripts
+			.map(file => vault.getFileByPath(file)!)
+			.filter(file => !file.parent?.path.startsWith(settings.startupScriptsDirectory ?? ''));
+		if (oldScripts.length > 0) {
+			this.containerEl.createEl('div', { cls: 'callout js-engine-settings-warning', text: 'These scripts are not in the Snippets Folder' });
+		}
+		for (const file of oldScripts) {
+			new Setting(containerEl)
+				.setName(file.basename)
+				.setDesc(`Apply JS snippet from "vault/${file.path}"`)
+				.addExtraButton(el => {
+					el.setTooltip('Move to current Snippets Folder')
+						.setIcon('archive-restore')
+						.onClick(async () => await this.moveStartupScriptToNewDirectory(file));
 				});
 		}
 	}
@@ -96,5 +114,20 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			settings.startupScripts.remove(file.path);
 		}
 		await this.plugin.saveSettings();
+	}
+
+	async moveStartupScriptToNewDirectory(script: TFile): Promise<void> {
+		const settings = this.plugin.settings;
+		const vault = this.app.vault;
+		const startupScriptsDirectory = settings.startupScriptsDirectory ?? '/';
+		const newPath = startupScriptsDirectory.concat('/', script.name);
+		if ((await vault.adapter.exists(startupScriptsDirectory)) == false) {
+			await vault.createFolder(startupScriptsDirectory);
+		}
+		settings.startupScripts.remove(script.path);
+		await this.app.vault.rename(script, newPath);
+		settings.startupScripts.push(newPath);
+		await this.plugin.saveSettings();
+		this.display();
 	}
 }
