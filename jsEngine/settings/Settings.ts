@@ -89,6 +89,9 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 					el.setTooltip('Move to current Snippets Folder')
 						.setIcon('archive-restore')
 						.onClick(async () => await this.moveStartupScriptToNewDirectory(file));
+				})
+				.addToggle(el => {
+					el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
 				});
 		}
 	}
