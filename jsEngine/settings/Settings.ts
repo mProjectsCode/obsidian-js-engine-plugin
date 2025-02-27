@@ -50,9 +50,11 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			.addText(el => {
 				el.setPlaceholder('Folder')
 					.setValue(settings.startupScriptsDirectory ?? '')
-					.onChange(async val => {
-						settings.startupScriptsDirectory = val ? normalizePath(val) : undefined;
-						await this.plugin.saveSettings();
+					.inputEl.addEventListener('focusout', ev => {
+						const target = ev.currentTarget as HTMLInputElement;
+						settings.startupScriptsDirectory = target.value ? normalizePath(target.value) : undefined;
+						void this.plugin.saveSettings();
+						this.display();
 					});
 			});
 
