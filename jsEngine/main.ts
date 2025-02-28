@@ -4,7 +4,7 @@ import { InstanceId, InstanceType } from 'jsEngine/api/InstanceId';
 import { Engine } from 'jsEngine/engine/Engine';
 import { JSFileSelectModal } from 'jsEngine/fileRunner/JSFileSelectModal';
 import { JsMDRC } from 'jsEngine/JsMDRC';
-import { MessageManager } from 'jsEngine/messages/MessageManager';
+import { MessageManager, MessageType } from 'jsEngine/messages/MessageManager';
 import type { JsEnginePluginSettings } from 'jsEngine/settings/Settings';
 import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettingTab } from 'jsEngine/settings/Settings';
 import { Validators } from 'jsEngine/utils/Validators';
@@ -60,6 +60,18 @@ export default class JsEnginePlugin extends Plugin {
 	async loadSettings(): Promise<void> {
 		const loadedSettings = (await this.loadData()) as JsEnginePluginSettings;
 		this.settings = Object.assign({}, JS_ENGINE_DEFAULT_SETTINGS, loadedSettings);
+
+		for (const script of this.settings.startupScripts) {
+			if (!(await this.app.vault.adapter.exists(script))) {
+				this.settings.startupScripts.remove(script);
+				this.api.message.createMessage(
+					MessageType.WANING,
+					'startup-script removed from settings',
+					`removed 'vault/${script}' from list of startup-scripts, as the file no longer exists in the vault`,
+				);
+				await this.saveSettings();
+			}
+		}
 	}
 
 	async saveSettings(): Promise<void> {
