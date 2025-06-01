@@ -52,7 +52,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 					.setValue(settings.startupScriptsDirectory ?? '')
 					.inputEl.addEventListener('focusout', ev => {
 						const target = ev.currentTarget as HTMLInputElement;
-						settings.startupScriptsDirectory = target.value ? normalizePath(target.value) : undefined;
+						settings.startupScriptsDirectory = target.value ? normalizePath(target.value) : JS_ENGINE_DEFAULT_SETTINGS.startupScriptsDirectory;
 						void this.plugin.saveSettings();
 						this.display();
 					});
