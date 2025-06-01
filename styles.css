@@ -175,3 +175,12 @@ If your plugin does not need CSS, delete this file.
 	left: 0;
 	right: 0;
 }
+
+.js-engine-settings-warning {
+	--callout-color: var(--callout-warning);
+	color: rgb(var(--callout-color));
+	margin-bottom: 0;
+	padding-block: 0.25em;
+	border-bottom-left-radius: unset;
+	border-bottom-right-radius: unset;
+}

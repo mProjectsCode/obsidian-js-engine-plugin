@@ -264,7 +264,7 @@ export class InternalAPI {
 	 * Runs all startup scripts defined in the plugins settings.
 	 */
 	public async executeStartupScripts(): Promise<void> {
-		for (const script of this.apiInstance.plugin.settings.startupScripts ?? []) {
+		for (const script of this.apiInstance.plugin.settings.startupScripts) {
 			await this.executeFileSimple(script);
 		}
 	}
