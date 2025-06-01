@@ -78,7 +78,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 
 		const oldScripts = settings.startupScripts
 			.map(file => vault.getFileByPath(file)!)
-			.filter(file => !file.parent?.path.startsWith(settings.startupScriptsDirectory ?? ''));
+			.filter(file => !this.isParentDir(file, settings.startupScriptsDirectory ?? '/'));
 		if (oldScripts.length > 0) {
 			this.containerEl.createEl('div', { cls: 'callout js-engine-settings-warning', text: 'These scripts are not in the Snippets Folder' });
 			for (const file of oldScripts) {
@@ -110,6 +110,12 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 		const files = directory.children.filter(el => el instanceof TFile);
 		const folders = directory.children.filter(el => el instanceof TFolder);
 		return files.filter(f => f.extension == 'js').concat(folders.flatMap(dir => this.listJSfilesInDirectory(dir)));
+	}
+
+	isParentDir(pathnode: TFile | TFolder, parent: string): boolean {
+		if (pathnode.parent == null) return false;
+		if (pathnode.parent.path == parent) return true;
+		return this.isParentDir(pathnode.parent, parent);
 	}
 
 	async toggleStartupScript(file: TFile, enable: boolean): Promise<void> {
