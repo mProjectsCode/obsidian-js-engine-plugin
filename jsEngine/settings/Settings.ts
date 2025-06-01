@@ -112,6 +112,7 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 		const settings = this.plugin.settings;
 		if (enable) {
 			settings.startupScripts.push(file.path);
+			void this.plugin.api.internal.executeFileSimple(file.path);
 		} else {
 			settings.startupScripts.remove(file.path);
 		}
