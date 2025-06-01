@@ -65,14 +65,15 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 		}
 		if (startupScripts.length == 0) {
 			new Setting(containerEl).setName('No JS snippets found').setDesc(`JS snippets are stored in "vault/${settings.startupScriptsDirectory ?? ''}"`);
-		}
-		for (const file of startupScripts) {
-			new Setting(containerEl)
-				.setName(file.basename)
-				.setDesc(`Apply JS snippet from "vault/${file.path}"`)
-				.addToggle(el => {
-					el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
-				});
+		} else {
+			for (const file of startupScripts) {
+				new Setting(containerEl)
+					.setName(file.basename)
+					.setDesc(`Apply JS snippet from "vault/${file.path}"`)
+					.addToggle(el => {
+						el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
+					});
+			}
 		}
 
 		const oldScripts = settings.startupScripts
@@ -80,19 +81,19 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 			.filter(file => !file.parent?.path.startsWith(settings.startupScriptsDirectory ?? ''));
 		if (oldScripts.length > 0) {
 			this.containerEl.createEl('div', { cls: 'callout js-engine-settings-warning', text: 'These scripts are not in the Snippets Folder' });
-		}
-		for (const file of oldScripts) {
-			new Setting(containerEl)
-				.setName(file.basename)
-				.setDesc(`Apply JS snippet from "vault/${file.path}"`)
-				.addExtraButton(el => {
-					el.setTooltip('Move to current Snippets Folder')
-						.setIcon('archive-restore')
-						.onClick(async () => await this.moveStartupScriptToNewDirectory(file));
-				})
-				.addToggle(el => {
-					el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
-				});
+			for (const file of oldScripts) {
+				new Setting(containerEl)
+					.setName(file.basename)
+					.setDesc(`Apply JS snippet from "vault/${file.path}"`)
+					.addExtraButton(el => {
+						el.setTooltip('Move to current Snippets Folder')
+							.setIcon('archive-restore')
+							.onClick(async () => await this.moveStartupScriptToNewDirectory(file));
+					})
+					.addToggle(el => {
+						el.setValue(settings.startupScripts.contains(file.path)).onChange(async val => this.toggleStartupScript(file, val));
+					});
+			}
 		}
 	}
 
