@@ -77,15 +77,12 @@ export class API {
 
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 
-		// we need to remove the query parameters from the path
-		// because other `import {} from '...'` statements don't add them
-		// and we would end up with multiple imports of the same file
-		// which would cause things like `instanceof` to produce false negatives
-		fullPath = fullPath.split('?')[0];
-
-		if (hotReload) {
-			// Trick from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import
-			fullPath += `?t=${Date.now()}`;
+		if (!hotReload) {
+			// we need to remove the query parameters from the path
+			// because other `import {} from '...'` statements don't add them
+			// and we would end up with multiple imports of the same file
+			// which would cause things like `instanceof` to produce false negatives
+			fullPath = fullPath.split('?')[0];
 		}
 
 		return import(fullPath);
