@@ -41,14 +41,14 @@ return markdownBuilder;
 
 #### Output
 
-> ## Test Heading
->
+> # Test Heading lvl 1
+> ## Test Heading lvl 2
+> ### Test Heading lvl 3
+> #### Test Heading lvl 4
+> ##### Test Heading lvl 5
+> ###### Test Heading lvl 6
 > This is a test paragraph.
->
-> ### This is a sub heading
->
-> #### This is a sub sub heading
->
+> 
 > This is another test paragraph.
 
 ### Rendering Strings as Markdown
