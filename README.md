@@ -27,11 +27,13 @@ Docs are available [here](https://www.moritzjung.dev/obsidian-js-engine-plugin-d
 ```js
 let markdownBuilder = engine.markdown.createBuilder();
 
-markdownBuilder.createHeading(2, 'Test Heading');
+markdownBuilder.createHeading(1, 'Test Heading lvl 1');
+markdownBuilder.createHeading(2, 'Test Heading lvl 2');
+markdownBuilder.createHeading(3, 'Test Heading lvl 3');
+markdownBuilder.createHeading(4, 'Test Heading lvl 4');
+markdownBuilder.createHeading(5, 'Test Heading lvl 5');
+markdownBuilder.createHeading(6, 'Test Heading lvl 6');
 markdownBuilder.createParagraph('This is a test paragraph.');
-
-markdownBuilder.createHeading(3, 'This is a sub heading');
-markdownBuilder.createHeading(4, 'This is a sub sub heading');
 markdownBuilder.createParagraph('This is another test paragraph.');
 
 return markdownBuilder;
