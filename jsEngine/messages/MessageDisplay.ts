@@ -20,7 +20,7 @@ export class MessageDisplay extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		this.component = mount(MessageDisplayComponent, {
@@ -34,7 +34,7 @@ export class MessageDisplay extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 }

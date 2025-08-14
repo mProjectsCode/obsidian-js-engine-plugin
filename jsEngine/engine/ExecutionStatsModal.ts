@@ -26,7 +26,7 @@ export class ExecutionStatsModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		if (!this.contentEl.hasClass('js-engine-execution-stats-modal')) {
@@ -49,7 +49,7 @@ export class ExecutionStatsModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 }

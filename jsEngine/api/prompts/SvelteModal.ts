@@ -42,7 +42,7 @@ export class SvelteModal<Component extends AnySvelteComponent, T> extends Modal 
 		}
 
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 		this.contentEl.empty();
 	}

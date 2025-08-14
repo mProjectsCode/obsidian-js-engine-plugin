@@ -158,11 +158,10 @@ declare module 'jsEngine/messages/MessageManager' {
 }
 declare module 'jsEngine/settings/StartupScriptModal' {
 	import type JsEnginePlugin from 'jsEngine/main';
-	import StartupScripts from 'jsEngine/settings/StartupScripts.svelte';
 	import { Modal } from 'obsidian';
 	export class StartupScriptsModal extends Modal {
-		plugin: JsEnginePlugin;
-		component?: ReturnType<typeof StartupScripts>;
+		private readonly plugin;
+		private component?;
 		constructor(plugin: JsEnginePlugin);
 		onOpen(): void;
 		onClose(): void;
@@ -194,7 +193,8 @@ declare module 'jsEngine/api/markdown/MarkdownElementType' {
 }
 declare module 'jsEngine/api/markdown/MarkdownString' {
 	import type { API } from 'jsEngine/api/API';
-	import type { App, Component } from 'obsidian';
+	import type { Component } from 'obsidian';
+	import { App } from 'obsidian';
 	/**
 	 * A string that should be rendered as markdown by the plugin.
 	 */
@@ -689,6 +689,7 @@ declare module 'jsEngine/utils/Validators' {
 	import { z } from 'zod';
 	export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S;
 	export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void;
+	export function zodFunction<T extends Function>(): z.ZodCustom<T, T>;
 	export class Validators {
 		htmlElement: z.ZodType<HTMLElement, any, any>;
 		voidFunction: z.ZodType<() => void, any, any>;
@@ -1417,6 +1418,10 @@ declare module 'jsEngine/engine/JsExecution' {
 	}
 	export interface JSFileExecutionContext {
 		executionSource: ExecutionSource.JSFile;
+		/**
+		 * There is no associated markdown file.
+		 */
+		file: undefined;
 		/**
 		 * The JS that is being executed.
 		 */

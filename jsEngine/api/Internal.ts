@@ -79,6 +79,7 @@ export class InternalAPI {
 		return await this.execute({
 			context: {
 				executionSource: ExecutionSource.JSFile,
+				file: undefined,
 				jsFile: file,
 			},
 			...params,
@@ -212,6 +213,7 @@ export class InternalAPI {
 
 		return {
 			executionSource: ExecutionSource.JSFile,
+			file: undefined,
 			jsFile: file,
 		};
 	}

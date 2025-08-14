@@ -75,6 +75,10 @@ export interface MarkdownOtherExecutionContext {
 export interface JSFileExecutionContext {
 	executionSource: ExecutionSource.JSFile;
 	/**
+	 * There is no associated markdown file.
+	 */
+	file: undefined;
+	/**
 	 * The JS that is being executed.
 	 */
 	jsFile: TFile;

@@ -68,7 +68,7 @@ export class ResultRenderer {
 			});
 
 			this.component.register(() => {
-				unmount(svelteComponent);
+				void unmount(svelteComponent);
 			});
 			return;
 		}

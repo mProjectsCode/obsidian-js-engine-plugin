@@ -1,11 +1,12 @@
 import type JsEnginePlugin from 'jsEngine/main';
 import StartupScripts from 'jsEngine/settings/StartupScripts.svelte';
+import type { MountedComponent } from 'jsEngine/utils/SvelteUtils';
 import { Modal } from 'obsidian';
 import { mount, unmount } from 'svelte';
 
 export class StartupScriptsModal extends Modal {
-	plugin: JsEnginePlugin;
-	component?: ReturnType<typeof StartupScripts>;
+	readonly plugin: JsEnginePlugin;
+	private component?: MountedComponent<typeof StartupScripts> | undefined;
 
 	constructor(plugin: JsEnginePlugin) {
 		super(plugin.app);
@@ -26,7 +27,7 @@ export class StartupScriptsModal extends Modal {
 
 	onClose(): void {
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 

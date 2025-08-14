@@ -1,6 +1,7 @@
 import type { API } from 'jsEngine/api/API';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import type { App, Component } from 'obsidian';
+import type { Component } from 'obsidian';
+import { App } from 'obsidian';
 import { MarkdownRenderer } from 'obsidian';
 import { z } from 'zod';
 
@@ -22,7 +23,7 @@ export class MarkdownString {
 	async render(app: App, element: HTMLElement, sourcePath: string, component: Component): Promise<void> {
 		validateAPIArgs(
 			z.object({
-				app: z.object({}),
+				app: z.instanceof(App),
 				element: this.apiInstance.validators.htmlElement,
 				sourcePath: z.string(),
 				component: this.apiInstance.validators.component,

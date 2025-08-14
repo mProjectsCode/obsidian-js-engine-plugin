@@ -51,6 +51,13 @@ export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type,@typescript-eslint/explicit-function-return-type
+export function zodFunction<T extends Function>() {
+	return z.custom<T>(val => {
+		return typeof val === 'function';
+	});
+}
+
 export class Validators {
 	htmlElement: z.ZodType<HTMLElement, any, any>;
 	voidFunction: z.ZodType<() => void, any, any>;
@@ -83,11 +90,11 @@ export class Validators {
 	numberInputPromptOptions: z.ZodType<NumberInputPromptOptions, any, any>;
 
 	constructor() {
-		this.htmlElement = schemaForType<HTMLElement>()(z.instanceof(HTMLElement));
-		this.voidFunction = schemaForType<() => void>()(z.function().args().returns(z.void()));
+		this.htmlElement = schemaForType<HTMLElement>()(z.any());
+		this.voidFunction = schemaForType<() => void>()(zodFunction<() => void>());
 		this.component = schemaForType<Component>()(z.instanceof(Component));
 		this.tFile = schemaForType<TFile>()(z.instanceof(TFile));
-		this.cachedMetadata = schemaForType<CachedMetadata>()(z.record(z.unknown())) as z.ZodType<CachedMetadata, any, any>;
+		this.cachedMetadata = schemaForType<CachedMetadata>()(z.record(z.string(), z.unknown())) as z.ZodType<CachedMetadata, any, any>;
 		this.block = schemaForType<Block>()(
 			z.object({
 				from: z.number(),
@@ -146,7 +153,7 @@ export class Validators {
 				component: this.component,
 				container: this.htmlElement.optional(),
 				context: this.executionContext,
-				contextOverrides: z.record(z.unknown()).optional(),
+				contextOverrides: z.record(z.string(), z.unknown()).optional(),
 			}),
 		);
 		this.engineExecutionParamsFile = schemaForType<ExecuteFileEngineExecutionParams>()(
@@ -154,21 +161,21 @@ export class Validators {
 				component: this.component,
 				container: this.htmlElement.optional(),
 				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
-				contextOverrides: z.record(z.unknown()).optional(),
+				contextOverrides: z.record(z.string(), z.unknown()).optional(),
 			}),
 		);
 		this.engineExecutionParamsFileSimple = schemaForType<ExecuteFileSimpleEngineExecutionParams>()(
 			z.object({
 				container: this.htmlElement.optional(),
 				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
-				contextOverrides: z.record(z.unknown()).optional(),
+				contextOverrides: z.record(z.string(), z.unknown()).optional(),
 			}),
 		);
 		this.jsExecutionGlobalsConstructionOptions = schemaForType<JsExecutionGlobalsConstructionOptions>()(
 			z.object({
 				engine: z.instanceof(API).optional(),
 				component: this.component,
-				context: z.intersection(this.executionContext, z.record(z.unknown())),
+				context: z.intersection(this.executionContext, z.record(z.string(), z.unknown())),
 				container: this.htmlElement.optional(),
 			}),
 		);
