@@ -48,7 +48,19 @@ export default class JsEnginePlugin extends Plugin {
 			},
 		});
 
-		this.app.workspace.onLayoutReady(() => {
+    for (let i = 0; i < this.settings.scripts.length; i++) {
+      if (this.settings.script_ids[i] && this.settings.script_names[i].length && this.settings.scripts[i].length) {
+        this.addCommand({
+          id: this.settings.script_ids[i],
+          name: this.settings.script_names[i],
+          callback: async () => {
+            let execution = await this.api.internal.executeFileSimple(this.settings.scripts[i]);
+          },
+        });
+      }
+    };
+
+    this.app.workspace.onLayoutReady(() => {
 			void this.api.internal.executeStartupScripts();
 		});
 

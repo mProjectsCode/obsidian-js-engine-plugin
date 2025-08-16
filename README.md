@@ -87,3 +87,24 @@ export function getGreeting() {
 #### Output
 
 > Hello!
+
+## Create Obsidian commands for user scripts
+
+Script commands allow you to run **designated scripts** from the command palette.
+These commands can also have a hotkey assigned to them in Obsidians Hotkeys settings.
+
+**How to use:** 
+- Click the `Add script command` to add a new command settings row
+- In the first edit field enter a unique Command ID string
+  - Must not contain spaces, use hyphens instead (Eg: `execute-js-file-myscriptname`)
+- In the second edit field enter the menu text to display in the command palette (Eg: `Execute new note script`)
+  - This will be displayed in the command palette as `JS Engine: Execute new note script`
+  - Note the `JS Engine: ` prefix is added by Obsidian itself and can not be removed
+- In the third field, a dropdown list, select the script file to execute
+  - The list contains all js files found in your entire vault
+- The button at the end of the settings row with the trash can icon will delete and remove that rows script command
+- The button following the `Add script command` will `reload Obsidian`
+  - Obsidian must be reloaded in order to register any new commands and to remove deleted commands
+  - It is reccomended to use this button after you are done adding/removing script commands
+
+
