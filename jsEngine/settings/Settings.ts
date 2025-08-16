@@ -1,6 +1,6 @@
 import type JsEnginePlugin from 'jsEngine/main';
 import { StartupScriptsModal } from 'jsEngine/settings/StartupScriptModal';
-import type { App, } from 'obsidian';
+import type { App } from 'obsidian';
 import { PluginSettingTab, Setting, setIcon, TFile } from 'obsidian';
 
 export interface JsEnginePluginSettings {
