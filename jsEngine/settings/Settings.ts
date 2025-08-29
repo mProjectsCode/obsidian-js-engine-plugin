@@ -86,8 +86,8 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
         .setPlaceholder('Command ID')
         .setValue(this.plugin.settings.script_ids[index])
         .then(textEl => {
-          textEl.inputEl.style.width = '200px';
-          textEl.inputEl.style.marginRight = "20px";
+          textEl.inputEl.style.width = '215px';
+          textEl.inputEl.style.marginRight = "10px";
         })
         .onChange(async (value) => {
           this.plugin.settings.script_ids[index] = value;
@@ -101,8 +101,8 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
         .setPlaceholder('Menu text')
         .setValue(this.plugin.settings.script_names[index])
         .then(textEl => {
-          textEl.inputEl.style.width = '200px';
-          textEl.inputEl.style.marginRight = "20px";
+          textEl.inputEl.style.width = '215px';
+          textEl.inputEl.style.marginRight = "10px";
         })
         .onChange(async (value) => {
           this.plugin.settings.script_names[index] = value;
@@ -117,6 +117,10 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
         cb.addOption(scriptPaths[i], scriptNames[i]);
       };
       cb.setValue(this.plugin.settings.scripts[index]);
+      cb.then(dropEl => {
+          dropEl.selectEl.style.width = '220px';
+          dropEl.selectEl.style.marginRight = "10px";
+        })
       cb.onChange(async (value) => {
         this.plugin.settings.scripts[index] = value;
         await this.plugin.saveSettings();
