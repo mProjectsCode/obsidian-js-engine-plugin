@@ -55,7 +55,7 @@
 	"dependencies": {
 		"@codemirror/legacy-modes": "^6.5.1",
 		"@lemons_dev/parsinom": "^0.0.12",
-		"itertools-ts": "^2.2.0",
+		"itertools-ts": "^2.3.0",
 		"zod": "^4.0.17"
 	},
 	"trustedDependencies": [
