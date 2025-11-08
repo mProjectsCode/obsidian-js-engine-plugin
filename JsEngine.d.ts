@@ -149,6 +149,7 @@ declare module 'jsEngine/messages/MessageManager' {
 		private messageDisplay;
 		constructor(app: App, plugin: JsEnginePlugin);
 		initStatusBarItem(): void;
+		removeStatusBarItem(): void;
 		addMessage(message: Message, source: InstanceId): MessageWrapper;
 		removeMessage(id: string): void;
 		removeAllMessages(): void;
@@ -160,7 +161,7 @@ declare module 'jsEngine/settings/StartupScriptModal' {
 	import type JsEnginePlugin from 'jsEngine/main';
 	import { Modal } from 'obsidian';
 	export class StartupScriptsModal extends Modal {
-		private readonly plugin;
+		readonly plugin: JsEnginePlugin;
 		private component?;
 		constructor(plugin: JsEnginePlugin);
 		onOpen(): void;
@@ -174,6 +175,7 @@ declare module 'jsEngine/settings/Settings' {
 	import { PluginSettingTab } from 'obsidian';
 	export interface JsEnginePluginSettings {
 		startupScripts?: string[];
+		disableStatusbar?: boolean;
 	}
 	export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings;
 	export class JsEnginePluginSettingTab extends PluginSettingTab {
@@ -378,7 +380,7 @@ declare module 'jsEngine/api/prompts/Suggester' {
 		getItems(): SuggesterOption<T>[];
 		getItemText(item: SuggesterOption<T>): string;
 		onChooseItem(item: SuggesterOption<T>, _: MouseEvent | KeyboardEvent): void;
-		onOpen(): void;
+		onOpen(): Promise<void>;
 		onClose(): void;
 	}
 }
@@ -686,7 +688,7 @@ declare module 'jsEngine/utils/Validators' {
 	import { ButtonStyleType } from 'jsEngine/utils/Util';
 	import type { CachedMetadata } from 'obsidian';
 	import { Component, TFile } from 'obsidian';
-	import { z } from 'zod';
+	import * as z from 'zod';
 	export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S;
 	export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void;
 	export function zodFunction<T extends Function>(): z.ZodCustom<T, T>;
@@ -742,9 +744,6 @@ declare module 'jsEngine/main' {
 		onunload(): void;
 		loadSettings(): Promise<void>;
 		saveSettings(): Promise<void>;
-		/**
-		 * Inspired by https://github.com/SilentVoid13/Templater/blob/487805b5ad1fd7fbc145040ed82b4c41fc2c48e2/src/editor/Editor.ts#L67
-		 */
 		registerCodeMirrorMode(): Promise<void>;
 	}
 }
@@ -1552,7 +1551,8 @@ declare module 'jsEngine/JsMDRC' {
 		content: string;
 		ctx: MarkdownPostProcessorContext;
 		jsExecution: JsExecution | undefined;
-		constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, ctx: MarkdownPostProcessorContext);
+		debugMode: boolean;
+		constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, debugMode: boolean, ctx: MarkdownPostProcessorContext);
 		getExecutionFile(): TFile | undefined;
 		buildExecutionContext(): ExecutionContext;
 		tryRun(context: ExecutionContext): Promise<JsExecution>;
