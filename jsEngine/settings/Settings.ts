@@ -5,10 +5,12 @@ import { PluginSettingTab, Setting } from 'obsidian';
 
 export interface JsEnginePluginSettings {
 	startupScripts?: string[];
+	disableStatusbar?: boolean;
 }
 
 export const JS_ENGINE_DEFAULT_SETTINGS: JsEnginePluginSettings = {
 	startupScripts: [],
+	disableStatusbar: false,
 };
 
 export class JsEnginePluginSettingTab extends PluginSettingTab {
@@ -33,5 +35,22 @@ export class JsEnginePluginSettingTab extends PluginSettingTab {
 				new StartupScriptsModal(this.plugin).open();
 			});
 		});
+
+		new Setting(this.containerEl)
+			.setName('Disable Status Bar Item')
+			.setDesc('Disable the status bar item for messages.')
+			.addToggle(toggle => {
+				toggle.setValue(this.plugin.settings.disableStatusbar ?? JS_ENGINE_DEFAULT_SETTINGS.disableStatusbar!);
+				toggle.onChange(async value => {
+					this.plugin.settings.disableStatusbar = value;
+					await this.plugin.saveSettings();
+
+					if (this.plugin.settings.disableStatusbar) {
+						this.plugin.messageManager.removeStatusBarItem();
+					} else {
+						this.plugin.messageManager.initStatusBarItem();
+					}
+				});
+			});
 	}
 }

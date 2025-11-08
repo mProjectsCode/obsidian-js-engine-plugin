@@ -16,7 +16,7 @@ import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import { Component, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export type ExecuteFileEngineExecutionParams = Omit<EngineExecutionParams, 'code' | 'context'> & {
 	context?: JSFileExecutionContext | MarkdownCallingJSFileExecutionContext;

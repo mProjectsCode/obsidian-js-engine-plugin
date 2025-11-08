@@ -7,7 +7,7 @@ import type { AnySvelteComponent } from 'jsEngine/utils/SvelteUtils';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import { mount } from 'svelte';
-import { z } from 'zod';
+import * as z from 'zod';
 
 /**
  * Basic options for a prompt modal.

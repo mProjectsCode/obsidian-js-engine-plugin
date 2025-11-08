@@ -10,11 +10,13 @@ export class JsMDRC extends MarkdownRenderChild {
 	content: string;
 	ctx: MarkdownPostProcessorContext;
 	jsExecution: JsExecution | undefined;
+	debugMode: boolean;
 
-	constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, ctx: MarkdownPostProcessorContext) {
+	constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, debugMode: boolean, ctx: MarkdownPostProcessorContext) {
 		super(containerEl);
 		this.plugin = plugin;
 		this.content = content;
+		this.debugMode = debugMode;
 		this.ctx = ctx;
 	}
 
@@ -68,6 +70,10 @@ export class JsMDRC extends MarkdownRenderChild {
 	}
 
 	renderExecutionStats(container: HTMLElement): void {
+		if (!this.debugMode) {
+			return;
+		}
+
 		const menu = new Menu();
 		menu.addItem(item => {
 			item.setTitle('Info');

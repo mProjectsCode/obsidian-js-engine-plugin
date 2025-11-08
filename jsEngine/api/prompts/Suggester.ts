@@ -30,8 +30,8 @@ export class Suggester<T> extends FuzzySuggestModal<SuggesterOption<T>> {
 		this.selectedValue = item.value;
 	}
 
-	onOpen(): void {
-		super.onOpen();
+	async onOpen(): Promise<void> {
+		await super.onOpen();
 
 		this.selectedValue = undefined;
 	}

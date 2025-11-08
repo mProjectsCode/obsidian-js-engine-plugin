@@ -13,7 +13,7 @@ import type { Validators } from 'jsEngine/utils/Validators';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { App, Plugin, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export class API {
 	/**

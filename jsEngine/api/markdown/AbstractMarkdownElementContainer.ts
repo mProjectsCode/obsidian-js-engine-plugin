@@ -3,7 +3,7 @@ import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownE
 import { AbstractMarkdownLiteral } from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
 import { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import { z } from 'zod';
+import * as z from 'zod';
 
 /**
  * @internal

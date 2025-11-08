@@ -232,3 +232,9 @@ le)
 ```js-engine
 engine.getPlugin(false)
 ```
+
+# Debug Mode
+
+```js-engine-debug
+return "foo";
+```

@@ -31,7 +31,7 @@ import { ErrorLevel, JSEngineValidationError } from 'jsEngine/utils/Errors';
 import { ButtonStyleType } from 'jsEngine/utils/Util';
 import type { CachedMetadata } from 'obsidian';
 import { Component, TFile } from 'obsidian';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S {
 	return function <S extends z.ZodType<T, any, any>>(arg: S): S {

@@ -2,7 +2,7 @@ import type { API } from 'jsEngine/api/API';
 import type { MessageManager, MessageType, MessageWrapper } from 'jsEngine/messages/MessageManager';
 import { Message } from 'jsEngine/messages/MessageManager';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export class MessageAPI {
 	readonly apiInstance: API;

@@ -2,7 +2,7 @@ import type { API } from 'jsEngine/api/API';
 import { validateAPIArgs, zodFunction } from 'jsEngine/utils/Validators';
 import type { CachedMetadata, TFile } from 'obsidian';
 import { getAllTags } from 'obsidian';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export class QueryAPI {
 	readonly apiInstance: API;

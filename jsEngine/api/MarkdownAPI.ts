@@ -13,7 +13,7 @@ import {
 import { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
 import { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 import { validateAPIArgs } from 'jsEngine/utils/Validators';
-import { z } from 'zod';
+import * as z from 'zod';
 
 /**
  * The markdown API provides utilities for creating markdown using js.

@@ -16,6 +16,14 @@ return engine.markdown.create('*test*');
 ```
 ````
 
+### Debugging your Code
+
+Debugging your code blocks can be difficult, but JS Engine aims to make it a bit simpler.
+While writing your code blocks, you can use the `js-engine-debug` code block language.
+The special language adds a small icon to the top right corner of the code block that lets you easily rerun and view stats about the code block.
+Once you are happy with your code block you can switch back to the `js-engine` code block language to get rid of the small icon.
+Other than the icon, the two codeblocks behave identically.
+
 ## API Docs
 
 Docs are available [here](https://www.moritzjung.dev/obsidian-js-engine-plugin-docs/).

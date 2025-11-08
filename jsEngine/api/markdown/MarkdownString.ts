@@ -3,7 +3,7 @@ import { validateAPIArgs } from 'jsEngine/utils/Validators';
 import type { Component } from 'obsidian';
 import { App } from 'obsidian';
 import { MarkdownRenderer } from 'obsidian';
-import { z } from 'zod';
+import * as z from 'zod';
 
 /**
  * A string that should be rendered as markdown by the plugin.

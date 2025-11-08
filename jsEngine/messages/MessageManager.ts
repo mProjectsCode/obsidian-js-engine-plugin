@@ -89,6 +89,7 @@ export class MessageManager {
 	}
 
 	initStatusBarItem(): void {
+		console.trace('Initializing MessageManager status bar item');
 		this.messageDisplay = new MessageDisplay(this.app, this.plugin);
 
 		this.statusBarItem = this.plugin.addStatusBarItem();
@@ -106,11 +107,19 @@ export class MessageManager {
 		});
 	}
 
+	removeStatusBarItem(): void {
+		this.statusBarItem?.remove();
+		this.statusBarItem = undefined;
+	}
+
 	addMessage(message: Message, source: InstanceId): MessageWrapper {
 		const messageWrapper = new MessageWrapper(message, source);
 
 		this.messages.update(messages => {
 			messages.push(messageWrapper);
+			if (messages.length > 100) {
+				messages.shift();
+			}
 			return messages;
 		});
 

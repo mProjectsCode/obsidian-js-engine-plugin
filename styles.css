@@ -129,6 +129,10 @@ If your plugin does not need CSS, delete this file.
 	display: revert;
 }
 
+.js-engine-execution-render-child.mod-error {
+	cursor: pointer;
+}
+
 .js-engine-execution-stats-modal {
 }
 
