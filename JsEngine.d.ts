@@ -896,15 +896,15 @@ declare module 'jsEngine/api/Internal' {
 	import type { API } from 'jsEngine/api/API';
 	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
 	import type {
-		JsExecution,
 		ExecutionContext,
+		JsExecution,
 		JsExecutionGlobals,
 		JsExecutionGlobalsConstructionOptions,
-		MarkdownCodeBlockExecutionContext,
 		JSFileExecutionContext,
-		UnknownExecutionContext,
 		MarkdownCallingJSFileExecutionContext,
+		MarkdownCodeBlockExecutionContext,
 		MarkdownOtherExecutionContext,
+		UnknownExecutionContext,
 	} from 'jsEngine/engine/JsExecution';
 	import { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 	import { Component } from 'obsidian';
@@ -1303,8 +1303,9 @@ declare module 'jsEngine/api/API' {
 		 * you might need to reload Obsidian to see changes made to the imported file.
 		 *
 		 * @param path the vault relative path of the file to import
+		 * @param hotReload whether to reload the imported module (may cause memory shortage if abused)
 		 */
-		importJs(path: string): Promise<unknown>;
+		importJs(path: string, hotReload?: boolean): Promise<unknown>;
 		/**
 		 * Gets a plugin by its id. A plugin id can be found by looking at its manifest.
 		 * If the plugin is not enabled, this will return undefined.
@@ -1354,8 +1355,8 @@ declare module 'jsEngine/engine/JsExecution' {
 	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
 	import type JsEnginePlugin from 'jsEngine/main';
 	import type { MessageWrapper } from 'jsEngine/messages/MessageManager';
-	import type { App, CachedMetadata, Component, TFile } from 'obsidian';
 	import type * as Obsidian from 'obsidian';
+	import type { App, CachedMetadata, Component, TFile } from 'obsidian';
 	/**
 	 * An async JavaScript function.
 	 */
@@ -1564,24 +1565,24 @@ declare module 'jsEngine/JsMDRC' {
 	}
 }
 declare module 'jsEngine/index' {
-	export * from 'jsEngine/engine/Engine';
-	export * from 'jsEngine/engine/JsExecution';
-	export * from 'jsEngine/engine/ResultRenderer';
 	export * from 'jsEngine/api/API';
 	export * from 'jsEngine/api/InstanceId';
 	export * from 'jsEngine/api/Internal';
 	export * from 'jsEngine/api/LibAPI';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
+	export * from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
+	export * from 'jsEngine/api/markdown/MarkdownBuilder';
+	export * from 'jsEngine/api/markdown/MarkdownElementType';
+	export * from 'jsEngine/api/markdown/MarkdownString';
 	export * from 'jsEngine/api/MarkdownAPI';
 	export * from 'jsEngine/api/MessageAPI';
 	export * from 'jsEngine/api/PromptAPI';
 	export * from 'jsEngine/api/QueryAPI';
 	export * from 'jsEngine/api/reactive/ReactiveComponent';
-	export * from 'jsEngine/api/markdown/AbstractMarkdownElement';
-	export * from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
-	export * from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
-	export * from 'jsEngine/api/markdown/MarkdownString';
-	export * from 'jsEngine/api/markdown/MarkdownBuilder';
-	export * from 'jsEngine/api/markdown/MarkdownElementType';
+	export * from 'jsEngine/engine/Engine';
+	export * from 'jsEngine/engine/JsExecution';
+	export * from 'jsEngine/engine/ResultRenderer';
 }
 declare module 'jsEngine/utils/UseIcon' {
 	export function useIcon(

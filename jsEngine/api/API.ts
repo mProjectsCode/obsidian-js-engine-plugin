@@ -70,17 +70,20 @@ export class API {
 	 * you might need to reload Obsidian to see changes made to the imported file.
 	 *
 	 * @param path the vault relative path of the file to import
+	 * @param hotReload whether to reload the imported module (may cause memory shortage if abused)
 	 */
-	public async importJs(path: string): Promise<unknown> {
+	public async importJs(path: string, hotReload = false): Promise<unknown> {
 		validateAPIArgs(z.object({ path: z.string() }), { path });
 
 		let fullPath = this.app.vault.adapter.getResourcePath(path);
 
-		// we need to remove the query parameters from the path
-		// because other `import {} from '...'` statements don't add them
-		// and we would end up with multiple imports of the same file
-		// which would cause things like `instanceof` to produce false negatives
-		fullPath = fullPath.split('?')[0];
+		if (!hotReload) {
+			// we need to remove the query parameters from the path
+			// because other `import {} from '...'` statements don't add them
+			// and we would end up with multiple imports of the same file
+			// which would cause things like `instanceof` to produce false negatives
+			fullPath = fullPath.split('?')[0];
+		}
 
 		return import(fullPath);
 	}
