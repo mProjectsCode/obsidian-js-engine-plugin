@@ -1,0 +1,46 @@
+import type { App } from 'obsidian';
+import { FuzzySuggestModal } from 'obsidian';
+import type { SuggesterOption, SuggesterPromptOptions } from 'packages/jsEngine/src/api/PromptAPI';
+
+export class Suggester<T> extends FuzzySuggestModal<SuggesterOption<T>> {
+	private readonly options: SuggesterPromptOptions<T>;
+	private readonly onSubmit: (value: T | undefined) => void;
+	private selectedValue: T | undefined;
+
+	constructor(app: App, options: SuggesterPromptOptions<T>, onSubmit: (value: T | undefined) => void) {
+		super(app);
+
+		this.options = options;
+		this.onSubmit = onSubmit;
+
+		if (options.placeholder) {
+			this.setPlaceholder(options.placeholder);
+		}
+	}
+
+	getItems(): SuggesterOption<T>[] {
+		return this.options.options;
+	}
+
+	getItemText(item: SuggesterOption<T>): string {
+		return item.label;
+	}
+
+	onChooseItem(item: SuggesterOption<T>, _: MouseEvent | KeyboardEvent): void {
+		this.selectedValue = item.value;
+	}
+
+	async onOpen(): Promise<void> {
+		await super.onOpen();
+
+		this.selectedValue = undefined;
+	}
+
+	onClose(): void {
+		super.onClose();
+
+		queueMicrotask(() => {
+			this.onSubmit(this.selectedValue);
+		});
+	}
+}

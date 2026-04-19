@@ -11,7 +11,7 @@ export default tseslint.config(
 		ignores: ['npm/', 'node_modules/', 'exampleVault/', 'automation/', 'main.js', '*.svelte'],
 	},
 	{
-		files: ['jsEngine/**/*.ts'],
+		files: ['packages/jsEngine/src/**/*.ts'],
 		extends: [
 			eslint.configs.recommended,
 			...tseslint.configs.recommended,

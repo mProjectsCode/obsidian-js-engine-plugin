@@ -34,3 +34,5 @@ exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/*
 !exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/.hotreload
 
 meta.txt
+
+dist

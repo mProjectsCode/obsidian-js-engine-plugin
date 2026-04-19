@@ -1,15 +1,18 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
+		"paths": {
+			"packages/*": ["./packages/*"],
+			"tests/*": ["./tests/*"]
+		},
 		"module": "ESNext",
-		"target": "ESNext",
+		"target": "ES2022",
 		"allowJs": true,
 		"checkJs": true,
 		"noImplicitAny": true,
 		"strict": true,
 		"strictNullChecks": true,
 		"noImplicitReturns": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"importHelpers": true,
 		"isolatedModules": true,
 		"skipLibCheck": true,
@@ -18,7 +21,8 @@
 		"moduleDetection": "force",
 		"sourceMap": true,
 		"lib": ["DOM", "ESNext"],
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"types": ["svelte"]
 	},
-	"include": ["jsEngine/**/*.ts", "jsEngine/**/*.svelte"]
+	"include": ["packages/jsEngine/**/*.ts", "packages/jsEngine/**/*.svelte"]
 }
