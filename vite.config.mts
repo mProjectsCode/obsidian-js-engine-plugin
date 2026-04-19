@@ -28,12 +28,14 @@ export default defineConfig(async ({ mode }) => {
 				},
 			],
 		}),
-		prod ? dtsBundlePlugin({
-			sourceDir: 'packages/jsEngine/src',
-			tempDir: 'types',
-			outputFile: 'JsEngine.d.ts',
-			modulePrefix: 'jsEngine/src',
-		}) : undefined,
+		prod
+			? dtsBundlePlugin({
+					sourceDir: 'packages/jsEngine/src',
+					tempDir: 'types',
+					outputFile: 'JsEngine.d.ts',
+					modulePrefix: 'jsEngine/src',
+				})
+			: undefined,
 	];
 
 	return {
