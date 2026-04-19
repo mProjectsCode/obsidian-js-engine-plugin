@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite build --mode=development --watch",
 		"build": "vite build --mode=production",
-		"tsc": "tsc -noEmit -skipLibCheck",
+		"typecheck": "tsc -noEmit -skipLibCheck",
 		"test": "LOG_TESTS=false bun test",
 		"test:log": "LOG_TESTS=true bun test",
 		"format": "prettier --write --plugin prettier-plugin-svelte .",
@@ -16,8 +16,7 @@
 		"svelte-check": "svelte-check",
 		"check": "bun run format:check && bun run tsc && bun run svelte-check && bun run lint && bun run test",
 		"check:fix": "bun run format && bun run tsc && bun run svelte-check && bun run lint:fix && bun run test",
-		"release": "bun run automation/release.ts",
-		"types": "tsc --project tsconfig.types.json"
+		"release": "lemons-helpers release"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
@@ -36,6 +35,7 @@
 		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"eslint-plugin-only-warn": "^1.2.1",
+		"lemons-obsidian-plugin-helpers": "https://github.com/mProjectsCode/lemons-obsidian-plugin-helpers",
 		"obsidian": "latest",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^3.5.1",

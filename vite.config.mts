@@ -4,8 +4,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import banner from 'vite-plugin-banner';
 import path from 'path';
 import { builtinModules } from 'node:module';
-import { getBuildBanner } from './automation/build/buildBanner';
-import { dtsBundlePlugin } from './automation/build/dtsBundlePlugin';
+import { dtsBundlePlugin, getBuildBanner } from 'lemons-obsidian-plugin-helpers/repo-automation';
 import manifest from './manifest.json' with { type: 'json' };
 
 const entryFile = 'packages/jsEngine/src/main.ts';
