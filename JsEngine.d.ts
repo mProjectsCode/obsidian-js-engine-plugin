@@ -240,21 +240,9 @@ declare module 'jsEngine/src/api/Internal' {
 }
 
 declare module 'jsEngine/src/api/LibAPI' {
-	import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-	import { ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
-	import { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
-	import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-	import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+	import * as ParsiNOM from '@lemons_dev/parsinom';
 	import * as IterTools from 'itertools-ts';
 	import type { API } from 'jsEngine/src/api/API';
-	export interface LibParsiNOM {
-		P: typeof P;
-		P_UTILS: typeof P_UTILS;
-		Parser: typeof Parser;
-		createParsingErrorMessage: typeof createParsingErrorMessage;
-		ParsingError: typeof ParsingError;
-		ParserContext: typeof ParserContext;
-	}
 	/**
 	 * The lib API provides in interface to some external libraries packaged into js engine.
 	 */
@@ -264,7 +252,7 @@ declare module 'jsEngine/src/api/LibAPI' {
 		/**
 		 * Get the [ParsiNOM](https://github.com/mProjectsCode/parsiNOM) library.
 		 */
-		parsinom(): LibParsiNOM;
+		parsinom(): typeof ParsiNOM;
 		/**
 		 * Get the [itertools-ts](https://github.com/Smoren/itertools-ts) library.
 		 */
@@ -1255,7 +1243,6 @@ declare module 'jsEngine/src/main' {
 	import { MessageManager } from 'jsEngine/src/messages/MessageManager';
 	import type { JsEnginePluginSettings } from 'jsEngine/src/settings/Settings';
 	import { Validators } from 'jsEngine/src/utils/Validators';
-
 	export default class JsEnginePlugin extends Plugin {
 		settings: JsEnginePluginSettings;
 		messageManager: MessageManager;
@@ -1288,7 +1275,6 @@ declare module 'jsEngine/src/messages/MessageDisplay' {
 }
 
 declare module 'jsEngine/src/messages/MessageManager' {
-	import type { Moment } from 'moment';
 	import type { App } from 'obsidian';
 	import type { InstanceId } from 'jsEngine/src/api/InstanceId';
 	import type JsEnginePlugin from 'jsEngine/src/main';
@@ -1315,7 +1301,7 @@ declare module 'jsEngine/src/messages/MessageManager' {
 		uuid: string;
 		source: InstanceId;
 		message: Message;
-		time: Moment;
+		time: moment.Moment;
 		constructor(message: Message, source: InstanceId);
 	}
 	export class MessageManager {

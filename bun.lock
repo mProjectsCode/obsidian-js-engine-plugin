@@ -17,7 +17,7 @@
         "@codemirror/state": "^6.6.0",
         "@codemirror/view": "^6.41.1",
         "@happy-dom/global-registrator": "^20.9.0",
-        "@lemons_dev/lemons-obsidian-plugin-automation": "^0.1.2",
+        "@lemons_dev/lemons-obsidian-plugin-automation": "^0.1.3",
         "@sveltejs/vite-plugin-svelte": "^7.0.0",
         "@tsconfig/svelte": "^5.0.8",
         "@types/bun": "^1.3.13",
@@ -103,7 +103,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
-    "@lemons_dev/lemons-obsidian-plugin-automation": ["@lemons_dev/lemons-obsidian-plugin-automation@0.1.2", "", { "dependencies": { "@lemons_dev/parsinom": "^0.2.1", "moment": "^2.30.1", "string-argv": "^0.3.2" }, "peerDependencies": { "vite": "^8.0.9" }, "bin": { "lemons-automation": "bin/lemons-automation.js" } }, "sha512-7xaBiy5CS9yxLAwLxeUcMZrQ4x8eevNYuV22hi2w2+fXNKm8H4nAfivCVGU3yqoOcoTyphX5fFDAVFqKintzkg=="],
+    "@lemons_dev/lemons-obsidian-plugin-automation": ["@lemons_dev/lemons-obsidian-plugin-automation@0.1.3", "", { "dependencies": { "@lemons_dev/parsinom": "^0.2.1", "moment": "^2.30.1", "string-argv": "^0.3.2" }, "peerDependencies": { "vite": "^8.0.9" }, "bin": { "lemons-automation": "bin/lemons-automation.js" } }, "sha512-Nv1eONy1Q9citS+nsMMasgL9ZfhKb57uinJmHRF+F1H+9HSiRkB5wlx9J/S1ou9cJL8IAhFvv72KGzE9HTIWtg=="],
 
     "@lemons_dev/parsinom": ["@lemons_dev/parsinom@0.2.1", "", {}, "sha512-ew+G3gm5aWJBnIhrysxI7k09FCAtAoj48wbTzr16NoX9ndhB8UnhmqjTxYVv46DsG88HQo+DTWPIFQW5qTAwwg=="],
 
