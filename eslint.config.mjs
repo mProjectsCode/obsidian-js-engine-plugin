@@ -1,12 +1,13 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import only_warn from 'eslint-plugin-only-warn';
 import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
-import * as plugin_import from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 
-export default tseslint.config(
+export default defineConfig(
 	{
 		ignores: ['npm/', 'node_modules/', 'exampleVault/', 'automation/', 'main.js', '*.svelte'],
 	},
@@ -28,7 +29,7 @@ export default tseslint.config(
 			// @ts-ignore
 			'only-warn': only_warn,
 			'no-relative-import-paths': no_relative_import_paths,
-			import: plugin_import,
+			import: importX,
 		},
 		rules: {
 			'@typescript-eslint/no-explicit-any': ['warn'],
@@ -58,6 +59,7 @@ export default tseslint.config(
 			'@typescript-eslint/no-inferrable-types': 'off',
 			'@typescript-eslint/explicit-function-return-type': ['warn'],
 			'@typescript-eslint/require-await': 'off',
+			'@typescript-eslint/prefer-promise-reject-errors': 'off',
 		},
 	},
 );

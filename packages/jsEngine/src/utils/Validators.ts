@@ -180,8 +180,8 @@ export class Validators {
 			}),
 		);
 		this.abstractMarkdownElement = schemaForType<AbstractMarkdownElement>()(z.instanceof(AbstractMarkdownElement));
-		this.messageType = schemaForType<MessageType>()(z.nativeEnum(MessageType));
-		this.buttonStyleType = schemaForType<ButtonStyleType>()(z.nativeEnum(ButtonStyleType));
+		this.messageType = schemaForType<MessageType>()(z.enum(MessageType));
+		this.buttonStyleType = schemaForType<ButtonStyleType>()(z.enum(ButtonStyleType));
 		this.buttonPromptButtonOptions = schemaForType<ButtonPromptButtonOptions<unknown>>()(
 			z.object({
 				label: z.string(),

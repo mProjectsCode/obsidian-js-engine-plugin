@@ -149,7 +149,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error as Error);
+				reject(error);
 			}
 		});
 	}
@@ -252,7 +252,7 @@ export class PromptAPI {
 			try {
 				new Suggester<T>(this.apiInstance.app, options, resolve).open();
 			} catch (error) {
-				reject(error as Error);
+				reject(error);
 			}
 		});
 	}
@@ -295,7 +295,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error as Error);
+				reject(error);
 			}
 		});
 	}
@@ -339,7 +339,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error as Error);
+				reject(error);
 			}
 		});
 	}
@@ -382,7 +382,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error as Error);
+				reject(error);
 			}
 		});
 	}

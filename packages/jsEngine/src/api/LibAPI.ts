@@ -1,19 +1,6 @@
-import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
-import { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import * as ParsiNOM from '@lemons_dev/parsinom';
 import * as IterTools from 'itertools-ts';
 import type { API } from 'packages/jsEngine/src/api/API';
-
-export interface LibParsiNOM {
-	P: typeof P;
-	P_UTILS: typeof P_UTILS;
-	Parser: typeof Parser;
-	createParsingErrorMessage: typeof createParsingErrorMessage;
-	ParsingError: typeof ParsingError;
-	ParserContext: typeof ParserContext;
-}
 
 /**
  * The lib API provides in interface to some external libraries packaged into js engine.
@@ -28,15 +15,8 @@ export class LibAPI {
 	/**
 	 * Get the [ParsiNOM](https://github.com/mProjectsCode/parsiNOM) library.
 	 */
-	public parsinom(): LibParsiNOM {
-		return {
-			P: P,
-			P_UTILS: P_UTILS,
-			Parser: Parser,
-			createParsingErrorMessage: createParsingErrorMessage,
-			ParsingError: ParsingError,
-			ParserContext: ParserContext,
-		};
+	public parsinom(): typeof ParsiNOM {
+		return ParsiNOM;
 	}
 
 	/**

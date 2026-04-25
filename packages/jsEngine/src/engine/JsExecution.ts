@@ -255,8 +255,8 @@ export class JsExecution {
 		const startTime = performance.now();
 
 		try {
-			// eslint-disable-next-line
-			this.result = await Promise.resolve(this.func(...Object.values(this.globals)));
+			const params = Object.values(this.globals) as unknown[];
+			this.result = await Promise.resolve(this.func(...params));
 		} catch (e) {
 			console.warn('failed to execute JS', e);
 

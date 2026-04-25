@@ -1,5 +1,5 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import type { Parser } from '@lemons_dev/parsinom';
+import { P } from '@lemons_dev/parsinom';
 import type { App, TFile } from 'obsidian';
 
 /**

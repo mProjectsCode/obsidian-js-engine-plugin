@@ -4,13 +4,12 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import banner from 'vite-plugin-banner';
 import path from 'path';
 import { builtinModules } from 'node:module';
-import { dtsBundlePlugin, getBuildBanner } from 'lemons-obsidian-plugin-helpers/repo-automation';
+import { dtsBundlePlugin, getBuildBanner } from '@lemons_dev/lemons-obsidian-plugin-automation';
 import manifest from './manifest.json' with { type: 'json' };
 
 const entryFile = 'packages/jsEngine/src/main.ts';
 
 export default defineConfig(async ({ mode }) => {
-	const { resolve } = path;
 	const prod = mode === 'production';
 	const outDir = prod ? 'dist/' : `exampleVault/.obsidian/plugins/${manifest.id}/`;
 
@@ -47,7 +46,7 @@ export default defineConfig(async ({ mode }) => {
 		},
 		build: {
 			lib: {
-				entry: resolve(__dirname, entryFile),
+				entry: path.resolve(__dirname, entryFile),
 				name: 'main',
 				fileName: () => 'main.js',
 				formats: ['cjs'],
@@ -60,7 +59,7 @@ export default defineConfig(async ({ mode }) => {
 			outDir: '',
 			rolldownOptions: {
 				input: {
-					main: resolve(__dirname, entryFile),
+					main: path.resolve(__dirname, entryFile),
 				},
 				output: {
 					dir: outDir,

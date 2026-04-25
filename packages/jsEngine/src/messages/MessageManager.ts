@@ -1,4 +1,3 @@
-import type { Moment } from 'moment';
 import type { App } from 'obsidian';
 import { setIcon } from 'obsidian';
 import type { InstanceId } from 'packages/jsEngine/src/api/InstanceId';
@@ -55,7 +54,7 @@ export class MessageWrapper {
 	uuid: string;
 	source: InstanceId;
 	message: Message;
-	time: Moment;
+	time: moment.Moment;
 
 	constructor(message: Message, source: InstanceId) {
 		this.message = message;
@@ -89,7 +88,6 @@ export class MessageManager {
 	}
 
 	initStatusBarItem(): void {
-		console.trace('Initializing MessageManager status bar item');
 		this.messageDisplay = new MessageDisplay(this.app, this.plugin);
 
 		this.statusBarItem = this.plugin.addStatusBarItem();
