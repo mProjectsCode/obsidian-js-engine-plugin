@@ -154,6 +154,7 @@ export class Validators {
 				container: this.htmlElement.optional(),
 				context: this.executionContext,
 				contextOverrides: z.record(z.string(), z.unknown()).optional(),
+				expression: z.boolean().optional(),
 			}),
 		);
 		this.engineExecutionParamsFile = schemaForType<ExecuteFileEngineExecutionParams>()(
@@ -162,6 +163,7 @@ export class Validators {
 				container: this.htmlElement.optional(),
 				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
 				contextOverrides: z.record(z.string(), z.unknown()).optional(),
+				expression: z.boolean().optional(),
 			}),
 		);
 		this.engineExecutionParamsFileSimple = schemaForType<ExecuteFileSimpleEngineExecutionParams>()(
@@ -169,6 +171,7 @@ export class Validators {
 				container: this.htmlElement.optional(),
 				context: z.union([this.markdownCallingJSFileExecutionContext, this.jsFileExecutionContext]).optional(),
 				contextOverrides: z.record(z.string(), z.unknown()).optional(),
+				expression: z.boolean().optional(),
 			}),
 		);
 		this.jsExecutionGlobalsConstructionOptions = schemaForType<JsExecutionGlobalsConstructionOptions>()(

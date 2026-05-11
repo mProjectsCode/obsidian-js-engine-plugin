@@ -12,6 +12,16 @@ import { MessageType } from 'packages/jsEngine/src/messages/MessageManager';
  */
 export type JsFunc = (...args: unknown[]) => Promise<unknown>;
 
+type AsyncFunctionConstructor = new (...args: string[]) => JsFunc;
+
+const AsyncFunction = async function (): Promise<void> {}.constructor as AsyncFunctionConstructor;
+
+export function buildJsFunc(code: string, globalNames: string[], expression: boolean, sourceUrl: string): JsFunc {
+	const functionBody = expression ? `return (\n${code}\n);` : code;
+	const func: JsFunc = new AsyncFunction(...globalNames, `${functionBody}\n//# sourceURL=${encodeURIComponent(sourceUrl)}`);
+	return func;
+}
+
 export enum ExecutionSource {
 	MarkdownCodeBlock = 'markdown-code-block',
 	MarkdownCallingJSFile = 'markdown-calling-js-file',
@@ -178,6 +188,7 @@ export class JsExecution {
 	readonly globals: JsExecutionGlobals;
 	readonly uuid: string;
 	readonly code: string;
+	readonly expression: boolean;
 	result: unknown;
 
 	functionBuildError: Error | undefined;
@@ -191,6 +202,7 @@ export class JsExecution {
 		this.plugin = params.plugin;
 
 		this.code = params.code;
+		this.expression = params.expression ?? false;
 		this.context = {
 			...params.context,
 			...params.contextOverrides,
@@ -216,12 +228,7 @@ export class JsExecution {
 		const startTime = performance.now();
 
 		try {
-			// this.func = AsyncFunction(...Object.keys(this.globals), this.code) as JsFunc;
-			this.func = window.eval(
-				`(async function anonymous(${Object.keys(this.globals).join(', ')}) {\n\n${this.code}\n\n})\n //# sourceURL=${encodeURIComponent(
-					this.apiInstance.instanceId.toString(),
-				)}`,
-			) as JsFunc;
+			this.func = buildJsFunc(this.code, Object.keys(this.globals), this.expression, this.apiInstance.instanceId.toString());
 		} catch (e) {
 			console.warn('failed to parse JS', e);
 

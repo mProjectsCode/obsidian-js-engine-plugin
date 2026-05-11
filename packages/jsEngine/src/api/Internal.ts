@@ -13,7 +13,7 @@ import type {
 	MarkdownCallingJSFileExecutionContext,
 	MarkdownOtherExecutionContext,
 } from 'packages/jsEngine/src/engine/JsExecution';
-import { ExecutionSource } from 'packages/jsEngine/src/engine/JsExecution';
+import { buildJsFunc, ExecutionSource } from 'packages/jsEngine/src/engine/JsExecution';
 import { ResultRenderer } from 'packages/jsEngine/src/engine/ResultRenderer';
 import { validateAPIArgs } from 'packages/jsEngine/src/utils/Validators';
 import * as z from 'zod';
@@ -45,6 +45,24 @@ export class InternalAPI {
 		validateAPIArgs(z.object({ params: this.apiInstance.validators.engineExecutionParams }), { params });
 
 		return await this.apiInstance.plugin.jsEngine.execute(params);
+	}
+
+	/**
+	 * Executes code with only the given globals provided as parameters.
+	 *
+	 * @param code
+	 * @param globals
+	 * @param expression If true, evaluate code as an expression instead of as a function body.
+	 */
+	public async executeCustom(code: string, globals: Record<string, unknown>, expression: boolean = false): Promise<unknown> {
+		validateAPIArgs(z.object({ code: z.string(), globals: z.record(z.string(), z.unknown()), expression: z.boolean() }), {
+			code,
+			globals,
+			expression,
+		});
+
+		const func = buildJsFunc(code, Object.keys(globals), expression, `${this.apiInstance.instanceId.toString()}:custom`);
+		return await Promise.resolve(func(...Object.values(globals)));
 	}
 
 	/**
@@ -88,7 +106,7 @@ export class InternalAPI {
 	}
 
 	/**
-	 * Lead and execute the given file.
+	 * Load and execute the given file.
 	 * This method also handles the lifetime of the execution.
 	 * The component for the execution is created and destroyed automatically.
 	 *

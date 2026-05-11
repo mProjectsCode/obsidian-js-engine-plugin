@@ -28,6 +28,10 @@ export interface EngineExecutionParams {
 	 * Optional extra context variables to provide to the JavaScript code.
 	 */
 	contextOverrides?: Record<string, unknown> | undefined;
+	/**
+	 * If true, the code is evaluated as an expression instead of as a function body.
+	 */
+	expression?: boolean | undefined;
 }
 
 export class Engine {
