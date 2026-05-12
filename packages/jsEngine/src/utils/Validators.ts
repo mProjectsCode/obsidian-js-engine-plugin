@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { CachedMetadata } from 'obsidian';
 import { Component, TFile } from 'obsidian';
 import { API } from 'packages/jsEngine/src/api/API';
@@ -33,8 +31,8 @@ import { ErrorLevel, JSEngineValidationError } from 'packages/jsEngine/src/utils
 import { ButtonStyleType } from 'packages/jsEngine/src/utils/Util';
 import * as z from 'zod';
 
-export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S {
-	return function <S extends z.ZodType<T, any, any>>(arg: S): S {
+export function schemaForType<T>(): <S extends z.ZodType<T>>(arg: S) => S {
+	return function <S extends z.ZodType<T>>(arg: S): S {
 		return arg;
 	};
 }
@@ -59,42 +57,42 @@ export function zodFunction<T extends Function>() {
 }
 
 export class Validators {
-	htmlElement: z.ZodType<HTMLElement, any, any>;
-	voidFunction: z.ZodType<() => void, any, any>;
-	component: z.ZodType<Component, any, any>;
-	tFile: z.ZodType<TFile, any, any>;
-	cachedMetadata: z.ZodType<CachedMetadata, any, any>;
-	block: z.ZodType<Block, any, any>;
-	tableElementType: z.ZodType<TableElementType, any, any>;
-	tableElementBody: z.ZodType<TableElementType[][], any, any>;
-	markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext, any, any>;
-	markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext, any, any>;
-	markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext, any, any>;
-	jsFileExecutionContext: z.ZodType<JSFileExecutionContext, any, any>;
-	unknownExecutionContext: z.ZodType<UnknownExecutionContext, any, any>;
-	executionContext: z.ZodType<ExecutionContext, any, any>;
-	engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
-	engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>, any, any>;
-	engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>, any, any>;
-	jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions, any, any>;
-	abstractMarkdownElement: z.ZodType<AbstractMarkdownElement, any, any>;
-	messageType: z.ZodType<MessageType, any, any>;
-	buttonStyleType: z.ZodType<ButtonStyleType, any, any>;
-	buttonPromptButtonOptions: z.ZodType<ButtonPromptButtonOptions<unknown>, any, any>;
-	buttonModalPromptOptions: z.ZodType<ButtonPromptOptions<unknown>, any, any>;
-	confirmPromptOptions: z.ZodType<ConfirmPromptOptions, any, any>;
-	yesNoPromptOptions: z.ZodType<YesNoPromptOptions, any, any>;
-	suggesterOption: z.ZodType<SuggesterOption<unknown>, any, any>;
-	suggesterPromptOptions: z.ZodType<SuggesterPromptOptions<unknown>, any, any>;
-	inputPromptOptions: z.ZodType<InputPromptOptions, any, any>;
-	numberInputPromptOptions: z.ZodType<NumberInputPromptOptions, any, any>;
+	htmlElement: z.ZodType<HTMLElement>;
+	voidFunction: z.ZodType<() => void>;
+	component: z.ZodType<Component>;
+	tFile: z.ZodType<TFile>;
+	cachedMetadata: z.ZodType<CachedMetadata>;
+	block: z.ZodType<Block>;
+	tableElementType: z.ZodType<TableElementType>;
+	tableElementBody: z.ZodType<TableElementType[][]>;
+	markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext>;
+	markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext>;
+	markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext>;
+	jsFileExecutionContext: z.ZodType<JSFileExecutionContext>;
+	unknownExecutionContext: z.ZodType<UnknownExecutionContext>;
+	executionContext: z.ZodType<ExecutionContext>;
+	engineExecutionParams: z.ZodType<EngineExecutionParams>;
+	engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>>;
+	engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>>;
+	jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions>;
+	abstractMarkdownElement: z.ZodType<AbstractMarkdownElement>;
+	messageType: z.ZodType<MessageType>;
+	buttonStyleType: z.ZodType<ButtonStyleType>;
+	buttonPromptButtonOptions: z.ZodType<ButtonPromptButtonOptions<unknown>>;
+	buttonModalPromptOptions: z.ZodType<ButtonPromptOptions<unknown>>;
+	confirmPromptOptions: z.ZodType<ConfirmPromptOptions>;
+	yesNoPromptOptions: z.ZodType<YesNoPromptOptions>;
+	suggesterOption: z.ZodType<SuggesterOption<unknown>>;
+	suggesterPromptOptions: z.ZodType<SuggesterPromptOptions<unknown>>;
+	inputPromptOptions: z.ZodType<InputPromptOptions>;
+	numberInputPromptOptions: z.ZodType<NumberInputPromptOptions>;
 
 	constructor() {
 		this.htmlElement = schemaForType<HTMLElement>()(z.any());
 		this.voidFunction = schemaForType<() => void>()(zodFunction<() => void>());
 		this.component = schemaForType<Component>()(z.instanceof(Component));
 		this.tFile = schemaForType<TFile>()(z.instanceof(TFile));
-		this.cachedMetadata = schemaForType<CachedMetadata>()(z.record(z.string(), z.unknown())) as z.ZodType<CachedMetadata, any, any>;
+		this.cachedMetadata = schemaForType<CachedMetadata>()(z.record(z.string(), z.unknown()));
 		this.block = schemaForType<Block>()(
 			z.object({
 				from: z.number(),
@@ -103,49 +101,57 @@ export class Validators {
 		);
 		this.tableElementType = schemaForType<TableElementType>()(z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()]));
 		this.tableElementBody = schemaForType<TableElementType[][]>()(z.array(z.array(this.tableElementType)));
-		this.markdownCodeBlockExecutionContext = schemaForType<MarkdownCodeBlockExecutionContext>()(
+
+		const markdownExecutionContextShape = {
+			file: this.tFile.optional(),
+			metadata: this.cachedMetadata.optional(),
+		};
+		const markdownCodeBlockExecutionContext = schemaForType<MarkdownCodeBlockExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownCodeBlock),
-				file: this.tFile.optional(),
-				metadata: this.cachedMetadata.optional(),
+				...markdownExecutionContextShape,
 				block: this.block.optional(),
 			}),
 		);
-		this.markdownCallingJSFileExecutionContext = schemaForType<MarkdownCallingJSFileExecutionContext>()(
+		const markdownCallingJSFileExecutionContext = schemaForType<MarkdownCallingJSFileExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownCallingJSFile),
-				file: this.tFile.optional(),
-				metadata: this.cachedMetadata.optional(),
+				...markdownExecutionContextShape,
 				jsFile: this.tFile,
 			}),
 		);
-		this.markdownOtherExecutionContext = schemaForType<MarkdownOtherExecutionContext>()(
+		const markdownOtherExecutionContext = schemaForType<MarkdownOtherExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.MarkdownOther),
-				file: this.tFile.optional(),
-				metadata: this.cachedMetadata.optional(),
+				...markdownExecutionContextShape,
 			}),
 		);
-		this.jsFileExecutionContext = schemaForType<JSFileExecutionContext>()(
+		const jsFileExecutionContext = schemaForType<JSFileExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.JSFile),
+				file: z.undefined(),
 				jsFile: this.tFile,
 			}),
 		);
-		this.unknownExecutionContext = schemaForType<UnknownExecutionContext>()(
+		const unknownExecutionContext = schemaForType<UnknownExecutionContext>()(
 			z.object({
 				executionSource: z.literal(ExecutionSource.Unknown),
 				file: this.tFile.optional(),
 			}),
 		);
+		this.markdownCodeBlockExecutionContext = markdownCodeBlockExecutionContext;
+		this.markdownCallingJSFileExecutionContext = markdownCallingJSFileExecutionContext;
+		this.markdownOtherExecutionContext = markdownOtherExecutionContext;
+		this.jsFileExecutionContext = jsFileExecutionContext;
+		this.unknownExecutionContext = unknownExecutionContext;
 		this.executionContext = schemaForType<ExecutionContext>()(
 			z.discriminatedUnion('executionSource', [
-				this.markdownCodeBlockExecutionContext,
-				this.markdownCallingJSFileExecutionContext,
-				this.markdownOtherExecutionContext,
-				this.jsFileExecutionContext,
-				this.unknownExecutionContext,
-			] as any) as z.ZodType<ExecutionContext, any, any>,
+				markdownCodeBlockExecutionContext,
+				markdownCallingJSFileExecutionContext,
+				markdownOtherExecutionContext,
+				jsFileExecutionContext,
+				unknownExecutionContext,
+			]) as z.ZodType<ExecutionContext>,
 		);
 		this.engineExecutionParams = schemaForType<EngineExecutionParams>()(
 			z.object({
@@ -190,7 +196,7 @@ export class Validators {
 				label: z.string(),
 				value: z.unknown(),
 				variant: this.buttonStyleType.optional(),
-			}) as z.ZodType<ButtonPromptButtonOptions<unknown>, any, any>,
+			}),
 		);
 		this.buttonModalPromptOptions = schemaForType<ButtonPromptOptions<unknown>>()(
 			z.object({
@@ -218,7 +224,7 @@ export class Validators {
 			z.object({
 				value: z.unknown(),
 				label: z.string(),
-			}) as z.ZodType<SuggesterOption<unknown>, any, any>,
+			}),
 		);
 		this.suggesterPromptOptions = schemaForType<SuggesterPromptOptions<unknown>>()(
 			z.object({

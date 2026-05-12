@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any -- we need any for the svelte types to work */
 
 import type { Component, SvelteComponent } from 'svelte';
 

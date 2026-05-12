@@ -141,10 +141,10 @@ export class MessageManager {
 
 		this.statusBarItem.empty();
 
-		const messageIcon = this.statusBarItem.createEl('div');
+		const messageIcon = this.statusBarItem.createDiv();
 		setIcon(messageIcon, 'message-square');
 
-		const messageCountEl = this.statusBarItem.createEl('span');
+		const messageCountEl = this.statusBarItem.createSpan();
 		messageCountEl.addClass('js-engine-message-counter');
 		messageCountEl.innerText = this.messages.get().length.toString();
 

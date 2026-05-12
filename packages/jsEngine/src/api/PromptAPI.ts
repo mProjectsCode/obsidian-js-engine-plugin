@@ -4,7 +4,7 @@ import InputModalComponent from 'packages/jsEngine/src/api/prompts/InputModalCom
 import { Suggester } from 'packages/jsEngine/src/api/prompts/Suggester';
 import { SvelteModal } from 'packages/jsEngine/src/api/prompts/SvelteModal';
 import type { AnySvelteComponent } from 'packages/jsEngine/src/utils/SvelteUtils';
-import { ButtonStyleType } from 'packages/jsEngine/src/utils/Util';
+import { ButtonStyleType, unknownToError } from 'packages/jsEngine/src/utils/Util';
 import { validateAPIArgs } from 'packages/jsEngine/src/utils/Validators';
 import { mount } from 'svelte';
 import * as z from 'zod';
@@ -149,7 +149,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error);
+				reject(unknownToError(error));
 			}
 		});
 	}
@@ -252,7 +252,7 @@ export class PromptAPI {
 			try {
 				new Suggester<T>(this.apiInstance.app, options, resolve).open();
 			} catch (error) {
-				reject(error);
+				reject(unknownToError(error));
 			}
 		});
 	}
@@ -295,7 +295,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error);
+				reject(unknownToError(error));
 			}
 		});
 	}
@@ -339,7 +339,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error);
+				reject(unknownToError(error));
 			}
 		});
 	}
@@ -382,7 +382,7 @@ export class PromptAPI {
 					resolve as (value: unknown) => void,
 				).open();
 			} catch (error) {
-				reject(error);
+				reject(unknownToError(error));
 			}
 		});
 	}

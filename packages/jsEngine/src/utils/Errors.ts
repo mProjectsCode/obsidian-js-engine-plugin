@@ -53,10 +53,6 @@ export abstract class JSEngineError extends Error {
 			this.message = `[${this.getErrorType()}] "${this.effect}" caused by "${this.cause}"`;
 		}
 	}
-
-	public log(): void {
-		console.log(this.message, this.stack, this.context);
-	}
 }
 
 export class JSEngineInternalError extends JSEngineError {
