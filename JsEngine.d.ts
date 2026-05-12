@@ -1401,7 +1401,6 @@ declare module 'jsEngine/src/utils/Errors' {
 		positionContext?: string;
 		constructor(params: JSEngineErrorParams);
 		protected updateMessage(): void;
-		log(): void;
 	}
 	export class JSEngineInternalError extends JSEngineError {
 		getErrorType(): ErrorType;
@@ -1501,6 +1500,7 @@ declare module 'jsEngine/src/utils/Util' {
 		PLAIN = 'plain',
 	}
 	export function mod(a: number, b: number): number;
+	export function unknownToError(error: unknown): Error;
 }
 
 declare module 'jsEngine/src/utils/Validators' {
@@ -1532,39 +1532,39 @@ declare module 'jsEngine/src/utils/Validators' {
 	import { MessageType } from 'jsEngine/src/messages/MessageManager';
 	import { ButtonStyleType } from 'jsEngine/src/utils/Util';
 	import * as z from 'zod';
-	export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S;
+	export function schemaForType<T>(): <S extends z.ZodType<T>>(arg: S) => S;
 	export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void;
 	export function zodFunction<T extends Function>(): z.ZodCustom<T, T>;
 	export class Validators {
-		htmlElement: z.ZodType<HTMLElement, any, any>;
-		voidFunction: z.ZodType<() => void, any, any>;
-		component: z.ZodType<Component, any, any>;
-		tFile: z.ZodType<TFile, any, any>;
-		cachedMetadata: z.ZodType<CachedMetadata, any, any>;
-		block: z.ZodType<Block, any, any>;
-		tableElementType: z.ZodType<TableElementType, any, any>;
-		tableElementBody: z.ZodType<TableElementType[][], any, any>;
-		markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext, any, any>;
-		markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext, any, any>;
-		markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext, any, any>;
-		jsFileExecutionContext: z.ZodType<JSFileExecutionContext, any, any>;
-		unknownExecutionContext: z.ZodType<UnknownExecutionContext, any, any>;
-		executionContext: z.ZodType<ExecutionContext, any, any>;
-		engineExecutionParams: z.ZodType<EngineExecutionParams, any, any>;
-		engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>, any, any>;
-		engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>, any, any>;
-		jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions, any, any>;
-		abstractMarkdownElement: z.ZodType<AbstractMarkdownElement, any, any>;
-		messageType: z.ZodType<MessageType, any, any>;
-		buttonStyleType: z.ZodType<ButtonStyleType, any, any>;
-		buttonPromptButtonOptions: z.ZodType<ButtonPromptButtonOptions<unknown>, any, any>;
-		buttonModalPromptOptions: z.ZodType<ButtonPromptOptions<unknown>, any, any>;
-		confirmPromptOptions: z.ZodType<ConfirmPromptOptions, any, any>;
-		yesNoPromptOptions: z.ZodType<YesNoPromptOptions, any, any>;
-		suggesterOption: z.ZodType<SuggesterOption<unknown>, any, any>;
-		suggesterPromptOptions: z.ZodType<SuggesterPromptOptions<unknown>, any, any>;
-		inputPromptOptions: z.ZodType<InputPromptOptions, any, any>;
-		numberInputPromptOptions: z.ZodType<NumberInputPromptOptions, any, any>;
+		htmlElement: z.ZodType<HTMLElement>;
+		voidFunction: z.ZodType<() => void>;
+		component: z.ZodType<Component>;
+		tFile: z.ZodType<TFile>;
+		cachedMetadata: z.ZodType<CachedMetadata>;
+		block: z.ZodType<Block>;
+		tableElementType: z.ZodType<TableElementType>;
+		tableElementBody: z.ZodType<TableElementType[][]>;
+		markdownCodeBlockExecutionContext: z.ZodType<MarkdownCodeBlockExecutionContext>;
+		markdownCallingJSFileExecutionContext: z.ZodType<MarkdownCallingJSFileExecutionContext>;
+		markdownOtherExecutionContext: z.ZodType<MarkdownOtherExecutionContext>;
+		jsFileExecutionContext: z.ZodType<JSFileExecutionContext>;
+		unknownExecutionContext: z.ZodType<UnknownExecutionContext>;
+		executionContext: z.ZodType<ExecutionContext>;
+		engineExecutionParams: z.ZodType<EngineExecutionParams>;
+		engineExecutionParamsFile: z.ZodType<Omit<EngineExecutionParams, 'code' | 'context'>>;
+		engineExecutionParamsFileSimple: z.ZodType<Omit<EngineExecutionParams, 'code' | 'component' | 'context'>>;
+		jsExecutionGlobalsConstructionOptions: z.ZodType<JsExecutionGlobalsConstructionOptions>;
+		abstractMarkdownElement: z.ZodType<AbstractMarkdownElement>;
+		messageType: z.ZodType<MessageType>;
+		buttonStyleType: z.ZodType<ButtonStyleType>;
+		buttonPromptButtonOptions: z.ZodType<ButtonPromptButtonOptions<unknown>>;
+		buttonModalPromptOptions: z.ZodType<ButtonPromptOptions<unknown>>;
+		confirmPromptOptions: z.ZodType<ConfirmPromptOptions>;
+		yesNoPromptOptions: z.ZodType<YesNoPromptOptions>;
+		suggesterOption: z.ZodType<SuggesterOption<unknown>>;
+		suggesterPromptOptions: z.ZodType<SuggesterPromptOptions<unknown>>;
+		inputPromptOptions: z.ZodType<InputPromptOptions>;
+		numberInputPromptOptions: z.ZodType<NumberInputPromptOptions>;
 		constructor();
 	}
 }
