@@ -28,6 +28,24 @@ Other than the icon, the two codeblocks behave identically.
 
 Docs are available [here](https://www.moritzjung.dev/obsidian-js-engine-plugin-docs/).
 
+## Plugin Integration
+
+Other plugins can access JS Engine through the loaded `js-engine` plugin instance. For TypeScript integrations, install the API helper package:
+
+```sh
+bun add -d https://github.com/mProjectsCode/obsidian-js-engine-plugin/releases/latest/download/obsidian-js-engine-api.tgz
+```
+
+```ts
+import { getJsEngineInternalApi } from '@lemons_dev/obsidian-js-engine-api';
+
+const jsEngine = getJsEngineInternalApi(this.app);
+
+await jsEngine?.executeFileSimple('Scripts/example.js');
+```
+
+The API package describes the cross-plugin integration surface: plugin lookup helpers, `api.internal`, execution context types, execution result types, and the result renderer contract. Each plugin release attaches the current API package tarball as `obsidian-js-engine-api.tgz` alongside the Obsidian plugin files.
+
 ## Examples
 
 ### Markdown Builder
@@ -95,3 +113,13 @@ export function getGreeting() {
 #### Output
 
 > Hello!
+
+## Development
+
+This repo includes `packages/js-engine-api` as the installable API helper package source. After cloning, initialize dependencies with:
+
+```sh
+bun run deps:init
+```
+
+When the public integration API changes, edit the package source, run `bun run api:build`, and release the plugin. The release workflow attaches the API package tarball alongside the Obsidian plugin files.

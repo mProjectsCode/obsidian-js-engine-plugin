@@ -40,6 +40,10 @@ jobs:
               id: build
               run: |
                   bun install
+                  bun run api:build
+                  mkdir -p dist
+                  api_tarball="$(cd packages/js-engine-api && npm pack --pack-destination ../../dist | tail -n 1)"
+                  cp "dist/${api_tarball}" dist/obsidian-js-engine-api.tgz
                   bun run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
@@ -53,6 +57,7 @@ jobs:
                       dist/main.js
                       dist/manifest.json
                       dist/styles.css
+                      dist/*.tgz
                       ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip
 
             - name: Release
@@ -66,3 +71,4 @@ jobs:
                       dist/main.js
                       dist/manifest.json
                       dist/styles.css
+                      dist/*.tgz

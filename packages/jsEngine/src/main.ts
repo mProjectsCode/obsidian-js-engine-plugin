@@ -1,3 +1,4 @@
+import type { JsEngineApi } from '@lemons_dev/obsidian-js-engine-api';
 import type { App, PluginManifest } from 'obsidian';
 import { Plugin } from 'obsidian';
 import { API } from 'packages/jsEngine/src/api/API';
@@ -14,10 +15,10 @@ import { Validators } from 'packages/jsEngine/src/utils/Validators';
 import 'packages/jsEngine/src/styles.css';
 
 export default class JsEnginePlugin extends Plugin {
-	settings!: JsEnginePluginSettings;
+	declare settings: JsEnginePluginSettings;
 	messageManager: MessageManager;
 	jsEngine: Engine;
-	api: API;
+	api: API & JsEngineApi;
 	validators: Validators;
 
 	constructor(app: App, manifest: PluginManifest) {

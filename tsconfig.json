@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
 		"paths": {
+			"@lemons_dev/obsidian-js-engine-api": ["./packages/js-engine-api/src"],
+			"obsidian": ["./node_modules/obsidian"],
 			"packages/*": ["./packages/*"],
 			"tests/*": ["./tests/*"]
 		},
@@ -22,7 +24,7 @@
 		"sourceMap": true,
 		"lib": ["DOM", "ESNext"],
 		"allowSyntheticDefaultImports": true,
-		"types": ["svelte"]
+		"types": ["bun", "svelte"]
 	},
-	"include": ["packages/jsEngine/**/*.ts", "packages/jsEngine/**/*.svelte"]
+	"include": ["packages/jsEngine/**/*.ts", "packages/jsEngine/**/*.svelte", "test/**/*.ts"]
 }

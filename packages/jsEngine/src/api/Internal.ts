@@ -1,3 +1,4 @@
+import type { JsEngineInternalApi } from '@lemons_dev/obsidian-js-engine-api';
 import { Component, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import type { API } from 'packages/jsEngine/src/api/API';
@@ -29,7 +30,7 @@ export type ExecuteFileSimpleEngineExecutionParams = Omit<EngineExecutionParams,
 /**
  * The internal API provides access to some of js engines internals.
  */
-export class InternalAPI {
+export class InternalAPI implements JsEngineInternalApi {
 	private readonly apiInstance: API;
 
 	constructor(apiInstance: API) {

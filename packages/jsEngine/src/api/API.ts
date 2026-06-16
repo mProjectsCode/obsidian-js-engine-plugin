@@ -1,3 +1,4 @@
+import type { JsEngineApi } from '@lemons_dev/obsidian-js-engine-api';
 import type { App, Plugin, TFile } from 'obsidian';
 import * as Obsidian from 'obsidian';
 import type { InstanceId } from 'packages/jsEngine/src/api/InstanceId';
@@ -15,7 +16,7 @@ import type { Validators } from 'packages/jsEngine/src/utils/Validators';
 import { validateAPIArgs } from 'packages/jsEngine/src/utils/Validators';
 import * as z from 'zod';
 
-export class API {
+export class API implements JsEngineApi {
 	/**
 	 * Reference to the obsidian app.
 	 */

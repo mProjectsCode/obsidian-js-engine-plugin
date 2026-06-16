@@ -1,3 +1,4 @@
+import type { ResultRenderer as JsEngineResultRenderer } from '@lemons_dev/obsidian-js-engine-api';
 import type { Component } from 'obsidian';
 import { MarkdownBuilder } from 'packages/jsEngine/src/api/markdown/MarkdownBuilder';
 import { MarkdownString } from 'packages/jsEngine/src/api/markdown/MarkdownString';
@@ -11,7 +12,7 @@ import { mount, unmount } from 'svelte';
  * Attaches to a container and renders values.
  * Used to render the result of a {@link JsExecution}.
  */
-export class ResultRenderer {
+export class ResultRenderer implements JsEngineResultRenderer {
 	readonly plugin: JsEnginePlugin;
 	readonly container: HTMLElement;
 	readonly sourcePath: string;

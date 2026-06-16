@@ -4,7 +4,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import banner from 'vite-plugin-banner';
 import path from 'path';
 import { builtinModules } from 'node:module';
-import { dtsBundlePlugin, getBuildBanner } from '@lemons_dev/lemons-obsidian-plugin-automation';
+import { getBuildBanner } from '@lemons_dev/lemons-obsidian-plugin-automation';
 import manifest from './manifest.json' with { type: 'json' };
 
 const entryFile = 'packages/jsEngine/src/main.ts';
@@ -27,14 +27,6 @@ export default defineConfig(async ({ mode }) => {
 				},
 			],
 		}),
-		prod
-			? dtsBundlePlugin({
-					sourceDir: 'packages/jsEngine/src',
-					tempDir: 'types',
-					outputFile: 'JsEngine.d.ts',
-					modulePrefix: 'jsEngine/src',
-				})
-			: undefined,
 	];
 
 	return {

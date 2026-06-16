@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"target": "ES2022",
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"noImplicitReturns": true,
+		"moduleResolution": "bundler",
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"verbatimModuleSyntax": true,
+		"declaration": true,
+		"declarationMap": false,
+		"sourceMap": false,
+		"outDir": "dist",
+		"rootDir": "src",
+		"lib": ["DOM", "ESNext"]
+	},
+	"include": ["src/**/*.ts"]
+}

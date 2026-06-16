@@ -1,0 +1,11 @@
+{
+	"extends": "../../../tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"paths": {
+			"@lemons_dev/obsidian-js-engine-api": ["../../../packages/js-engine-api/src"],
+			"obsidian": ["../../../node_modules/obsidian"]
+		}
+	},
+	"include": ["index.ts"]
+}

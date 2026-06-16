@@ -1,0 +1,43 @@
+{
+	"name": "@lemons_dev/obsidian-js-engine-api",
+	"version": "0.1.0",
+	"description": "Types and helper functions for integrating with the JS Engine Obsidian plugin API.",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE.md"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"pack:dry-run": "npm pack --dry-run"
+	},
+	"keywords": [
+		"obsidian",
+		"js-engine",
+		"typescript"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mProjectsCode/obsidian-js-engine-plugin.git",
+		"directory": "packages/js-engine-api"
+	},
+	"author": "Moritz Jung",
+	"license": "GPL-3.0",
+	"peerDependencies": {
+		"obsidian": ">=1.4.0"
+	},
+	"devDependencies": {
+		"obsidian": "latest",
+		"typescript": "^6.0.3"
+	}
+}
