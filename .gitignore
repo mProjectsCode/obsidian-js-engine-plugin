@@ -1,5 +1,5 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
@@ -36,3 +36,5 @@ exampleVault/.obsidian/plugins/obsidian-js-engine-plugin/*
 meta.txt
 
 dist
+/dist/
+/artifacts/

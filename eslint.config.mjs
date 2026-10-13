@@ -1,65 +1,10 @@
-// @ts-check
+import { fileURLToPath } from 'node:url';
+import { createCIConfig } from '@lemons_dev/eslint-config-obsidian';
+import svelteConfig from './svelte.config.mjs';
 
-import eslint from '@eslint/js';
-import { defineConfig } from 'eslint/config';
-import tseslint from 'typescript-eslint';
-import only_warn from 'eslint-plugin-only-warn';
-import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
-import { importX } from 'eslint-plugin-import-x';
-
-export default defineConfig(
-	{
-		ignores: ['npm/', 'node_modules/', 'exampleVault/', 'automation/', 'main.js', '*.svelte'],
-	},
-	{
-		files: ['packages/jsEngine/src/**/*.ts'],
-		extends: [
-			eslint.configs.recommended,
-			...tseslint.configs.recommended,
-			...tseslint.configs.recommendedTypeChecked,
-			...tseslint.configs.stylisticTypeChecked,
-		],
-		languageOptions: {
-			parser: tseslint.parser,
-			parserOptions: {
-				project: true,
-			},
-		},
-		plugins: {
-			// @ts-ignore
-			'only-warn': only_warn,
-			'no-relative-import-paths': no_relative_import_paths,
-			import: importX,
-		},
-		rules: {
-			'@typescript-eslint/no-explicit-any': ['warn'],
-
-			'@typescript-eslint/no-unused-vars': [
-				'error',
-				{ argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
-			],
-			'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'separate-type-imports' }],
-
-			'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
-			'import/order': [
-				'error',
-				{
-					'newlines-between': 'never',
-					alphabetize: { order: 'asc', orderImportKind: 'asc', caseInsensitive: true },
-				},
-			],
-
-			'@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
-			'@typescript-eslint/restrict-template-expressions': 'off',
-
-			'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: false }],
-
-			'@typescript-eslint/ban-ts-comment': 'off',
-			'@typescript-eslint/no-empty-function': 'off',
-			'@typescript-eslint/no-inferrable-types': 'off',
-			'@typescript-eslint/explicit-function-return-type': ['warn'],
-			'@typescript-eslint/require-await': 'off',
-			'@typescript-eslint/prefer-promise-reject-errors': 'off',
-		},
-	},
-);
+export default createCIConfig({
+	root: fileURLToPath(new URL('.', import.meta.url)),
+	host: ['packages/jsEngine/src/**'],
+	workers: [],
+	svelteConfig,
+});

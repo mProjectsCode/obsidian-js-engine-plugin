@@ -7,3 +7,6 @@ Publish.js
 /docs
 index.d.ts
 Engine.d.ts
+dist
+artifacts
+bun.lock
