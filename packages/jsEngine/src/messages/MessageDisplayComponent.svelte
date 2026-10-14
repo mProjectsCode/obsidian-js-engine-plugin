@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { MessageManager, MessageWrapper } from './MessageManager';
+	import type { Listener } from 'packages/jsEngine/src/utils/Signal';
+	import './MessageManager';
 	import MessageComponent from './MessageComponent.svelte';
 	import Button from '../utils/Button.svelte';
 	import { ButtonStyleType } from 'packages/jsEngine/src/utils/Util';
 	import { onDestroy, onMount } from 'svelte';
-	import type { Listener } from 'packages/jsEngine/src/utils/Signal';
+	import type { MessageManager, MessageWrapper } from './MessageManager';
 
 	const {
 		messageManager,

@@ -11,7 +11,6 @@ import type { JsEnginePluginSettings } from 'packages/jsEngine/src/settings/Sett
 import { JS_ENGINE_DEFAULT_SETTINGS, JsEnginePluginSettingTab } from 'packages/jsEngine/src/settings/Settings';
 import { Validators } from 'packages/jsEngine/src/utils/Validators';
 
-// @ts-expect-error TS6133
 import 'packages/jsEngine/src/styles.css';
 
 export default class JsEnginePlugin extends Plugin {

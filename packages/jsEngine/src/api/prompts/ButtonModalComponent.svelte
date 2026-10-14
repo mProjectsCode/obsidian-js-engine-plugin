@@ -1,15 +1,16 @@
 <script lang="ts">
 	import type { ButtonPromptOptions } from 'packages/jsEngine/src/api/PromptAPI';
 	import Button from 'packages/jsEngine/src/utils/Button.svelte';
-	import type { SvelteModal } from './SvelteModal';
+	import type { AnySvelteComponent } from 'packages/jsEngine/src/utils/SvelteUtils';
 	import { ButtonStyleType, mod } from 'packages/jsEngine/src/utils/Util';
+	import type { SvelteModal } from './SvelteModal';
 
 	const {
 		options,
 		modal,
 	}: {
 		options: ButtonPromptOptions<unknown>;
-		modal: SvelteModal<any, unknown>;
+		modal: Pick<SvelteModal<AnySvelteComponent, unknown>, 'submit'>;
 	} = $props();
 
 	let divEl: HTMLDivElement;

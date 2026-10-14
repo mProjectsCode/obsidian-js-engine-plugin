@@ -1,8 +1,8 @@
 <!-- Inspired by https://github.com/marcusolsson/obsidian-svelte -->
 
 <script lang="ts">
-	import { ButtonStyleType } from './Util';
 	import type { Snippet } from 'svelte';
+	import { ButtonStyleType } from './Util';
 
 	const {
 		variant = ButtonStyleType.DEFAULT,

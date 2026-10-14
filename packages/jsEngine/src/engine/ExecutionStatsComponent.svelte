@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { JsExecution } from './JsExecution';
+	import './JsExecution';
 	import MessageComponent from '../messages/MessageComponent.svelte';
+	import type { JsExecution } from './JsExecution';
 
 	const {
 		execution,
@@ -9,10 +10,9 @@
 	} = $props();
 
 	function highlightCode(code: string): string {
-		// @ts-expect-error
 		const prism = window.Prism;
 		try {
-			return prism.highlight(code, prism.languages.javascript, 'javascript');
+			return prism!.highlight(code, prism!.languages.javascript, 'javascript');
 		} catch (e) {
 			console.warn('js-engine | failed to highlight code', e);
 			return code;

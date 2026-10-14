@@ -1,5 +1,5 @@
-import type { App, Component } from 'obsidian';
 import { getJsEngineApi, getJsEngineInternalApi, getJsEnginePlugin, JS_ENGINE_PLUGIN_ID } from '@lemons_dev/obsidian-js-engine-api';
+import type { App, Component } from 'obsidian';
 import { ExecutionSource, MessageType } from '@lemons_dev/obsidian-js-engine-api';
 import type {
 	EngineExecutionParams,

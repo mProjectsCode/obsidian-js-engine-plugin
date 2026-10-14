@@ -17,4 +17,14 @@ declare module 'obsidian' {
 	}
 }
 
+declare global {
+	interface Window {
+		/** The Prism instance supplied by the host after it loads the highlighter. */
+		Prism?: {
+			languages: Record<string, unknown>;
+			highlight(code: string, grammar: unknown, language: string): string;
+		};
+	}
+}
+
 export {};

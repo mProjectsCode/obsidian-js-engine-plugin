@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Button from 'packages/jsEngine/src/utils/Button.svelte';
+	import type { AnySvelteComponent } from 'packages/jsEngine/src/utils/SvelteUtils';
+	import { ButtonStyleType } from 'packages/jsEngine/src/utils/Util';
 	import type { InputPromptOptions, NumberInputPromptOptions } from '../PromptAPI';
 	import type { SvelteModal } from './SvelteModal';
-	import { ButtonStyleType } from 'packages/jsEngine/src/utils/Util';
 
 	const {
 		options,
@@ -11,12 +12,12 @@
 	}:
 		| {
 				options: InputPromptOptions;
-				modal: SvelteModal<any, unknown>;
+				modal: Pick<SvelteModal<AnySvelteComponent, unknown>, 'submit'>;
 				inputType: 'text' | 'textarea';
 		  }
 		| {
 				options: NumberInputPromptOptions;
-				modal: SvelteModal<any, unknown>;
+				modal: Pick<SvelteModal<AnySvelteComponent, unknown>, 'submit'>;
 				inputType: 'number';
 		  } = $props();
 

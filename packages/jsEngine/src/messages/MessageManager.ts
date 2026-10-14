@@ -54,7 +54,7 @@ export class MessageWrapper {
 	uuid: string;
 	source: InstanceId;
 	message: Message;
-	time: moment.Moment;
+	time: ReturnType<typeof window.moment>;
 
 	constructor(message: Message, source: InstanceId) {
 		this.message = message;

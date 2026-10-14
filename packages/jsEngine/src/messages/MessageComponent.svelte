@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { mapMessageTypeToClass, mapMessageTypeToIcon, MessageManager, MessageWrapper } from './MessageManager';
+	import { mapMessageTypeToClass, mapMessageTypeToIcon } from './MessageManager';
 	import { useIcon } from 'packages/jsEngine/src/utils/UseIcon';
 	import { slide } from 'svelte/transition';
+	import type { MessageManager, MessageWrapper } from './MessageManager';
 
 	const {
 		messageWrapper,
