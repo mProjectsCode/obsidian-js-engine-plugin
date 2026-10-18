@@ -19,8 +19,6 @@
 	onMount(() => {
 		listener = messageManager.messages.registerListener({
 			callback: newMessages => {
-				console.log('Messages updated', newMessages);
-
 				messages = newMessages;
 			},
 		});

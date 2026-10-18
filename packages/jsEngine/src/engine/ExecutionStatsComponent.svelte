@@ -59,7 +59,7 @@
 
 	<h3>Messages</h3>
 	<div>
-		{#each execution.getMessages() as messageWrapper}
+		{#each execution.getMessages() as messageWrapper, loopIndex (loopIndex)}
 			<MessageComponent
 				messageWrapper={messageWrapper}
 				messageManager={execution.plugin.messageManager}

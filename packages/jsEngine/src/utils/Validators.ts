@@ -49,7 +49,7 @@ export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void {
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- Runtime validation accepts any function; its signature is supplied by the caller.
 export function zodFunction<T extends Function>() {
 	return z.custom<T>(val => {
 		return typeof val === 'function';

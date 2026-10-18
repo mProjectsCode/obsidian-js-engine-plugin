@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- we need any for the svelte types to work */
-
 import type { Component, SvelteComponent } from 'svelte';
 
-export type AnyRecord = Record<string, any>;
 export type UnknownRecord = Record<string, unknown>;
-type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N;
+export type AnyRecord = UnknownRecord;
+export type ComponentExports<Comp extends AnySvelteComponent | SvelteComponent> = Comp extends AnySvelteComponent ? ReturnType<Comp> : Comp;
 
-export type ComponentExports<Comp extends Component<any, any> | SvelteComponent> =
-	Comp extends SvelteComponent<any, infer Exports> ? IfAny<Exports, AnyRecord, Exports> : AnyRecord;
+export type MountedComponent<Comp extends AnySvelteComponent | SvelteComponent> = ComponentExports<Comp>;
 
-export type MountedComponent<Comp extends Component<any, any> | SvelteComponent> = ComponentExports<Comp>;
-
-export type AnySvelteComponent = Component<any, any>;
+export type AnySvelteComponent = Component<never>;

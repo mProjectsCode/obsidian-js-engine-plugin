@@ -16,8 +16,6 @@
 		showMessageSource?: boolean;
 	} = $props();
 
-	console.log(messageWrapper.source.executionContext);
-
 	let showMore: boolean = $state(false);
 </script>
 

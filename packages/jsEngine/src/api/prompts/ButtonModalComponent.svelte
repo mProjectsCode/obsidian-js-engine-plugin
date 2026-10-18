@@ -24,7 +24,7 @@
 
 			const newFocusedButton = divEl.querySelector(`button[data-index="${nextIndex}"]`);
 
-			if (newFocusedButton && newFocusedButton instanceof HTMLElement) {
+			if (newFocusedButton && newFocusedButton.instanceOf(HTMLElement)) {
 				newFocusedButton.focus();
 			}
 		}
@@ -38,7 +38,7 @@
 
 		if (event.key === 'ArrowLeft') {
 			event.preventDefault();
-			shiftFocus(true);
+			shiftFocus(false);
 		}
 	}
 </script>
@@ -46,7 +46,7 @@
 <p>{options.content}</p>
 
 <div class="modal-button-container" bind:this={divEl}>
-	{#each options.buttons as button, i}
+	{#each options.buttons as button, i (i)}
 		<Button
 			variant={button.variant ?? ButtonStyleType.DEFAULT}
 			onclick={() => modal.submit(button.value)}
