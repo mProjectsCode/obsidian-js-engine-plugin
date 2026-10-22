@@ -48,7 +48,7 @@ export default class JsEnginePlugin extends Plugin {
 
 		this.addCommand({
 			id: 'execute-js-file',
-			name: 'Execute JS File',
+			name: 'Execute JS file',
 			callback: () => {
 				new JSFileSelectModal(this, async selected => {
 					await this.api.internal.executeFileSimple(selected.path);

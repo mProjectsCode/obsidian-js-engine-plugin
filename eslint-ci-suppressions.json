@@ -1,0 +1,7 @@
+{
+	"packages/jsEngine/src/api/API.ts": {
+		"no-unsanitized/method": {
+			"count": 1
+		}
+	}
+}

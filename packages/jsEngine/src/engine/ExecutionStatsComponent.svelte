@@ -1,5 +1,6 @@
 <script lang="ts">
 	import './JsExecution';
+	import { sanitizeHTMLToDom } from 'obsidian';
 	import MessageComponent from '../messages/MessageComponent.svelte';
 	import type { JsExecution } from './JsExecution';
 
@@ -9,14 +10,19 @@
 		execution: JsExecution;
 	} = $props();
 
-	function highlightCode(code: string): string {
-		const prism = window.Prism;
-		try {
-			return prism!.highlight(code, prism!.languages.javascript, 'javascript');
-		} catch (e) {
-			console.warn('js-engine | failed to highlight code', e);
-			return code;
+	function renderCode(node: HTMLElement, code: string) {
+		function update(code: string): void {
+			const prism = window.Prism;
+			try {
+				node.replaceChildren(sanitizeHTMLToDom(prism!.highlight(code, prism!.languages.javascript, 'javascript')));
+			} catch (e) {
+				console.warn('js-engine | failed to highlight code', e);
+				node.textContent = code;
+			}
 		}
+
+		update(code);
+		return { update };
 	}
 </script>
 
@@ -26,7 +32,7 @@
 	<p>Execution ID: {execution.uuid}</p>
 
 	<h3>Code</h3>
-	<pre class="language-js"><code class="language-js">{@html highlightCode(execution.code)}</code></pre>
+	<pre class="language-js"><code class="language-js" use:renderCode={execution.code}></code></pre>
 
 	<h3>Time</h3>
 	<p>Build Time: {Math.round(execution.functionBuildTime ?? 0)} ms</p>

@@ -83,6 +83,7 @@ export class API implements JsEngineApi {
 		// which would cause things like `instanceof` to produce false negatives
 		fullPath = fullPath.split('?')[0];
 
+		// CI baseline: importing user-selected vault modules is an intentional scripting API capability.
 		return import(fullPath);
 	}
 
